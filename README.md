@@ -10,3 +10,6 @@
 ```
 yarn run build
 ```
+###   技术说明
+
+项目使用 antd-pro + umi + typescript
