@@ -23,7 +23,8 @@ interface IState {}
 class Contract extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this.state = {};
+    this.state = {
+    };
   }
 
   componentDidMount() {}

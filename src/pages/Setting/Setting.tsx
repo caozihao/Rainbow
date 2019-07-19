@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import {} from 'antd';
+// import {} from 'antd';
 import withRouter from 'umi/withRouter';
 //import styles from './Setting.less';
 
