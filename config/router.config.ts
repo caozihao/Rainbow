@@ -28,13 +28,26 @@ const router: object = [
           },
         ],
       },
-
       {
         path: '/verification',
         name: 'verification',
         // authority: ['admin', 'user'],
         component: './Verification/Verification',
-        icon: 'folder',
+        icon: 'line-chart',
+      },
+      {
+        path: '/receivable',
+        name: 'receivable',
+        // authority: ['admin', 'user'],
+        component: './Receivable/Receivable',
+        icon: 'pay-circle',
+      },
+      {
+        path: '/setting',
+        name: 'setting',
+        // authority: ['admin', 'user'],
+        component: './setting/Setting',
+        icon: 'setting',
       },
       {
         component: './404',
