@@ -1,26 +1,26 @@
 export default {
-  contractOrder: {
-    name: 'contractOrder',
+  id: {
+    name: 'id',
     title: '合同编号',
   },
-  customerOrder: {
-    name: 'customerOrder',
+  customId: {
+    name: 'customId',
     title: '客户编号',
   },
-  companyName: {
-    name: 'companyName',
-    title: '公司名称',
+  customName: {
+    name: 'customName',
+    title: '客户名称',
   },
-  contractType: {
-    name: 'contractType',
+  type: {
+    name: 'type',
     title: '合同类型',
   },
-  totalPrice: {
-    name: 'totalPrice',
+  totalAmount: {
+    name: 'totalAmount',
     title: '总金额',
   },
-  effectTime: {
-    name: 'effectTime',
+  effectiveDate: {
+    name: 'effectiveDate',
     title: '生效时间',
   },
 }

@@ -5,6 +5,9 @@ import routerConfig from './router.config';
 // https://umijs.org/config/
 import slash from 'slash2';
 import webpackPlugin from './plugin.config';
+import config from './constant.config';
+
+const {MOCK_API} = config;
 
 const { pwa, primaryColor } = defaultSettings;
 
@@ -138,13 +141,11 @@ export default {
     basePath: '/',
   },
   chainWebpack: webpackPlugin,
-  /*
-  proxy: {
-    '/server/api/': {
-      target: 'https://preview.pro.ant.design/',
-      changeOrigin: true,
-      pathRewrite: { '^/server': '' },
-    },
-  },
-  */
+  // proxy: {
+  //   [`${MOCK_API}`]: {
+  //     target: `http://localhost:8000/${MOCK_API}`,
+  //     changeOrigin: true,
+  //     pathRewrite: { [`^${MOCK_API}`]: '' },
+  //   },
+  // },
 } as IConfig;

@@ -1,8 +1,7 @@
 import config from '../config/constant.config';
-const {MOCK_API,HOST_API}  = config;
+const {MOCK_API,HOST_API,DEV_MODE}  = config;
 
-const ifMock = true;
-const host = ifMock ? MOCK_API : HOST_API;
+const host = DEV_MODE === 'mock' ? MOCK_API : HOST_API;
 
 export default {
   contract:{

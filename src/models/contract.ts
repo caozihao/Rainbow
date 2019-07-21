@@ -2,12 +2,23 @@ import { Effect } from 'dva';
 import { Reducer } from 'redux';
 import { requestApi } from '../utils/request';
 
+export const namespace = 'contract';
 export interface ContractModelState {
-  tableData: object;
+  tableDataList: object;
+  tableDataPageTotal: number;
+  tableDataPageNo: number;
+  tableDataPageSize: number;
 }
 
+const initailState = {
+  tableDataList: [],
+  tableDataPageTotal: 0,
+  tableDataPageNo: 0,
+  tableDataPageSize: 0,
+};
+
 export interface ContractModelType {
-  namespace: 'contract';
+  namespace: string;
   state: ContractModelState;
   effects: {
     create: Effect;
@@ -19,51 +30,62 @@ export interface ContractModelType {
 }
 
 const ContractModel: ContractModelType = {
-  namespace: 'contract',
-
-  state: {
-    tableData: [],
-  },
-
+  namespace,
+  state: initailState,
   effects: {
     *create({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, payload);
-      const { code, message } = data;
+      const { data } = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
       } else {
-        failCallback && failCallback(message);
+        failCallback && failCallback(errMsg);
       }
     },
     *getContractFileById({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, payload);
-      const { code, message } = data;
+      const { data } = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
       } else {
-        failCallback && failCallback(message);
+        failCallback && failCallback(errMsg);
       }
     },
     *modify({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, payload);
-      const { code, message } = data;
+      const { data } = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
       } else {
-        failCallback && failCallback(message);
+        failCallback && failCallback(errMsg);
       }
     },
     *queryList({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, payload);
-      const { code, message } = data;
+      const data = yield call(requestApi, { ...payload, namespace });
+      console.log('queryList data ->', data);
+      const { code, errMsg, body } = data;
       if (!code) {
+        const { totalSize, currentPage, pageSize, dataList } = body;
+        yield put({
+          type: 'save',
+          payload: {
+            tableDataList: dataList,
+            tableDataPageTotal: totalSize,
+            tableDataPageNo: currentPage,
+            tableDataPageSize: pageSize,
+          },
+        });
         successCallback && successCallback();
       } else {
-        failCallback && failCallback(message);
+        failCallback && failCallback(errMsg);
       }
     },
   },
-  reducers: {},
+  reducers: {
+    save(state: any, { payload = {} }) {
+      return { ...state, ...payload };
+    },
+  },
 };
 
 export default ContractModel;

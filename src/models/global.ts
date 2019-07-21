@@ -28,7 +28,7 @@ export interface GlobalModelType {
     changeLayoutCollapsed: Reducer<GlobalModelState>;
     saveNotices: Reducer<GlobalModelState>;
     saveClearedNotices: Reducer<GlobalModelState>;
-    save:Reducer<GlobalModelState>;
+    save: Reducer<GlobalModelState>;
   };
   subscriptions: { setup: Subscription };
 }
@@ -123,7 +123,7 @@ const GlobalModel: GlobalModelType = {
         notices: state.notices.filter((item): boolean => item.type !== payload),
       };
     },
-    save(state:any, { payload }) {
+    save(state: any, { payload }) {
       return { ...state, ...payload };
     },
   },

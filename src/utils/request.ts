@@ -16,6 +16,7 @@ import api from '../serviceApi';
  */
 
 interface requestApiParams {
+  namespace: string;
   apiName: string;
   reqType: string;
   placeholerData?: object;
@@ -24,16 +25,19 @@ interface requestApiParams {
 }
 
 export function requestApi({
+  namespace,
   apiName,
   reqType,
   placeholerData,
   queryData,
   bodyData,
 }: requestApiParams) {
+  console.log('namespace ->', namespace);
   // const =requestParams;
 
   // const method = reqType.toLowerCase();
-  let url = api[apiName];
+
+  let url = api[namespace][apiName];
   const req = { method: reqType, params: {}, data: {} };
   const params = placeholerData ? Object.keys(placeholerData) : [];
   if (placeholerData) {
@@ -48,9 +52,11 @@ export function requestApi({
   }
 
   if (bodyData && Object.keys(bodyData).length) {
-    req.data = JSON.stringify(bodyData);
+    req.data = bodyData;
   }
 
+  console.log('url ->', url);
+  console.log('req ->', req);
   return request(url, req);
 }
 
@@ -77,6 +83,7 @@ const codeMessage = {
  */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
+  console.log('response ->', response);
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -86,6 +93,7 @@ const errorHandler = (error: { response: Response }): Response => {
       description: errorText,
     });
   }
+  console.log('response ->', response);
   return response;
 };
 
