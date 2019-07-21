@@ -1,0 +1,45 @@
+export default [
+  {
+    tag: 'Input',
+    name: 'contractOrder',
+    title: '合同编号',
+    // initValue: undefined,
+  },
+  {
+    tag: 'InputNumber',
+    name: 'customerOrder',
+    title: '客户编号',
+    // initValue: undefined,
+  },
+  {
+    tag: 'Select',
+    name: 'projectType',
+    title: '产品类别',
+    initValue: [],
+    // otherProps: {mode: 'multiple' },
+    // mode: 'multiple',
+    options: [{ label: '直销', value: '1' }, { label: '传销', value: '2' }],
+  },
+  {
+    tag: 'Select',
+    name: 'contractType',
+    title: '合同类型',
+    // initValue: [],
+    // otherProps: {mode: 'multiple' },
+    mode: 'multiple',
+    options: [{ label: '类型一', value: '1' }, { label: '类型二', value: '2' }],
+  },
+  {
+    tag: 'Select',
+    name: 'contractType',
+    title: '合同类型',
+    // initValue: [],
+    mode: 'multiple',
+    options: [{ label: '类型一', value: '1' }, { label: '类型二', value: '2' }],
+  },
+  {
+    tag: 'RangePicker',
+    name: 'effectTime',
+    title: '生效时间',
+  },
+];

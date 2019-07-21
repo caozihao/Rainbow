@@ -4,6 +4,55 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
+import api from '../serviceApi';
+
+/**
+ * 通用请求Api方法
+ * @param apiName(String)：调用的api名称
+ * @param reqType(String)：请求的类型：GET | POST | PUT | DELETE
+ * @param placeholerData(Object)：放在占位符上的数据
+ * @param queryData(Object)：放在url上的数据
+ * @param bodyData(Object)：放在body里的数据
+ */
+
+interface requestApiParams {
+  apiName: string;
+  reqType: string;
+  placeholerData?: object;
+  queryData?: object;
+  bodyData?: object;
+}
+
+export function requestApi({
+  apiName,
+  reqType,
+  placeholerData,
+  queryData,
+  bodyData,
+}: requestApiParams) {
+  // const =requestParams;
+
+  // const method = reqType.toLowerCase();
+  let url = api[apiName];
+  const req = { method: reqType, params: {}, data: {} };
+  const params = placeholerData ? Object.keys(placeholerData) : [];
+  if (placeholerData) {
+    for (let i = 0; i < params.length; i += 1) {
+      url = url.replace(`:${params[i]}`, placeholerData[params[i]]);
+    }
+  }
+
+  if (queryData && Object.keys(queryData).length) {
+    // url = `${url}?${stringify(queryData)}`;
+    req.params = queryData;
+  }
+
+  if (bodyData && Object.keys(bodyData).length) {
+    req.data = JSON.stringify(bodyData);
+  }
+
+  return request(url, req);
+}
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',

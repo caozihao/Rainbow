@@ -10,6 +10,7 @@ export { default as QnModal } from './QnModal/QnModal';
 export { default as QnFormModal } from './QnFormModal/QnFormModal';
 export { default as QnSelect } from './QnSelect/QnSelect';
 export { default as QnTable } from './QnTable/QnTable';
+export { default as QnListPage } from './QnListPage/QnListPage';
 
 // export { default as QnInfoBox } from './QnInfoBox/QnInfoBox';
 // export { default as QnListTagAdder } from './QnListTagAdder/QnListTagAdder';

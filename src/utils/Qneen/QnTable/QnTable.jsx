@@ -30,7 +30,7 @@ class QnTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.hasRowSelection) {
+    if (this.props.handleRowSelect) {
       // 如果表格行数据变化(重新获取了数据),则把选择中行清零
       if (this.props.dataSource !== nextProps.dataSource) {
         this.setState({ selectedRowKeys: [] }, () => {
@@ -122,7 +122,7 @@ class QnTable extends Component {
       }
     }
     let rowSelection = null;
-    if (this.props.hasRowSelection) {
+    if (this.props.handleRowSelect) {
       rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
           this.setState({ selectedRowKeys });
@@ -195,7 +195,6 @@ QnTable.defaultProps = {
 
   hasPagination: true,
   hasColumnSwitch: false,
-  hasRowSelection: false,
   paginationSetting: false,
   expandedRowRender: false,
   handleRowSelect: selectedRows => {},
@@ -204,6 +203,7 @@ QnTable.defaultProps = {
   bordered: true,
   otherProps: {},
   defaultPageSize: 10,
+  rowSelection:{},
   scroll: {
     x: false,
     y: false,
