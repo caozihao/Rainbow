@@ -19,7 +19,7 @@ class QnTable extends Component {
   }
 
   componentDidMount() {
-    console.log('QnTable');
+
   }
 
   componentWillMount() {
@@ -134,7 +134,7 @@ class QnTable extends Component {
       };
     }
     // console.log(expandedRowRender);
-    console.log('qntable this.state.filteredColumns ->',this.state.filteredColumns);
+
     return (
       <div className="QnTable">
         {this.props.hasColumnSwitch ? (

@@ -1,7 +1,7 @@
 export default [
   {
     tag: 'Input',
-    name: 'contractId',
+    name: 'id',
     title: '合同编号',
     // initValue: undefined,
   },

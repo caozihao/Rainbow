@@ -1,22 +1,53 @@
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
+import { parse } from 'qs';
+import router from 'umi/router';
+
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
-const isUrl = (path: string): boolean => reg.test(path);
+export function isUrl(path: string): boolean {
+  return reg.test(path);
+}
 
-const isAntDesignPro = (): boolean => {
+export function isAntDesignPro(): boolean {
   if (ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site') {
     return true;
   }
   return window.location.hostname === 'preview.pro.ant.design';
-};
+}
 
 // 给官方演示站点用，用于关闭真实开发环境不需要使用的特性
-const isAntDesignProOrDev = (): boolean => {
+export function isAntDesignProOrDev(): boolean {
   const { NODE_ENV } = process.env;
   if (NODE_ENV === 'development') {
     return true;
   }
   return isAntDesignPro();
-};
+}
 
-export { isAntDesignProOrDev, isAntDesignPro, isUrl };
+export function getPageQuery() {
+  return parse(window.location.href.split('?')[1]);
+}
+
+interface IQueryParams {
+  pageSize?: number;
+  currentPage?: number;
+}
+
+export function dealWithQueryParams(params: IQueryParams) {
+  let copyParams = Object.assign({}, params);
+  const { pageSize, currentPage } = copyParams;
+  if (!pageSize) {
+    copyParams.pageSize = 10;
+  }
+  if (!currentPage) {
+    copyParams.currentPage = 1;
+  }
+  return copyParams;
+}
+
+export function updateRoute(params: object) {
+  router.push({
+    pathname: location ? location.pathname : '',
+    query: { ...params },
+  });
+}

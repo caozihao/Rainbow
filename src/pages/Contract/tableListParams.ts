@@ -11,6 +11,10 @@ export default {
     name: 'customName',
     title: '客户名称',
   },
+  productType: {
+    name: 'productType',
+    title: '产品类型',
+  },
   type: {
     name: 'type',
     title: '合同类型',
@@ -23,4 +27,4 @@ export default {
     name: 'effectiveDate',
     title: '生效时间',
   },
-}
+};

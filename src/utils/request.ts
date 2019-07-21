@@ -32,7 +32,7 @@ export function requestApi({
   queryData,
   bodyData,
 }: requestApiParams) {
-  console.log('namespace ->', namespace);
+  // console.log('namespace ->', namespace);
   // const =requestParams;
 
   // const method = reqType.toLowerCase();
@@ -55,8 +55,8 @@ export function requestApi({
     req.data = bodyData;
   }
 
-  console.log('url ->', url);
-  console.log('req ->', req);
+  // console.log('url ->', url);
+  // console.log('req ->', req);
   return request(url, req);
 }
 

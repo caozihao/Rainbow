@@ -15,9 +15,7 @@ class QnListPage extends Component {
     this.state = {};
   }
 
-  componentDidMount() {
-    console.log('QnListPage');
-  }
+  componentDidMount() {}
 
   // componentWillReceiveProps(nextProps) { }
 
@@ -76,8 +74,6 @@ class QnListPage extends Component {
       rowSelection,
       handleRowSelect,
     } = this.props;
-
-    console.log('rowSelection ->', rowSelection);
 
     const tabContent = (
       <div className="QnListPage">
@@ -156,7 +152,7 @@ QnListPage.defaultProps = {
   // 通用
   loading: false,
   title: 'foo',
-  hasTab: true,
+  hasTab: false,
 
   // 表格相关
   columns: [],
@@ -206,5 +202,6 @@ QnListPage.defaultProps = {
   // 如果是link, 需要以下参数
   adderRoute: '',
   rowSelection: {},
+  current: 0,
 };
 export default QnListPage;

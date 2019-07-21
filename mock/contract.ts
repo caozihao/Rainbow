@@ -11,11 +11,11 @@ const getContractFileById = () => {};
 
 const modify = () => {};
 
-const queryList = (req, res) => {
+const queryList = (req: Request, res: Response) => {
   const result = mock({
     body: {
-      currentPage: 0,
-      "dataList|100": [
+      currentPage: req.body.currentPage,
+      'dataList|100': [
         {
           contactName: `<${Random.word(6, 10)}>`,
           customId: Random.id(),
@@ -30,7 +30,7 @@ const queryList = (req, res) => {
           'status|1': ['Normal', 'Legal', '3rd party'],
           tel: Random.tel,
           totalAmount: Random.float(),
-          "type|1": ['直销', '渠道', '爱德堡'],
+          'type|1': ['直销', '渠道', '爱德堡'],
         },
       ],
       pageSize: 10,

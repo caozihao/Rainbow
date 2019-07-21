@@ -10,20 +10,26 @@ import { genTableColumns } from '../../utils/format/dataGen';
 import tableFilterParams from './tableFilterParams';
 import { ContractModelState, namespace } from '../../models/contract';
 
+import { getPageQuery, dealWithQueryParams, updateRoute } from '../../utils/utils';
+
 interface IConnectState extends ConnectState {
   [namespace]: ContractModelState;
 }
-
 interface IProps extends ConnectProps {
   dispatch: Dispatch;
-  [namespace]: ContractModelState;
 }
+
+interface IProps extends ContractModelState {}
 
 interface IState {}
 
 @connect(({ contract }: IConnectState) => {
+  const { tableDataList, tableDataPageTotal, tableDataPageNo, tableDataPageSize } = contract;
   return {
-    contract,
+    tableDataList,
+    tableDataPageTotal,
+    tableDataPageNo,
+    tableDataPageSize,
   };
 })
 class Contract extends PureComponent<IProps, IState> {
@@ -33,34 +39,41 @@ class Contract extends PureComponent<IProps, IState> {
   }
 
   componentDidMount() {
-    this.queryList();
+    this.queryList(getPageQuery());
   }
 
   componentDidUpdate() {}
 
-  queryList = (params = {}) => {
-    params['pageSize'] = 10;
-    params['currentPage'] = 1;
-
+  queryList = (params: object) => {
+    const copyParams = dealWithQueryParams(params);
     const { dispatch } = this.props;
     dispatch({
       type: 'contract/queryList',
       payload: {
         apiName: 'queryList',
         reqType: 'POST',
-        bodyData: params,
+        bodyData: copyParams,
       },
-      successCallback: data => {},
-      failCallback: err => {},
+      successCallback: () => {
+        updateRoute(copyParams);
+      },
     });
+  };
+
+  handlePageChange = (currentPage: number, pageSize: number) => {
+    this.queryList({ pageSize, currentPage });
+  };
+
+  handleFilterChange = (filterParams: object) => {
+    this.queryList({ ...filterParams });
   };
 
   // handleClick = (e: Object): void => {};
 
   render() {
-    const { tableDataList, tableDataPageTotal } = this.props[namespace];
+    const { tableDataList, tableDataPageTotal, tableDataPageNo } = this.props;
 
-    console.log('tableDataList ->', tableDataList);
+    // console.log('this.props ->', this.props);
 
     const QnListPageProps: object = {
       dataSource: tableDataList,
@@ -71,8 +84,10 @@ class Contract extends PureComponent<IProps, IState> {
       },
       filterRules: tableFilterParams,
       col: 2,
-      handlePageChange: () => {},
+      handlePageChange: this.handlePageChange,
+      handleFilterChange: this.handleFilterChange,
       total: tableDataPageTotal,
+      current: tableDataPageNo,
     };
     return (
       <Card className={styles.Contract} title="合同管理">

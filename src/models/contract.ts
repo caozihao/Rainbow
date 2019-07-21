@@ -70,9 +70,9 @@ const ContractModel: ContractModelType = {
           type: 'save',
           payload: {
             tableDataList: dataList,
-            tableDataPageTotal: totalSize,
-            tableDataPageNo: currentPage,
-            tableDataPageSize: pageSize,
+            tableDataPageTotal: parseInt(totalSize, 10),
+            tableDataPageNo: parseInt(currentPage, 10),
+            tableDataPageSize: parseInt(pageSize, 10),
           },
         });
         successCallback && successCallback();
