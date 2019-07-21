@@ -4,7 +4,12 @@ import { Tag, Badge } from 'antd';
 import { FormattedTime, FormattedDate } from 'react-intl';
 
 import {
-  formatDate, formatPercent, formatMoney, getNumWithCommas, formatFloat, formatMoment,
+  formatDate,
+  formatPercent,
+  formatMoney,
+  getNumWithCommas,
+  formatFloat,
+  formatMoment,
 } from './dataFormatter.js';
 
 /**
@@ -20,7 +25,7 @@ import {
  */
 
 const renderMoneyInBoth = (text, record, from = 'fiat', config) => {
-  const getConfig = (userConfig) => {
+  const getConfig = userConfig => {
     const defaultConfig = {
       bit: 8,
       fiatBit: 2,
@@ -31,9 +36,9 @@ const renderMoneyInBoth = (text, record, from = 'fiat', config) => {
     return { ...defaultConfig, ...userConfig };
   };
 
-  const {
-    bit, fiatName, currencyNameFiledName, exchangeRateFieldName, fiatBit,
-  } = getConfig(config);
+  const { bit, fiatName, currencyNameFiledName, exchangeRateFieldName, fiatBit } = getConfig(
+    config,
+  );
 
   const styles = {
     fiat: { color: '#999' },
@@ -60,24 +65,39 @@ const renderMoneyInBoth = (text, record, from = 'fiat', config) => {
   );
 };
 
-const renderMoneyFromCrypto = (bit = 8, fiatName = 'USD', currencyNameFiledName = 'currencyName', exchangeRateFieldName = 'exchangeRate') => {
+const renderMoneyFromCrypto = (
+  bit = 8,
+  fiatName = 'USD',
+  currencyNameFiledName = 'currencyName',
+  exchangeRateFieldName = 'exchangeRate',
+) => {
   return (text, record) => {
     const config = {
-      bit, fiatName, currencyNameFiledName, exchangeRateFieldName,
+      bit,
+      fiatName,
+      currencyNameFiledName,
+      exchangeRateFieldName,
     };
     return renderMoneyInBoth(text, record, 'crypto', config);
   };
 };
 
-const renderMoneyFromFiat = (bit = 8, fiatName = 'USD', currencyNameFiledName = 'currencyName', exchangeRateFieldName = 'exchangeRate') => {
+const renderMoneyFromFiat = (
+  bit = 8,
+  fiatName = 'USD',
+  currencyNameFiledName = 'currencyName',
+  exchangeRateFieldName = 'exchangeRate',
+) => {
   return (text, record) => {
     const config = {
-      bit, fiatName, currencyNameFiledName, exchangeRateFieldName,
+      bit,
+      fiatName,
+      currencyNameFiledName,
+      exchangeRateFieldName,
     };
     return renderMoneyInBoth(text, record, 'fiat', config);
   };
 };
-
 
 const dataRender = {
   renderTime: (text, record, index) => {
@@ -93,15 +113,15 @@ const dataRender = {
     return formatPercent(text, 2);
   },
   renderMoney: (prefix = '￥', suffix = '', colored = true, fixed = 2) => {
-    return (text) => {
+    return text => {
       return formatMoney(text, prefix, suffix, colored, fixed);
     };
   },
-  renderNumber: (text) => {
+  renderNumber: text => {
     return getNumWithCommas(text);
   },
-  renderFloat: (fixed) => {
-    return (text) => {
+  renderFloat: fixed => {
+    return text => {
       return formatFloat(text, true, fixed);
     };
   },
@@ -113,12 +133,12 @@ const dataRender = {
   },
 
   renderTag: (color = 'blue') => {
-    return (text) => {
+    return text => {
       return <Tag color={color}>{text}</Tag>;
     };
   },
   renderMoment: (format = 'YYYY-MM-DD HH:mm') => {
-    return (text) => {
+    return text => {
       if (text) {
         return formatMoment(text, format);
       } else {
@@ -127,13 +147,13 @@ const dataRender = {
     };
   },
 
-  renderPhone: (phone) => {
+  renderPhone: phone => {
     const text = `${phone}`;
     return `${text.substr(0, 3)}-${text.substr(3, 4)}-${text.substr(7, 4)}`;
   },
 
   // 身份证号脱敏展示
-  renderId: (text) => {
+  renderId: text => {
     function genArr(num, content) {
       if (num <= 0) {
         return;
@@ -157,7 +177,7 @@ const dataRender = {
       return `${head}${middle.join('')}${tail}`;
     }
   },
-  renderSuccessFail: (text) => {
+  renderSuccessFail: text => {
     let result = text;
     const keywords = {
       success: '成功 已',
@@ -171,14 +191,19 @@ const dataRender = {
       const regStr = words.map(word => `(${word})`).join('|');
       const reg = new RegExp(regStr, 'g');
       if (reg.test(text)) {
-        result = (<span><Badge status={type} />{text}</span>);
+        result = (
+          <span>
+            <Badge status={type} />
+            {text}
+          </span>
+        );
         return result;
       }
     }
     return result;
   },
   // 渲染多语言支持的日期时间
-  renderi18nTime: (text) => {
+  renderi18nTime: text => {
     if (text) {
       const props = {
         value: new Date(text),
@@ -194,7 +219,7 @@ const dataRender = {
     }
   },
   // 渲染多语言支持的日期时间
-  renderi18nDate: (text) => {
+  renderi18nDate: text => {
     if (text) {
       const props = {
         value: new Date(text),

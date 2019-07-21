@@ -1,3 +1,4 @@
+/* eslint-disable no-unneeded-ternary */
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { Tabs, Button, Card } from 'antd';
@@ -45,7 +46,8 @@ class QnListPage extends Component {
           formItems={this.props.formItems}
           formDict={this.props.formDict}
           formInitValueObj={this.props.formInitValueObj}
-          handleOk={this.props.handleAdd}
+          handleOk={this.props.handleOk}
+          {...this.props.modalOtherProps}
         />
       );
     }
@@ -65,7 +67,6 @@ class QnListPage extends Component {
       expandedRowRender,
       expandRowByClick,
       current,
-      middleContent,
       hasPagination,
       pageSize,
       selectedRowKeys,
@@ -73,6 +74,7 @@ class QnListPage extends Component {
       scroll,
       rowSelection,
       handleRowSelect,
+      middleSection,
     } = this.props;
 
     const tabContent = (
@@ -85,8 +87,7 @@ class QnListPage extends Component {
             {...otherQnFilterProps}
           />
         ) : null}
-        {/* <br /> */}
-        {middleContent ? middleContent() : ''}
+        {middleSection ? middleSection : ''}
         {this.props.hasSummary ? (
           <QnTableWithSummary
             loading={loading}
@@ -195,13 +196,15 @@ QnListPage.defaultProps = {
   // adderType :modal | link 默认为modal
   adderType: 'modal',
   // 如果是modal, 需要以下参数
-  formItems: [],
+  formItems: null,
   formDict: null,
   formInitValueObj: null,
-  handleAdd: null,
+  handleOk: null,
   // 如果是link, 需要以下参数
   adderRoute: '',
   rowSelection: {},
   current: 0,
+  modalOtherProps: {},
+  middleSection: null,
 };
 export default QnListPage;

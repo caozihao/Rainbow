@@ -54,10 +54,12 @@ export function formatDate(date, withTime = true) {
   }
 }
 
-export function formatMoment(date, format = 'YYYY-MM-DD HH:mm') {
+export function formatMoment(date, format = 'YYYY-MM-DD HH:mm:ss') {
+  let result = '';
   if (typeof date !== 'undefined') {
-    return moment(date).format(format);
+    result = moment(date).format(format);
   }
+  return result;
 }
 
 export function formatTime(time, format = 'HH:mm:ss') {
@@ -88,12 +90,12 @@ export function formatMoney(value, prefix = '￥', suffix = '', colored = true, 
       style = { color: 'green' };
     }
     const number = formatFloat(value, true, fixed);
-    content = (<span style={style}>{`${prefix}${number}${suffix}`}</span>);
+    content = <span style={style}>{`${prefix}${number}${suffix}`}</span>;
     // content = (<span style={style} >{number}</span>);
   } else if (value === 0) {
     content = '-';
   }
-  const result = (<div style={{ textAlign: 'right' }}>{content}</div>);
+  const result = <div style={{ textAlign: 'right' }}>{content}</div>;
   return result;
 }
 
@@ -121,27 +123,14 @@ export function setDateToRim(timeStamp, to = 'START') {
 export function formatCrypto(num, bit = 8) {
   return formatFloat(num, true, bit);
 }
-export const formatPhone = (text) => {
+export const formatPhone = text => {
   const str = `${text}`;
   return `${str.substr(0, 3)}-${str.substr(3, 4)}-${str.substr(7, 4)}`;
 };
 
-export default {
-  roundDown,
-  roundUp,
-  round,
-
-  getNumWithCommas,
-
-  formatDate,
-  formatTime,
-  formatMoment,
-  setDateToRim,
-
-  formatFloat,
-  formatMoney,
-  formatPercent,
-  formatCrypto,
-
-  formatPhone,
+export const rangeTimeProps = {
+  format: 'YYYY-MM-DD HH:mm:ss',
+  showTime: {
+    defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+  },
 };

@@ -1,9 +1,22 @@
 /* eslint-disable react/destructuring-assignment */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import propTypes from 'prop-types';
-import { Modal, Button, Input, InputNumber, DatePicker, Form, Tooltip, Icon, Spin } from 'antd';
+import {
+  Modal,
+  Button,
+  Input,
+  InputNumber,
+  DatePicker,
+  Form,
+  Tooltip,
+  Icon,
+  Spin,
+  Row,
+  Col,
+} from 'antd';
 import QnSelect from '../QnSelect/QnSelect.jsx';
 import QnListTagAdder from '../QnListTagAdder/QnListTagAdder.jsx';
+import QnUpload from '../QnUpload/QnUpload.jsx';
 // import './QnFormModal.less';
 const log = console.log.bind(console);
 const FormItem = Form.Item;
@@ -79,6 +92,8 @@ class QnFormModal extends Component {
       style: { width: '100%' },
     };
 
+    const { rowsNumber } = this.props;
+
     // log('itemData', itemData);
     const name = typeof itemData === 'string' ? itemData : itemData.name;
     // const { name } = itemData;
@@ -98,6 +113,7 @@ class QnFormModal extends Component {
       QnSelect: <QnSelect {...itemProps} options={dataDict[name].options} />,
       Select: <QnSelect {...itemProps} options={dataDict[name].options} />,
       QnListTagAdder: <QnListTagAdder {...itemProps} />,
+      File: <QnUpload {...itemProps} />,
     };
 
     const formPart = formPartDict[tag];
@@ -109,23 +125,36 @@ class QnFormModal extends Component {
     };
 
     return (
-      <FormItem {...formItemLayout} label={title} key={name}>
-        {getFieldDecorator(name, {
-          // valuePropName: 'value',
-          initialValue: typeof initialValue[name] === 'undefined' ? undefined : initialValue[name],
-          rules,
-        })(formPart)}
-      </FormItem>
+      <Col span={Math.ceil(24 / rowsNumber)} key={name}>
+        <FormItem {...formItemLayout} label={title}>
+          {getFieldDecorator(name, {
+            // valuePropName: 'value',
+            initialValue:
+              typeof initialValue[name] === 'undefined' ? undefined : initialValue[name],
+            rules,
+          })(formPart)}
+        </FormItem>
+      </Col>
     );
   };
 
-  genFormItems = (itemDataArr, dataDict, initialValueObj) => {
+  genFormItems = (itemDataArr, dataDict, initialValueObj, rowSplitTitleDict) => {
     if (Array.isArray(itemDataArr) && itemDataArr.length > 0) {
       const items = [];
       for (let i = 0; i < itemDataArr.length; i += 1) {
+        if (rowSplitTitleDict) {
+          if (rowSplitTitleDict[i]) {
+            items.push(
+              <Col span={24} style={{ paddingBottom: '10px' }} key={i}>
+                {i !== 0 ? <hr style={{ marginBottom: '20px' }} /> : ''}
+                <b>{rowSplitTitleDict[i]}</b>
+              </Col>,
+            );
+          }
+        }
         items.push(this.genFormItem(itemDataArr[i], dataDict, initialValueObj));
       }
-      return items;
+      return <Row>{items}</Row>;
     }
   };
 
@@ -150,6 +179,9 @@ class QnFormModal extends Component {
       ifShowFormLoading,
       formDict,
       triggerTitle,
+      otherProps,
+      width,
+      rowSplitTitleDict,
     } = this.props;
 
     let trigger = null;
@@ -164,7 +196,13 @@ class QnFormModal extends Component {
     }
 
     const itemDataArr = formItems || this.getAllFormItemsFromDict(formDict);
-    const formItemData = this.genFormItems(itemDataArr, formDict, formInitialValueObj);
+    const formItemData = this.genFormItems(
+      itemDataArr,
+      formDict,
+      formInitialValueObj,
+      rowSplitTitleDict,
+    );
+
     return (
       <span className="QnFormModal">
         {hasTooltip ? <Tooltip title={title}>{trigger}</Tooltip> : trigger}
@@ -175,7 +213,9 @@ class QnFormModal extends Component {
           onOk={this.handleModalOk}
           onCancel={this.handleModalCancel}
           maskClosable={false}
+          width={width}
           closable
+          {...otherProps}
         >
           <Spin spinning={ifShowFormLoading}>{formItemData}</Spin>
         </Modal>
@@ -250,6 +290,9 @@ QnFormModal.defaultProps = {
   // creditorList: [],
   ifResetAfterSuccess: true,
   ifShowFormLoading: false,
+  width: 500,
+  rowsNumber: 1,
+  rowSplitTitleDict: null,
 };
 
 export default Form.create()(QnFormModal);

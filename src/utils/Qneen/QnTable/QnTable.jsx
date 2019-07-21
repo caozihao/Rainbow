@@ -18,13 +18,11 @@ class QnTable extends Component {
     // this.scrollX = 150 * (this.props.columns.length + 1);
   }
 
-  componentDidMount() {
-
-  }
+  componentDidMount() {}
 
   componentWillMount() {
     const filteredColumns = this.getFilteredColumns(
-      this.props.defaultColumnValues || this.allColumnValues
+      this.props.defaultColumnValues || this.allColumnValues,
     );
     this.setState({ filteredColumns });
   }
@@ -127,7 +125,7 @@ class QnTable extends Component {
         onChange: (selectedRowKeys, selectedRows) => {
           this.setState({ selectedRowKeys });
           if (typeof this.props.handleRowSelect === 'function') {
-            this.props.handleRowSelect(selectedRows);
+            this.props.handleRowSelect(selectedRowKeys, selectedRows);
           }
         },
         selectedRowKeys: this.state.selectedRowKeys,
@@ -203,7 +201,7 @@ QnTable.defaultProps = {
   bordered: true,
   otherProps: {},
   defaultPageSize: 10,
-  rowSelection:{},
+  rowSelection: {},
   scroll: {
     x: false,
     y: false,

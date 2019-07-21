@@ -25,7 +25,7 @@ import FormattedMessage from '../FM/FM.jsx';
 import QnSelect from '../QnSelect/QnSelect';
 // import { Group } from '../../../node_modules/_antd@2.13.7@antd/lib/radio';
 // import log from '../log';
-import styles from './QnFilter.less'
+import styles from './QnFilter.less';
 
 const { MonthPicker, RangePicker } = DatePicker;
 const FormItem = Form.Item;
@@ -33,7 +33,6 @@ const RadioGroup = Radio.Group;
 const Panel = Collapse.Panel;
 
 const log = console.log.bind(console);
-
 
 // const log = () => { };
 class QnFilter extends Component {
@@ -208,6 +207,7 @@ class QnFilter extends Component {
             defaultFormatDate = otherProps.format;
           }
         }
+
         tagValueToShow = `${value[0].format(defaultFormatDate)} - ${value[1].format(
           defaultFormatDate,
         )}`;
@@ -233,7 +233,7 @@ class QnFilter extends Component {
       result = (
         <Tag
           key={key}
-          className= {styles.filterTag}
+          className={styles.filterTag}
           color="blue"
           closable
           onClose={() => {
