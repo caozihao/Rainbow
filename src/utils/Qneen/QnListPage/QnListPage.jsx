@@ -192,7 +192,7 @@ QnListPage.defaultProps = {
   otherQnTableProps: {},
   handleRowSelect: () => {},
   // 新增记录相关
-  hasAdder: true,
+  hasAdder: false,
   // adderType :modal | link 默认为modal
   adderType: 'modal',
   // 如果是modal, 需要以下参数

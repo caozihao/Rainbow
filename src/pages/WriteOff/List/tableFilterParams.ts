@@ -1,5 +1,3 @@
-import {rangeTimeProps} from '../../utils/format/dataFormatter';
-
 export default [
   {
     tag: 'Input',
@@ -34,11 +32,5 @@ export default [
     // otherProps: {mode: 'multiple' },
     // mode: 'multiple',
     options: [{ label: '类型一', value: '1' }, { label: '类型二', value: '2' }],
-  },
-  {
-    tag: 'RangePicker',
-    name: 'startDate,endDate',
-    title: '生效时间',
-    otherProps: rangeTimeProps,
   },
 ];

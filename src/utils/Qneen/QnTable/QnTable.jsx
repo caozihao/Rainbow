@@ -12,7 +12,6 @@ class QnTable extends Component {
     super(props);
     this.state = {
       filteredColumns: [],
-      selectedRowKeys: [],
     };
     this.allColumnValues = this.getAllColumnValues(this.props.columns);
     // this.scrollX = 150 * (this.props.columns.length + 1);
@@ -22,22 +21,13 @@ class QnTable extends Component {
 
   componentWillMount() {
     const filteredColumns = this.getFilteredColumns(
-      this.props.defaultColumnValues || this.allColumnValues,
+      this.props.defaultColumnValues || this.allColumnValues
     );
     this.setState({ filteredColumns });
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.handleRowSelect) {
-      // 如果表格行数据变化(重新获取了数据),则把选择中行清零
-      if (this.props.dataSource !== nextProps.dataSource) {
-        this.setState({ selectedRowKeys: [] }, () => {
-          if (typeof this.props.handleRowSelect === 'function') {
-            this.props.handleRowSelect(this.state.selectedRowKeys);
-          }
-        });
-      }
-    }
+
   }
 
   componentDidUpdate = prevProps => {
@@ -93,6 +83,7 @@ class QnTable extends Component {
       current,
       pageSize,
       hideOnSinglePage,
+      rowSelection
     } = this.props;
     let pagination = false;
     if (this.props.hasPagination) {
@@ -118,18 +109,6 @@ class QnTable extends Component {
           },
         };
       }
-    }
-    let rowSelection = null;
-    if (this.props.handleRowSelect) {
-      rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
-          this.setState({ selectedRowKeys });
-          if (typeof this.props.handleRowSelect === 'function') {
-            this.props.handleRowSelect(selectedRowKeys, selectedRows);
-          }
-        },
-        selectedRowKeys: this.state.selectedRowKeys,
-      };
     }
     // console.log(expandedRowRender);
 
@@ -195,16 +174,14 @@ QnTable.defaultProps = {
   hasColumnSwitch: false,
   paginationSetting: false,
   expandedRowRender: false,
-  handleRowSelect: selectedRows => {},
-
+  rowSelection: null,
   rowKey: item => item.id,
   bordered: true,
-  otherProps: {},
   defaultPageSize: 10,
-  rowSelection: {},
   scroll: {
     x: false,
     y: false,
   },
+  otherProps: {},
 };
 export default QnTable;

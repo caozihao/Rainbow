@@ -3,29 +3,29 @@ import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
 import { Card, Button, message } from 'antd';
 import withRouter from 'umi/withRouter';
-import styles from './Contract.less';
-import { QnListPage, QnFormModal } from '../../utils/Qneen/index';
+import { Link } from 'dva/router';
+import { QnListPage, QnFormModal } from '../../../utils/Qneen/index';
 import tableListParams from './tableListParams';
-import { genTableColumns } from '../../utils/format/dataGen';
+import { genTableColumns } from '../../../utils/format/dataGen';
 import tableFilterParams from './tableFilterParams';
-import { ContractModelState, namespace } from '../../models/contract';
+import { ContractModelState } from '../../../models/contract';
+import { WriteOffModelState, namespace } from '../../../models/writeOff';
 import { formDict, formInitialValueObj } from './formParams';
 import {
   getPageQuery,
   dealWithQueryParams,
   updateRoute,
   initializeFilterParams,
-} from '../../utils/utils';
-import { formatMoment } from '../../utils/format/dataFormatter';
+} from '../../../utils/utils';
+import { formatMoment } from '../../../utils/format/dataFormatter';
 
 interface IConnectState extends ConnectState {
-  [namespace]: ContractModelState;
+  [namespace]: WriteOffModelState;
+  contract: ContractModelState;
 }
-interface IProps extends ConnectProps {
+interface IProps extends ConnectProps, ContractModelState, WriteOffModelState {
   dispatch: Dispatch;
 }
-
-interface IProps extends ContractModelState {}
 
 interface IState {
   selectedRowKeys: object;
@@ -41,7 +41,7 @@ interface IState {
     tableDataPageSize,
   };
 })
-class Contract extends PureComponent<IProps, IState> {
+class WriteOff extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -55,10 +55,10 @@ class Contract extends PureComponent<IProps, IState> {
     const copyValue = Object.assign({}, values);
     copyValue['effectiveDate'] = formatMoment(copyValue['effectiveDate']);
 
-    let api = 'contract/create';
+    let api = 'writeOff/create';
     let successMesage = '添加成功！';
     if (copyValue['_id']) {
-      api = 'contract/modify';
+      api = 'writeOff/modify';
       successMesage = '修改成功！';
     }
 
@@ -173,10 +173,12 @@ class Contract extends PureComponent<IProps, IState> {
   genMiddleSection = () => {
     return (
       <div style={{ marginBottom: '1rem' }}>
-        <Button style={{ marginRight: '1rem' }} type="primary">
-          创建核销表
-        </Button>
-        <Button type="danger">删除合同</Button>
+        <Link to="/writeoff/invoice">
+          <Button style={{ marginRight: '1rem' }}>添加发票</Button>
+        </Link>
+        <Link to="/writeoff/record">
+          <Button type="primary">编辑核销记录</Button>
+        </Link>
       </div>
     );
   };
@@ -187,17 +189,19 @@ class Contract extends PureComponent<IProps, IState> {
     const { tableDataList, tableDataPageTotal, tableDataPageNo } = this.props;
     const copyTableListParams = Object.assign({}, tableListParams);
     copyTableListParams['option'] = this.option;
-    // console.log('this.props ->', this.props);
+    console.log('this.props ->', this.props);
 
     const QnListPageProps: object = {
       dataSource: tableDataList,
       columns: genTableColumns(copyTableListParams),
       title: '合同',
-      handleRowSelect: (selectedRowKeys: [], selectedRows: []) => {
-        // console.log(selectedRowKeys, selectedRows);
-        this.setState({
-          selectedRowKeys,
-        });
+      rowSelection: {
+        onChange: (selectedRowKeys = [], selectedRows = []) => {
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          this.setState({
+            selectedRowKeys,
+          });
+        },
       },
       filterRules: this.tableFilterParams,
       col: 2,
@@ -205,16 +209,15 @@ class Contract extends PureComponent<IProps, IState> {
       handleFilterChange: this.handleFilterChange,
       total: tableDataPageTotal,
       current: tableDataPageNo,
-      adderType: 'modal',
       middleSection: this.genMiddleSection(),
       ...this.QnFormModalProps('QnListPage'),
     };
     return (
-      <Card className={styles.Contract} title="合同管理">
+      <Card className="wrapper-right-content" title="合同管理">
         <QnListPage {...QnListPageProps} />
       </Card>
     );
   }
 }
 
-export default withRouter(Contract as any);
+export default withRouter(WriteOff as any);

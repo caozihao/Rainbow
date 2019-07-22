@@ -50,7 +50,10 @@ export default {
   'menu.contract': '合同管理',
   'menu.contract.list': '合同管理列表',
   'menu.contract.detail': '合同详情',
-  'menu.verification': '核销管理',
+  'menu.writeoff': '核销管理',
+  'menu.writeoff.list': '核销管理',
+  'menu.writeoff.record': '核销记录',
+  'menu.writeoff.invoice': '发票',
   'menu.receivable': '应收管理',
   'menu.setting': '个人设置',
 };

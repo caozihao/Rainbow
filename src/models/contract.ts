@@ -26,7 +26,9 @@ export interface ContractModelType {
     modify: Effect;
     queryList: Effect;
   };
-  reducers: {};
+  reducers: {
+    save: Reducer;
+  };
 }
 
 const ContractModel: ContractModelType = {

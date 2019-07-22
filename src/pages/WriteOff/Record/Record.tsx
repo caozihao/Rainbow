@@ -1,14 +1,13 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-// import {} from 'antd';
+import {} from 'antd';
 import withRouter from 'umi/withRouter';
-//import styles from './Detail.less';
+// import { RecordModelState, namespace } from '../../../../models/Record';
+//import styles from './Record.less';
 
 interface IConnectState extends ConnectState {
-  login: {
-    [profile: string]: object;
-  };
+  //  [namespace]: RecordModelState;
 }
 
 interface IProps extends ConnectProps {
@@ -17,10 +16,8 @@ interface IProps extends ConnectProps {
 
 interface IState {}
 
-@connect(({ login }: IConnectState) => ({
-  profile: login.profile,
-}))
-class Detail extends PureComponent<IProps, IState> {
+@connect(({  }: IConnectState) => ({}))
+class Record extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {};
@@ -33,8 +30,8 @@ class Detail extends PureComponent<IProps, IState> {
   // handleClick = (e: Object): void => {};
 
   render() {
-    return <div /* className={styles.Detail} */>详情</div>;
+    return <div /* className={styles.Record} */>内容</div>;
   }
 }
 
-export default withRouter(Detail as any);
+export default withRouter(Record as React.ComponentClass<any>);

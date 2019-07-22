@@ -17,23 +17,43 @@ const router: object = [
           {
             path: '/contract/list',
             name: 'list',
-            component: './Contract/Contract',
-            icon: 'folder',
+            component: './Contract/List/Contract',
           },
-          {
-            path: '/contract/detail',
-            name: 'detail',
-            component: './Contract/Detail',
-            // hideInMenu: true,
-          },
+          // {
+          //   path: '/contract/detail',
+          //   name: 'detail',
+          //   component: './Contract/Detail',
+          //   // hideInMenu: true,
+          // },
         ],
       },
       {
-        path: '/verification',
-        name: 'verification',
+        path: '/writeoff',
+        name: 'writeoff',
         // authority: ['admin', 'user'],
-        component: './Verification/Verification',
+        // component: './Contract/Contract',
         icon: 'line-chart',
+        hideChildrenInMenu: true,
+        routes: [
+          { path: '/writeoff', redirect: '/writeoff/list' },
+          {
+            path: '/writeoff/list',
+            name: 'list',
+            component: './WriteOff/List/WriteOff',
+          },
+          {
+            // 添加 /writeoff/record?type=add
+            // 编辑 /writeoff/record?type=detail&&id=1
+            path: '/writeoff/record',
+            name: 'record',
+            component: './WriteOff/Record/Record',
+          },
+          {
+            path: '/writeoff/invoice',
+            name: 'invoice',
+            component: './WriteOff/Invoice/Invoice',
+          },
+        ],
       },
       {
         path: '/receivable',
