@@ -42,8 +42,8 @@ const router: object = [
             component: './WriteOff/List/WriteOff',
           },
           {
-            // 添加 /writeoff/record?type=add
-            // 编辑 /writeoff/record?type=detail&&id=1
+            // 查看 /writeoff/record?type=detail
+            // 编辑 /writeoff/record?type=edit&&id=1
             path: '/writeoff/record',
             name: 'record',
             component: './WriteOff/Record/Record',

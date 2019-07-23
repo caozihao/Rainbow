@@ -1,23 +1,23 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import { Card, Button, message } from 'antd';
+import { Card, Button, message, Icon } from 'antd';
 import withRouter from 'umi/withRouter';
 import { Link } from 'dva/router';
-import { QnListPage, QnFormModal } from '../../../utils/Qneen/index';
+import { QnListPage, QnFormModal } from '@/utils/Qneen/index';
 import tableListParams from './tableListParams';
-import { genTableColumns } from '../../../utils/format/dataGen';
+import { genTableColumns } from '@/utils/format/dataGen';
 import tableFilterParams from './tableFilterParams';
-import { ContractModelState } from '../../../models/contract';
-import { WriteOffModelState, namespace } from '../../../models/writeOff';
+import { ContractModelState } from '@/models/contract';
+import { WriteOffModelState, namespace } from '@/models/writeOff';
 import { formDict, formInitialValueObj } from './formParams';
 import {
   getPageQuery,
   dealWithQueryParams,
   updateRoute,
   initializeFilterParams,
-} from '../../../utils/utils';
-import { formatMoment } from '../../../utils/format/dataFormatter';
+} from '@/utils/utils';
+import { formatMoment } from '@/utils/format/dataFormatter';
 
 interface IConnectState extends ConnectState {
   [namespace]: WriteOffModelState;
@@ -33,12 +33,12 @@ interface IState {
 }
 
 @connect(({ contract }: IConnectState) => {
-  const { tableDataList, tableDataPageTotal, tableDataPageNo, tableDataPageSize } = contract;
+  const { dataList, dataPageTotal, dataPageNo, dataPageSize } = contract;
   return {
-    tableDataList,
-    tableDataPageTotal,
-    tableDataPageNo,
-    tableDataPageSize,
+    dataList,
+    dataPageTotal,
+    dataPageNo,
+    dataPageSize,
   };
 })
 class WriteOff extends PureComponent<IProps, IState> {
@@ -50,87 +50,25 @@ class WriteOff extends PureComponent<IProps, IState> {
     };
   }
 
-  addAndUpdate = (values: object) => {
-    console.log('values ->', values);
-    const copyValue = Object.assign({}, values);
-    copyValue['effectiveDate'] = formatMoment(copyValue['effectiveDate']);
-
-    let api = 'writeOff/create';
-    let successMesage = '添加成功！';
-    if (copyValue['_id']) {
-      api = 'writeOff/modify';
-      successMesage = '修改成功！';
-    }
-
-    const { dispatch } = this.props;
-    this.setState({
-      ifShowFormLoading: true,
-    });
-
-    const promise = new Promise(resolve => {
-      dispatch({
-        type: api,
-        payload: {
-          apiName: 'create',
-          reqType: 'POST',
-          bodyData: values,
-        },
-        successCallback: () => {
-          message.success(successMesage);
-          resolve();
-        },
-      });
-    });
-
-    return promise;
-  };
-
-  QnFormModalProps = (type: string) => {
-    const { ifShowFormLoading } = this.state;
-    const modalOtherProps = {
-      width: 800,
-      rowsNumber: 2,
-      rowSplitTitleDict: {
-        0: '基础信息',
-        8: '交易信息',
-        14: '上传合同',
-      },
-    };
-
-    const commonParams = {
-      formDict,
-      formInitialValueObj,
-      handleTriggerClick: () => {},
-      handleOk: this.addAndUpdate,
-      ifShowFormLoading,
-    };
-
-    let result = {};
-
-    if (type === 'QnListPage') {
-      result = { ...commonParams, modalOtherProps };
-    } else {
-      result = { ...commonParams, ...modalOtherProps };
-    }
-    return result;
-  };
-
   option = {
     name: 'option',
     title: '操作',
     render: (text, record) => {
-      const copyQnFormModalProps = Object.assign({}, this.QnFormModalProps('QnFormModal'));
-      copyQnFormModalProps['buttonProps'] = {
-        type: 'primary',
-        title: '修改',
-      };
-      copyQnFormModalProps['title'] = '修改合同';
+      const { contractId } = record;
       return (
         <Fragment>
-          <Button style={{ marginRight: '10px' }}>查看</Button>
-          <QnFormModal {...copyQnFormModalProps}>
-            <Button type="primary">修改</Button>
-          </QnFormModal>
+          <Link to="/writeoff/record?type=detail">
+            {/* <Button style={{ marginRight: '1rem' }}>查看</Button> */}
+            <Icon type="search" style={{ marginRight: '1rem' }} title="查看" />
+          </Link>
+          <Link to={`/writeoff/invoice?contractId=${contractId}`}>
+            {/* <Button style={{ marginRight: '1rem' }}>添加发票</Button> */}
+            <Icon type="plus" style={{ marginRight: '1rem' }} title="添加发票" />
+          </Link>
+          <Link to="/writeoff/record?type=edit&&id=1">
+            {/* <Button type="primary">编辑核销记录</Button> */}
+            <Icon type="edit" title="编辑核销记录" />
+          </Link>
         </Fragment>
       );
     },
@@ -141,7 +79,6 @@ class WriteOff extends PureComponent<IProps, IState> {
   componentDidMount() {
     this.queryList(getPageQuery());
     this.tableFilterParams = initializeFilterParams(tableFilterParams);
-    console.log(' this.tableFilterParams ->', this.tableFilterParams);
   }
 
   componentDidUpdate() {}
@@ -170,50 +107,50 @@ class WriteOff extends PureComponent<IProps, IState> {
     this.queryList({ ...filterParams });
   };
 
-  genMiddleSection = () => {
-    return (
-      <div style={{ marginBottom: '1rem' }}>
-        <Link to="/writeoff/invoice">
-          <Button style={{ marginRight: '1rem' }}>添加发票</Button>
-        </Link>
-        <Link to="/writeoff/record">
-          <Button type="primary">编辑核销记录</Button>
-        </Link>
-      </div>
-    );
-  };
+  // genMiddleSection = () => {
+  //   return (
+  //     <div style={{ marginBottom: '1rem' }}>
+  //       <Link to="/writeoff/invoice">
+  //         <Button style={{ marginRight: '1rem' }}>添加发票</Button>
+  //       </Link>
+  //       <Link to="/writeoff/record">
+  //         <Button type="primary">编辑核销记录</Button>
+  //       </Link>
+  //     </div>
+  //   );
+  // };
 
   // handleClick = (e: Object): void => {};
 
   render() {
-    const { tableDataList, tableDataPageTotal, tableDataPageNo } = this.props;
+    const { dataList, dataPageTotal, dataPageNo } = this.props;
     const copyTableListParams = Object.assign({}, tableListParams);
     copyTableListParams['option'] = this.option;
     console.log('this.props ->', this.props);
 
     const QnListPageProps: object = {
-      dataSource: tableDataList,
+      dataSource: dataList,
       columns: genTableColumns(copyTableListParams),
-      title: '合同',
-      rowSelection: {
-        onChange: (selectedRowKeys = [], selectedRows = []) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          this.setState({
-            selectedRowKeys,
-          });
-        },
-      },
+      title: '核销',
+      // rowSelection: {
+      //   onChange: (selectedRowKeys = [], selectedRows = []) => {
+      //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      //     this.setState({
+      //       selectedRowKeys,
+      //     });
+      //   },
+      // },
       filterRules: this.tableFilterParams,
       col: 2,
       handlePageChange: this.handlePageChange,
       handleFilterChange: this.handleFilterChange,
-      total: tableDataPageTotal,
-      current: tableDataPageNo,
-      middleSection: this.genMiddleSection(),
-      ...this.QnFormModalProps('QnListPage'),
+      total: dataPageTotal,
+      current: dataPageNo,
+      // middleSection: this.genMiddleSection(),
+      // ...this.QnFormModalProps('QnListPage'),
     };
     return (
-      <Card className="wrapper-right-content" title="合同管理">
+      <Card className="wrapper-right-content" title="核销管理">
         <QnListPage {...QnListPageProps} />
       </Card>
     );

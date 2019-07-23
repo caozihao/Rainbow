@@ -1,6 +1,6 @@
 export default {
-  id: {
-    name: 'id',
+  contractNo: {
+    name: 'contractNo',
     title: '合同编号',
   },
   customId: {

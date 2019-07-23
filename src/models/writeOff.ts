@@ -5,17 +5,17 @@ import { requestApi } from '../utils/request';
 export const namespace = 'writeOff';
 
 export interface WriteOffModelState {
-  // tableDataList: object;
-  // tableDataPageTotal: number;
-  // tableDataPageNo: number;
-  // tableDataPageSize: number;
+  // dataList: object;
+  // dataPageTotal: number;
+  // dataPageNo: number;
+  // dataPageSize: number;
 }
 
 const initailState = {
-  // tableDataList: [],
-  // tableDataPageTotal: 0,
-  // tableDataPageNo: 0,
-  // tableDataPageSize: 0,
+  // dataList: [],
+  // dataPageTotal: 0,
+  // dataPageNo: 0,
+  // dataPageSize: 0,
 };
 
 export interface WriteOffModelType {

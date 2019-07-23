@@ -4,17 +4,19 @@ import { requestApi } from '../utils/request';
 
 export const namespace = 'contract';
 export interface ContractModelState {
-  tableDataList: object;
-  tableDataPageTotal: number;
-  tableDataPageNo: number;
-  tableDataPageSize: number;
+  dataList: Array<any>;
+  dataPageTotal: number;
+  dataPageNo: number;
+  dataPageSize: number;
+  detail: object;
 }
 
 const initailState = {
-  tableDataList: [],
-  tableDataPageTotal: 0,
-  tableDataPageNo: 0,
-  tableDataPageSize: 0,
+  dataList: [],
+  dataPageTotal: 0,
+  dataPageNo: 0,
+  dataPageSize: 0,
+  detail: {},
 };
 
 export interface ContractModelType {
@@ -25,6 +27,7 @@ export interface ContractModelType {
     getContractFileById: Effect;
     modify: Effect;
     queryList: Effect;
+    queryById: Effect;
   };
   reducers: {
     save: Reducer;
@@ -71,10 +74,25 @@ const ContractModel: ContractModelType = {
         yield put({
           type: 'save',
           payload: {
-            tableDataList: dataList,
-            tableDataPageTotal: parseInt(totalSize, 10),
-            tableDataPageNo: parseInt(currentPage, 10),
-            tableDataPageSize: parseInt(pageSize, 10),
+            dataList: dataList,
+            dataPageTotal: parseInt(totalSize, 10),
+            dataPageNo: parseInt(currentPage, 10),
+            dataPageSize: parseInt(pageSize, 10),
+          },
+        });
+        successCallback && successCallback();
+      } else {
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *queryById({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg, body } = data;
+      if (!code) {
+        yield put({
+          type: 'save',
+          payload: {
+            detail: body,
           },
         });
         successCallback && successCallback();

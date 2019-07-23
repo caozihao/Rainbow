@@ -25,8 +25,9 @@ export function isAntDesignProOrDev(): boolean {
   return isAntDesignPro();
 }
 
-export function getPageQuery() {
-  return parse(window.location.href.split('?')[1]);
+export function getPageQuery(key = '') {
+  let params = parse(window.location.href.split('?')[1]);
+  return key ? params[key] : params;
 }
 
 export function initializeFilterParams(tableFilterParams: Array<any>) {

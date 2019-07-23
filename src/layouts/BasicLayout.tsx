@@ -75,8 +75,8 @@ const footerRender: BasicLayoutProps['footerRender'] = (_, defaultDom) => {
 class BasicLayout extends PureComponent<BasicLayoutProps> {
   componentDidMount() {
     const { history } = this.props;
-    console.log('BasicLayout this.props->', this.props);
-    console.log('BasicLayout history->', history);
+    // console.log('BasicLayout this.props->', this.props);
+    // console.log('BasicLayout history->', history);
 
     history.listen(({ search }: any) => {
       const { action, goBack } = history;

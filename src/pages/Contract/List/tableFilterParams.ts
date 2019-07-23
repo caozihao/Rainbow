@@ -3,7 +3,7 @@ import {rangeTimeProps} from '../../../utils/format/dataFormatter';
 export default [
   {
     tag: 'Input',
-    name: 'id',
+    name: 'contractNo',
     title: '合同编号',
     // initValue: undefined,
   },

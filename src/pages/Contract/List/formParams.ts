@@ -13,7 +13,7 @@ const genInputParam = (name: string) => {
 };
 
 const formDict = {
-  id: genInputParam('合同号'),
+  contractNo: genInputParam('合同号'),
   customId: genInputParam('客户编号'),
   type: {
     title: '合同类型',

@@ -1,7 +1,11 @@
 export default {
-  id: {
-    name: 'id',
-    title: '合同编号',
+  identifierCode: {
+    name: 'identifierCode',
+    title: '发票识别号',
+  },
+  invoiceNo: {
+    name: 'invoiceNo',
+    title: '发票编号',
   },
   customId: {
     name: 'customId',
@@ -11,20 +15,16 @@ export default {
     name: 'customName',
     title: '客户名称',
   },
-  productType: {
-    name: 'productType',
-    title: '产品类型',
+  subject: {
+    name: 'subject',
+    title: '发票科目',
   },
-  type: {
-    name: 'type',
-    title: '合同类型',
+  amount: {
+    name: 'amount',
+    title: '发票金额',
   },
-  totalAmount: {
-    name: 'totalAmount',
-    title: '总金额',
-  },
-  effectiveDate: {
-    name: 'effectiveDate',
-    title: '生效时间',
+  billingDate: {
+    name: 'billingDate',
+    title: '开票日期',
   },
 };

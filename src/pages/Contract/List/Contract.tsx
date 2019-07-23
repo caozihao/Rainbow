@@ -3,7 +3,6 @@ import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
 import { Card, Button, message } from 'antd';
 import withRouter from 'umi/withRouter';
-import styles from './Contract.less';
 import { QnListPage, QnFormModal } from '../../../utils/Qneen/index';
 import tableListParams from './tableListParams';
 import { genTableColumns } from '../../../utils/format/dataGen';
@@ -31,12 +30,12 @@ interface IState {
 }
 
 @connect(({ contract }: IConnectState) => {
-  const { tableDataList, tableDataPageTotal, tableDataPageNo, tableDataPageSize } = contract;
+  const { dataList, dataPageTotal, dataPageNo, dataPageSize } = contract;
   return {
-    tableDataList,
-    tableDataPageTotal,
-    tableDataPageNo,
-    tableDataPageSize,
+    dataList,
+    dataPageTotal,
+    dataPageNo,
+    dataPageSize,
   };
 })
 class Contract extends PureComponent<IProps, IState> {
@@ -182,13 +181,13 @@ class Contract extends PureComponent<IProps, IState> {
   // handleClick = (e: Object): void => {};
 
   render() {
-    const { tableDataList, tableDataPageTotal, tableDataPageNo } = this.props;
+    const { dataList, dataPageTotal, dataPageNo } = this.props;
     const copyTableListParams = Object.assign({}, tableListParams);
     copyTableListParams['option'] = this.option;
     // console.log('this.props ->', this.props);
 
     const QnListPageProps: object = {
-      dataSource: tableDataList,
+      dataSource: dataList,
       columns: genTableColumns(copyTableListParams),
       title: '合同',
       rowSelection: {
@@ -203,8 +202,8 @@ class Contract extends PureComponent<IProps, IState> {
       col: 2,
       handlePageChange: this.handlePageChange,
       handleFilterChange: this.handleFilterChange,
-      total: tableDataPageTotal,
-      current: tableDataPageNo,
+      total: dataPageTotal,
+      current: dataPageNo,
       hasAdder: true,
       adderType: 'modal',
       middleSection: this.genMiddleSection(),

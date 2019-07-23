@@ -80,7 +80,7 @@ class QnListPage extends Component {
     const tabContent = (
       <div className="QnListPage">
         {this.genAdder()}
-        {this.props.hasFilter ? (
+        {this.props.filterRules.length ? (
           <QnFilter
             rules={this.props.filterRules}
             handleChange={this.props.handleFilterChange}
@@ -170,20 +170,19 @@ QnListPage.defaultProps = {
   summaryColumnValues: [],
 
   // 表格过滤器相关
-  hasFilter: true,
   filterRules: [
-    {
-      tag: 'Input',
-      name: 'userMobile',
-      title: '用户手机号',
-      // initValue: undefined,
-    },
-    {
-      tag: 'InputNumber',
-      name: 'orderCode',
-      title: '订单编号',
-      initValue: undefined,
-    },
+    // {
+    //   tag: 'Input',
+    //   name: 'userMobile',
+    //   title: '用户手机号',
+    //   // initValue: undefined,
+    // },
+    // {
+    //   tag: 'InputNumber',
+    //   name: 'orderCode',
+    //   title: '订单编号',
+    //   initValue: undefined,
+    // },
   ],
   handleFilterChange: () => {},
 
