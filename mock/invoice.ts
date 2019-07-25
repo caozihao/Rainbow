@@ -26,6 +26,17 @@ const queryByCustomIdAndEffactTime = (req: Request, res: Response) => {
   return res.status(200).send(result);
 };
 
+const postRequest = (req: Request, res: Response) => {
+  const result = {
+    code: 0,
+    errMsg: 'string',
+  };
+  return res.status(200).send(result);
+};
+
+
 export default {
   [`GET ${MOCK_API}/invoice/queryByCustomIdAndEffactTime`]: queryByCustomIdAndEffactTime,
+  [`POST ${MOCK_API}/invoice/relationToContract`]: postRequest,
+  [`POST ${MOCK_API}/invoice/syncByCustomId`]: postRequest,
 };

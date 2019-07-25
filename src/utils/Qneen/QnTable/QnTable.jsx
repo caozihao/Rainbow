@@ -21,24 +21,14 @@ class QnTable extends Component {
 
   componentWillMount() {
     const filteredColumns = this.getFilteredColumns(
-      this.props.defaultColumnValues || this.allColumnValues
+      this.props.defaultColumnValues || this.allColumnValues,
     );
     this.setState({ filteredColumns });
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {}
 
-  }
-
-  componentDidUpdate = prevProps => {
-    const { selectedRowKeys: prevSelectedRowKeys } = prevProps;
-    const { selectedRowKeys } = this.props;
-    if (JSON.stringify(selectedRowKeys) !== JSON.stringify(prevSelectedRowKeys)) {
-      this.setState({
-        selectedRowKeys,
-      });
-    }
-  };
+  componentDidUpdate = prevProps => {};
 
   getAllColumnValues = columns => {
     const values = [];
@@ -83,7 +73,7 @@ class QnTable extends Component {
       current,
       pageSize,
       hideOnSinglePage,
-      rowSelection
+      rowSelection,
     } = this.props;
     let pagination = false;
     if (this.props.hasPagination) {
@@ -140,6 +130,7 @@ class QnTable extends Component {
           pagination={pagination}
           loading={loading}
           rowSelection={rowSelection}
+
           scroll={this.props.scroll}
         />
       </div>

@@ -69,7 +69,6 @@ class QnListPage extends Component {
       current,
       hasPagination,
       pageSize,
-      selectedRowKeys,
       otherQnFilterProps,
       scroll,
       rowSelection,
@@ -125,7 +124,6 @@ class QnListPage extends Component {
               rowSelection={rowSelection}
               pageSize={pageSize}
               scroll={scroll}
-              selectedRowKeys={selectedRowKeys}
               otherProps={this.props.otherTableProps}
               {...this.props.otherQnTableProps}
             />

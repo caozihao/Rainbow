@@ -22,8 +22,6 @@ export default {
     updateCommission: `${host}/writeoff/updateCommission`,
   },
   invoice: {
-    deleteInvoiceByInvoiceId: `${host}/invoice/delete/:invoiceId`,
-    queryByCompanyByCustomId: `${host}/invoice/queryByCompany/:customId`,
     queryByCustomIdAndEffactTime: `${host}/invoice/queryByCustomIdAndEffactTime`,
     relationToContract: `${host}/invoice/relationToContract`,
     syncByCustomId: `${host}/invoice/sync/:customId`,

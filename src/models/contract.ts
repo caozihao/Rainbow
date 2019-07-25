@@ -30,7 +30,7 @@ export interface ContractModelType {
     queryById: Effect;
   };
   reducers: {
-    save: Reducer;
+    save: Reducer<ContractModelState>;
   };
 }
 

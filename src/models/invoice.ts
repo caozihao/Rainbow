@@ -15,14 +15,12 @@ export interface InvoiceModelType {
   namespace: string;
   state: InvoiceModelState;
   effects: {
-    deleteInvoiceByInvoiceId: Effect;
-    queryByCompanyByCustomId: Effect;
     relationToContract: Effect;
     syncByCustomId: Effect;
     queryByCustomIdAndEffactTime: Effect;
   };
   reducers: {
-    save: Reducer;
+    save: Reducer<InvoiceModelState>;
   };
 }
 
@@ -30,24 +28,6 @@ const InvoiceModel: InvoiceModelType = {
   namespace,
   state: initailState,
   effects: {
-    *deleteInvoiceByInvoiceId({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
-      const { code, errMsg } = data;
-      if (!code) {
-        successCallback && successCallback();
-      } else {
-        failCallback && failCallback(errMsg);
-      }
-    },
-    *queryByCompanyByCustomId({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
-      const { code, errMsg } = data;
-      if (!code) {
-        successCallback && successCallback();
-      } else {
-        failCallback && failCallback(errMsg);
-      }
-    },
     *queryByCustomIdAndEffactTime({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
@@ -64,7 +44,7 @@ const InvoiceModel: InvoiceModelType = {
       }
     },
     *relationToContract({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();

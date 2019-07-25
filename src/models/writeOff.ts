@@ -32,7 +32,7 @@ export interface WriteOffModelType {
     updateCommission: Effect;
   };
   reducers: {
-    save: Reducer;
+    save: Reducer<WriteOffModelState>;
   };
 }
 
