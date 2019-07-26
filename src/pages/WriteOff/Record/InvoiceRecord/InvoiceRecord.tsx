@@ -1,9 +1,9 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import { Card, Icon, Button, Tabs, Row, Col } from 'antd';
-import { QnListPage, QnFormModal } from '@/utils/Qneen/index';
+import { Button, Tabs } from 'antd';
 import withRouter from 'umi/withRouter';
+import { QnListPage } from '@/utils/Qneen';
 import { InvoiceModelState } from '@/models/invoice';
 import { genTableColumns } from '@/utils/format/dataGen';
 import tableListParams from '../tableListParams';
@@ -87,10 +87,10 @@ class ToBeRelated extends PureComponent<IProps, IState> {
       <div /* className={styles.ToBeRelated} */>
         {this.genMiddleSectionBeRelated()}
         <Tabs defaultActiveKey={defaultTabKey} onChange={this.changeTab}>
-          <TabPane tab="分期" key="instalment">
+          <TabPane tab="分期核销" key="instalment">
             <QnListPage {...QnListPagePropsBeRelated} />
           </TabPane>
-          <TabPane tab="服务费" key="serviceFee">
+          <TabPane tab="服务费核销" key="serviceFee">
             <QnListPage {...QnListPagePropsBeRelated} />
           </TabPane>
         </Tabs>

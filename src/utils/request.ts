@@ -15,32 +15,36 @@ import api from '../serviceApi';
  * @param bodyData(Object)：放在body里的数据
  */
 
-interface requestApiParams {
-  namespace: string;
+interface IReq {
+  method: string;
+  params?: object;
+  data?: string;
+}
+
+interface IRequestApiParams {
   apiName: string;
   reqType: string;
   placeholerData?: object;
   queryData?: object;
   bodyData?: object;
+  namespace: string;
 }
 
 export function requestApi({
-  namespace,
   apiName,
   reqType,
   placeholerData,
   queryData,
   bodyData,
-}: requestApiParams) {
-  // console.log('namespace ->', namespace);
-  // const =requestParams;
-
+  namespace,
+}: IRequestApiParams) {
   // const method = reqType.toLowerCase();
-
   let url = api[namespace][apiName];
-  const req = { method: reqType, params: {}, data: {} };
-  const params = placeholerData ? Object.keys(placeholerData) : [];
+  const req: IReq = { method: reqType };
+
+  let params = [];
   if (placeholerData) {
+    params = Object.keys(placeholerData);
     for (let i = 0; i < params.length; i += 1) {
       url = url.replace(`:${params[i]}`, placeholerData[params[i]]);
     }
@@ -52,11 +56,8 @@ export function requestApi({
   }
 
   if (bodyData && Object.keys(bodyData).length) {
-    req.data = bodyData;
+    req.data = JSON.stringify(bodyData);
   }
-
-  // console.log('url ->', url);
-  // console.log('req ->', req);
   return request(url, req);
 }
 

@@ -6,10 +6,9 @@ import withRouter from 'umi/withRouter';
 import { InvoiceModelState } from '@/models/invoice';
 import { ContractModelState } from '@/models/contract';
 import { getPageQuery } from '@/utils/utils';
-import styles from './Invoice.less';
 import BeRelated from './BeRelated/BeRelated';
 import ToBeRelated from './ToBeRelated/ToBeRelated';
-
+import styles from '../WriteOff.less';
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
   contract: ContractModelState;
@@ -21,9 +20,6 @@ interface IProps extends ConnectProps, InvoiceModelState, ContractModelState {
 }
 
 interface IState {
-  selectedRowKeysToBeRelated: Array<any>;
-  selectedRowKeysBeRelate: Array<any>;
-  defaultTabKey: string;
 }
 
 @connect(({ invoice, contract }: IConnectState) => {

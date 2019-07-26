@@ -3,12 +3,14 @@ import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
 import { Icon, Button, Spin, message } from 'antd';
 import withRouter from 'umi/withRouter';
-import { QnListPage } from '@/utils/Qneen/index';
+import { QnListPage } from '@/utils/Qneen';
 import { InvoiceModelState } from '@/models/invoice';
 import { genTableColumns } from '@/utils/format/dataGen';
 import tableListParams from '../tableListParams';
 import { getPageQuery } from '@/utils/utils';
+
 import styles from '../../WriteOff.less';
+
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
 }
@@ -30,7 +32,7 @@ interface IState {
     dataList,
   };
 })
-class ToBeRelated extends PureComponent<IProps, IState> {
+class WriteOffSettlement extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -135,4 +137,4 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   }
 }
 
-export default withRouter(ToBeRelated as React.ComponentClass<any>);
+export default withRouter(WriteOffSettlement as React.ComponentClass<any>);

@@ -1,36 +1,116 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import {} from 'antd';
+import { Card, Tabs, Row, Col } from 'antd';
 import withRouter from 'umi/withRouter';
-// import { RecordModelState, namespace } from '../../../../models/Record';
-//import styles from './Record.less';
+import { InvoiceModelState } from '@/models/invoice';
+import { ContractModelState } from '@/models/contract';
+import { getPageQuery } from '@/utils/utils';
+import InvoiceRecord from './InvoiceRecord/InvoiceRecord';
+import WriteOffSettlement from './WriteOffSettlement/WriteOffSettlement';
+
+import styles from '../WriteOff.less';
 
 interface IConnectState extends ConnectState {
-  //  [namespace]: RecordModelState;
+  invoice: InvoiceModelState;
+  contract: ContractModelState;
 }
 
-interface IProps extends ConnectProps {
+interface IProps extends ConnectProps, InvoiceModelState, ContractModelState {
   dispatch: Dispatch;
+  contractDetail: Object;
 }
 
-interface IState {}
+interface IState {
+}
 
-@connect(({  }: IConnectState) => ({}))
+@connect(({ invoice, contract }: IConnectState) => {
+  const { dataList } = invoice;
+  const { detail } = contract;
+  return {
+    dataList,
+    contractDetail: detail,
+  };
+})
 class Record extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {};
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.queryById();
+  }
 
   componentDidUpdate() {}
 
-  // handleClick = (e: Object): void => {};
+  queryByCustomIdAndEffactTime = () => {
+    const { dispatch, contractDetail } = this.props;
+    const { customId, effectiveDate } = contractDetail;
+    console.log('contractDetail ->', contractDetail);
+    dispatch({
+      type: 'invoice/queryByCustomIdAndEffactTime',
+      payload: {
+        apiName: 'queryByCustomIdAndEffactTime',
+        reqType: 'GET',
+        queryData: {
+          customId,
+          effectiveDate,
+        },
+      },
+      successCallback: () => {},
+    });
+  };
+
+  queryById = () => {
+    const contractId = getPageQuery('contractId');
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'contract/queryById',
+      payload: {
+        apiName: 'queryById',
+        reqType: 'GET',
+        placeholerData: {
+          contractId,
+        },
+      },
+      successCallback: () => {
+        this.queryByCustomIdAndEffactTime();
+      },
+    });
+  };
 
   render() {
-    return <div /* className={styles.Record} */>内容</div>;
+    const { contractDetail } = this.props;
+    const genContractInfo = () => {
+      const { customId, contractNo, effectiveDate, customName } = contractDetail;
+      return (
+        <Fragment>
+          <h3>合同信息</h3>
+          {/* <Row>
+            <Col span={6}>客户编号：{customId}</Col>
+            <Col span={6}>合同编号：{contractNo}</Col>
+            <Col span={6}>生效时间：{effectiveDate}</Col>
+            <Col span={6}>客户名称：{customName}</Col>
+          </Row> */}
+          <div className={styles.headLayout}>
+            <span>客户编号：{customId}</span>
+            <span>合同编号：{contractNo}</span>
+            <span>生效时间：{effectiveDate}</span>
+            <span>客户名称：{customName}</span>
+          </div>
+          <br />
+        </Fragment>
+      );
+    };
+
+    return (
+      <Card className="wrapper-right-content" title="查看/编辑核销记录">
+        {contractDetail ? genContractInfo() : ''}
+        <InvoiceRecord />
+        <WriteOffSettlement />
+      </Card>
+    );
   }
 }
 
