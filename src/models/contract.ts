@@ -39,7 +39,7 @@ const ContractModel: ContractModelType = {
   state: initailState,
   effects: {
     *create({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
@@ -48,7 +48,7 @@ const ContractModel: ContractModelType = {
       }
     },
     *getContractFileById({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
@@ -57,7 +57,7 @@ const ContractModel: ContractModelType = {
       }
     },
     *modify({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();

@@ -9,6 +9,7 @@ import { genTableColumns } from '@/utils/format/dataGen';
 import tableListParams from '../tableListParams';
 import { getPageQuery } from '@/utils/utils';
 import styles from '../../WriteOff.less';
+import { IQueryParams } from '../../writeoff.d';
 
 const { TabPane } = Tabs;
 
@@ -42,6 +43,8 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     };
   }
 
+  queryParams: IQueryParams = getPageQuery();
+
   componentDidMount() {}
 
   componentDidUpdate() {}
@@ -69,7 +72,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   unRelationToContract = () => {
     const { dispatch } = this.props;
     const { selectedRowKeys } = this.state;
-    const contractId = getPageQuery('contractId');
+    const { contractId } = this.queryParams;
     dispatch({
       type: 'invoice/unRelationToContract',
       payload: {

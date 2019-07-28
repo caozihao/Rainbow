@@ -1,54 +1,76 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import { Button, Tabs } from 'antd';
+import { Button } from 'antd';
 import withRouter from 'umi/withRouter';
 import { QnListPage } from '@/utils/Qneen';
 import { InvoiceModelState } from '@/models/invoice';
+import { ContractModelState } from '@/models/contract';
 import { genTableColumns } from '@/utils/format/dataGen';
-import tableListParams from '../tableListParams';
+import tableListParams from '../invoiceRecordDataList';
 import styles from '../../WriteOff.less';
-
-const { TabPane } = Tabs;
+import { getPageQuery } from '@/utils/utils';
+import { IQueryParams, IContractDetail } from '../../writeoff.d';
 
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
+  contract: ContractModelState;
 }
 
 interface IProps extends ConnectProps, InvoiceModelState {
   dispatch: Dispatch;
+  contractDetail: IContractDetail;
 }
 
 interface IState {
-  selectedRowKeys: Array<any>;
   defaultTabKey: string;
 }
 
-@connect(({ invoice }: IConnectState) => {
-  const { dataList } = invoice;
+@connect(({ invoice, contract }: IConnectState) => {
+  const { invoiceRecordDataList } = invoice;
+  const { detail } = contract;
   return {
-    dataList,
+    invoiceRecordDataList,
+    contractDetail: detail,
   };
 })
 class ToBeRelated extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      selectedRowKeys: [],
       defaultTabKey: 'instalment',
     };
   }
 
-  componentDidMount() {}
+  queryParams: IQueryParams = getPageQuery();
+
+  componentDidMount() {
+    this.queryRelatedInvoice();
+  }
 
   componentDidUpdate() {}
+
+  queryRelatedInvoice = () => {
+    const { contractId } = this.queryParams;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'invoice/queryRelatedInvoice',
+      payload: {
+        apiName: 'queryRelatedInvoice',
+        reqType: 'GET',
+        queryData: {
+          contractId,
+        },
+      },
+      successCallback: () => {},
+    });
+  };
 
   genMiddleSectionBeRelated = () => {
     return (
       <Fragment>
-        <br />
-        <div className={styles.headLayout}>
-          <h3>已关联的发票信息 11</h3>
+        <div className={styles.headLayout} style={{ marginBottom: '1rem' }}>
+          <h3>发票记录</h3>
           <Button style={{ marginRight: '1rem' }} type="danger">
             删除
           </Button>
@@ -57,43 +79,49 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     );
   };
 
-  changeTab = (key: string) => {
-    console.log('key ->', key);
+  getExtraData = () => {
+    const { invoiceRecordDataList, contractDetail } = this.props;
+    let result = invoiceRecordDataList;
+    if (contractDetail && Object.keys(contractDetail).length) {
+      const { firstPayment, receivableNum } = contractDetail;
+      result = invoiceRecordDataList.map(v => {
+        v.firstPayment = firstPayment;
+        v.receivableNum = receivableNum;
+        return v;
+      });
+    }
+    return result;
   };
 
   render() {
-    const { dataList } = this.props;
-    const { defaultTabKey } = this.state;
     const copyTableListParams = Object.assign({}, tableListParams);
+    const copyInvoiceRecordDataList = this.getExtraData();
 
     const QnListPagePropsBeRelated: object = {
-      dataSource: dataList,
+      dataSource: copyInvoiceRecordDataList,
       columns: genTableColumns(copyTableListParams),
-      title: '已关联的发票信息',
-      rowSelection: {
-        onChange: (selectedRowKeys = [], selectedRows = []) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          this.setState({
-            selectedRowKeys,
-          });
-        },
-      },
-      col: 2,
-      total: dataList.length,
       hasPagination: false,
+      // otherTableProps: {
+      //   footer: (pageData: []) => {
+      //     console.log('pageData ->', pageData);
+      //     const amountData = [];
+      //     pageData.forEach(v => {
+      //       amountData.push(parseFloat(v.amount));
+      //     });
+      //     const number = amountData.reduce((total, num) => total + num, 0);
+      //     return (
+      //       <div>
+      //         <h3>合计 | 发票金额 : {number} </h3>
+      //       </div>
+      //     );
+      //   },
+      // },
     };
 
     return (
       <div /* className={styles.ToBeRelated} */>
         {this.genMiddleSectionBeRelated()}
-        <Tabs defaultActiveKey={defaultTabKey} onChange={this.changeTab}>
-          <TabPane tab="分期核销" key="instalment">
-            <QnListPage {...QnListPagePropsBeRelated} />
-          </TabPane>
-          <TabPane tab="服务费核销" key="serviceFee">
-            <QnListPage {...QnListPagePropsBeRelated} />
-          </TabPane>
-        </Tabs>
+        <QnListPage {...QnListPagePropsBeRelated} />
       </div>
     );
   }

@@ -4,129 +4,83 @@ import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
 import { Icon, Button, Spin, message } from 'antd';
 import withRouter from 'umi/withRouter';
 import { QnListPage } from '@/utils/Qneen';
-import { InvoiceModelState } from '@/models/invoice';
+import { WriteOffModelState } from '@/models/writeOff';
 import { genTableColumns } from '@/utils/format/dataGen';
-import tableListParams from '../tableListParams';
+import { ContractModelState } from '@/models/contract';
+import tableListParams from '../writeOffRecordDataList.tsx';
+import { IQueryParams, IContractDetail } from '../../writeoff.d';
 import { getPageQuery } from '@/utils/utils';
 
 import styles from '../../WriteOff.less';
 
 interface IConnectState extends ConnectState {
-  invoice: InvoiceModelState;
+  writeOff: WriteOffModelState;
+  contract: ContractModelState;
 }
 
-interface IProps extends ConnectProps, InvoiceModelState {
+interface IProps extends ConnectProps, WriteOffModelState {
   dispatch: Dispatch;
   relationToContractLoading: Boolean;
 }
 
-interface IState {
-  selectedRowKeys: Array<any>;
-  defaultTabKey: string;
-}
+interface IState {}
 
-@connect(({ invoice, loading }: IConnectState) => {
-  const { dataList } = invoice;
+@connect(({ writeOff, loading }: IConnectState) => {
+  const { writeOffRecordDataList } = writeOff;
   return {
-    relationToContractLoading: loading.effects['invoice/relationToContract'],
-    dataList,
+    // relationToContractLoading: loading.effects['invoice/relationToContract'],
+    writeOffRecordDataList,
   };
 })
 class WriteOffSettlement extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this.state = {
-      selectedRowKeys: [],
-      defaultTabKey: 'instalment',
-    };
+    this.state = {};
   }
 
-  componentDidMount() {}
+  queryParams: IQueryParams = getPageQuery();
+
+  componentDidMount() {
+    this.querySettlementByContractId();
+  }
 
   componentDidUpdate() {}
 
-  relationToContract = (type: string) => {
+  querySettlementByContractId = () => {
+    const { contractId } = this.queryParams;
     const { dispatch } = this.props;
-    const { selectedRowKeys } = this.state;
-    const contractId = getPageQuery('contractId');
     dispatch({
-      type: 'invoice/relationToContract',
+      type: 'writeOff/querySettlementByContractId',
       payload: {
-        apiName: 'relationToContract',
-        reqType: 'POST',
-        bodyData: {
+        apiName: 'querySettlementByContractId',
+        reqType: 'GET',
+        placeholerData: {
           contractId,
-          invoiceIds: selectedRowKeys,
-          type,
         },
       },
-      successCallback: () => {
-        this.setState({
-          selectedRowKeys: [],
-        });
-        message.success('添加成功');
-      },
+      successCallback: () => {},
     });
   };
 
   genMiddleSectionToBeRelated = () => {
-    const { selectedRowKeys } = this.state;
     return (
-      <Fragment>
-        <div className={styles.headLayout}>
-          <h3>
-            待关联的发票信息{' '}
-            <a
-              onClick={() => {
-                alert('刷新');
-              }}
-              href="javascript:void(0)"
-            >
-              <Icon type="sync" style={{ marginLeft: '0.5rem' }} />
-            </a>
-          </h3>
-          <div>
-            <Button
-              disabled={!selectedRowKeys.length}
-              onClick={() => this.relationToContract('0')}
-              style={{ marginRight: '1rem' }}
-              type="primary"
-            >
-              添加到分期
-            </Button>
-            <Button disabled={!selectedRowKeys.length} onClick={() => this.relationToContract('1')}>
-              添加到服务费
-            </Button>
-          </div>
-        </div>
-        <br />
-      </Fragment>
+      <div className={styles.headLayout} style={{ margin: '1rem 0' }}>
+        <h3>核销结算</h3>
+      </div>
     );
   };
 
   render() {
-    const { dataList, relationToContractLoading } = this.props;
-    const { selectedRowKeys } = this.state;
+    const {} = this.props;
+    const { writeOffRecordDataList, relationToContractLoading } = this.props;
     const copyTableListParams = Object.assign({}, tableListParams);
 
-    console.log('selectedRowKeys ->', selectedRowKeys);
     const QnListPagePropsToBeRelated: object = {
-      dataSource: dataList,
+      dataSource: writeOffRecordDataList,
       columns: genTableColumns(copyTableListParams),
-      title: '',
-      rowSelection: {
-        selectedRowKeys,
-        onChange: (selectedRowKeys = [], selectedRows = []) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          this.setState({
-            selectedRowKeys,
-          });
-        },
-      },
-      col: 2,
-      total: dataList.length,
       hasPagination: false,
       middleSection: this.genMiddleSectionToBeRelated(),
+      rowKey: (_, index) => index,
     };
 
     return (

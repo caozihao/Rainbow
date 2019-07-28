@@ -18,6 +18,7 @@ export default {
     exportCommissionByContractId: `${host}/writeoff/exportCommission/:contractId`,
     queryByContractId: `${host}/writeoff/queryByContractId/{contractId}`,
     queryCommissionByContractId: `${host}/writeoff/queryCommissionByContractId/:contractId`,
+    querySettlementByContractId: `${host}/writeoff/querySettlementByContractId/:contractId`,
     update: `${host}/writeoff/update`,
     updateCommission: `${host}/writeoff/updateCommission`,
   },
@@ -26,5 +27,6 @@ export default {
     relationToContract: `${host}/invoice/relationToContract`,
     unRelationToContract: `${host}/invoice/unRelationToContract`,
     syncByCustomId: `${host}/invoice/sync/:customId`,
+    queryRelatedInvoice: `${host}/invoice/queryRelatedInvoice`,
   },
 };

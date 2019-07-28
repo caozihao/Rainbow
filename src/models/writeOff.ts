@@ -5,14 +5,14 @@ import { requestApi } from '../utils/request';
 export const namespace = 'writeOff';
 
 export interface WriteOffModelState {
-  // dataList: object;
+  writeOffRecordDataList: object;
   // dataPageTotal: number;
   // dataPageNo: number;
   // dataPageSize: number;
 }
 
 const initailState = {
-  // dataList: [],
+  writeOffRecordDataList: [],
   // dataPageTotal: 0,
   // dataPageNo: 0,
   // dataPageSize: 0,
@@ -28,6 +28,7 @@ export interface WriteOffModelType {
     exportCommissionByContractId: Effect;
     queryByContractId: Effect;
     queryCommissionByContractId: Effect;
+    querySettlementByContractId: Effect;
     update: Effect;
     updateCommission: Effect;
   };
@@ -41,7 +42,7 @@ const WriteOffModel: WriteOffModelType = {
   state: initailState,
   effects: {
     *deleteByWriteOffId({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
@@ -50,7 +51,7 @@ const WriteOffModel: WriteOffModelType = {
       }
     },
     *deleteCommissionByWriteOffId({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
@@ -59,7 +60,7 @@ const WriteOffModel: WriteOffModelType = {
       }
     },
     *exportByContractId({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
@@ -68,7 +69,7 @@ const WriteOffModel: WriteOffModelType = {
       }
     },
     *exportCommissionByContractId({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
@@ -77,7 +78,7 @@ const WriteOffModel: WriteOffModelType = {
       }
     },
     *queryByContractId({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
@@ -86,7 +87,7 @@ const WriteOffModel: WriteOffModelType = {
       }
     },
     *queryCommissionByContractId({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
@@ -94,8 +95,23 @@ const WriteOffModel: WriteOffModelType = {
         failCallback && failCallback(errMsg);
       }
     },
+    *querySettlementByContractId({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg, body } = data;
+      if (!code) {
+        yield put({
+          type: 'save',
+          payload: {
+            writeOffRecordDataList: body,
+          },
+        });
+        successCallback && successCallback();
+      } else {
+        failCallback && failCallback(errMsg);
+      }
+    },
     *update({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
@@ -104,7 +120,7 @@ const WriteOffModel: WriteOffModelType = {
       }
     },
     *updateCommission({ payload, successCallback, failCallback }, { call, put }) {
-      const { data } = yield call(requestApi, { ...payload, namespace });
+      const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
         successCallback && successCallback();
@@ -112,7 +128,6 @@ const WriteOffModel: WriteOffModelType = {
         failCallback && failCallback(errMsg);
       }
     },
-
   },
   reducers: {
     save(state: any, { payload = {} }) {

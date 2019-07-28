@@ -10,14 +10,14 @@ import { genTableColumns } from '@/utils/format/dataGen';
 import tableFilterParams from './tableFilterParams';
 import { ContractModelState } from '@/models/contract';
 import { WriteOffModelState, namespace } from '@/models/writeOff';
-import { formDict, formInitialValueObj } from './formParams';
 import {
   getPageQuery,
   dealWithQueryParams,
   updateRoute,
   initializeFilterParams,
 } from '@/utils/utils';
-import { formatMoment } from '@/utils/format/dataFormatter';
+
+
 
 interface IConnectState extends ConnectState {
   [namespace]: WriteOffModelState;
@@ -57,17 +57,20 @@ class WriteOff extends PureComponent<IProps, IState> {
       const { contractId } = record;
       return (
         <Fragment>
-          <Link to="/writeoff/record?type=detail">
-            {/* <Button style={{ marginRight: '1rem' }}>查看</Button> */}
-            <Icon type="search" style={{ marginRight: '1rem' }} title="查看" />
-          </Link>
-          <Link to={`/writeoff/invoice?contractId=${contractId}`}>
+          <Link to={`/writeoff/invoice?contractId=${contractId}`} style={{ marginRight: '0.5rem' }}>
             {/* <Button style={{ marginRight: '1rem' }}>添加发票</Button> */}
-            <Icon type="plus" style={{ marginRight: '1rem' }} title="添加发票" />
+            <Icon type="plus" title="添加发票" />
           </Link>
-          <Link to="/writeoff/record?type=edit&&id=1">
+          <Link
+            to={`/writeoff/record?type=edit&&contractId=${contractId}`}
+            style={{ marginRight: '0.5rem' }}
+          >
             {/* <Button type="primary">编辑核销记录</Button> */}
             <Icon type="edit" title="编辑核销记录" />
+          </Link>
+          <Link to={`/writeoff/record?type=detail&&contractId=${contractId}`}>
+            {/* <Button style={{ marginRight: '1rem' }}>查看</Button> */}
+            <Icon type="search" title="查看" />
           </Link>
         </Fragment>
       );

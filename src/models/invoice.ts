@@ -5,10 +5,12 @@ import { requestApi } from '../utils/request';
 export const namespace = 'invoice';
 export interface InvoiceModelState {
   dataList: Array<any>;
+  invoiceRecordDataList: Array<any>;
 }
 
 const initailState = {
   dataList: [],
+  invoiceRecordDataList: [],
 };
 
 export interface InvoiceModelType {
@@ -19,6 +21,7 @@ export interface InvoiceModelType {
     unRelationToContract: Effect;
     syncByCustomId: Effect;
     queryByCustomIdAndEffectTime: Effect;
+    queryRelatedInvoice: Effect;
   };
   reducers: {
     save: Reducer<InvoiceModelState>;
@@ -57,6 +60,21 @@ const InvoiceModel: InvoiceModelType = {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!code) {
+        successCallback && successCallback();
+      } else {
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *queryRelatedInvoice({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg, body } = data;
+      if (!code) {
+        yield put({
+          type: 'save',
+          payload: {
+            invoiceRecordDataList: body,
+          },
+        });
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);

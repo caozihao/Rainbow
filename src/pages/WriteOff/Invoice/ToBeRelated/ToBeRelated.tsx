@@ -9,7 +9,7 @@ import { genTableColumns } from '@/utils/format/dataGen';
 import { ContractModelState } from '@/models/contract';
 import tableListParams from '../tableListParams';
 import { getPageQuery } from '@/utils/utils';
-import { IContractDetail } from '../../writeoff.d';
+import { IContractDetail,IQueryParams } from '../../writeoff.d';
 import styles from '../../WriteOff.less';
 
 interface IConnectState extends ConnectState {
@@ -44,6 +44,8 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     };
   }
 
+  queryParams: IQueryParams = getPageQuery();
+
   componentDidMount() {}
 
   componentDidUpdate() {}
@@ -51,7 +53,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   relationToContract = (type: string) => {
     const { dispatch } = this.props;
     const { selectedRowKeys } = this.state;
-    const contractId = getPageQuery('contractId');
+    const { contractId } = this.queryParams;
     dispatch({
       type: 'invoice/relationToContract',
       payload: {

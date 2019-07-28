@@ -1,27 +1,30 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import { Card, Tabs, Row, Col } from 'antd';
+import { Card, Tabs } from 'antd';
 import withRouter from 'umi/withRouter';
 import { InvoiceModelState } from '@/models/invoice';
 import { ContractModelState } from '@/models/contract';
-import { getPageQuery } from '@/utils/utils';
+import { getPageQuery, updateRoute } from '@/utils/utils';
 import InvoiceRecord from './InvoiceRecord/InvoiceRecord';
+import { IQueryParams, IContractDetail } from '../writeoff.d';
 import WriteOffSettlement from './WriteOffSettlement/WriteOffSettlement';
-
 import styles from '../WriteOff.less';
+
+const { TabPane } = Tabs;
 
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
   contract: ContractModelState;
 }
 
-interface IProps extends ConnectProps, InvoiceModelState, ContractModelState {
+interface IProps extends ConnectProps, InvoiceModelState {
   dispatch: Dispatch;
-  contractDetail: Object;
+  contractDetail: IContractDetail;
 }
 
 interface IState {
+  tabKey: string;
 }
 
 @connect(({ invoice, contract }: IConnectState) => {
@@ -35,8 +38,12 @@ interface IState {
 class Record extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      tabKey: this.queryParams['tabKey'] || 'stageWriteOff',
+    };
   }
+
+  queryParams: IQueryParams = getPageQuery();
 
   componentDidMount() {
     this.queryById();
@@ -44,26 +51,8 @@ class Record extends PureComponent<IProps, IState> {
 
   componentDidUpdate() {}
 
-  queryByCustomIdAndEffectTime = () => {
-    const { dispatch, contractDetail } = this.props;
-    const { customId, effectiveDate } = contractDetail;
-    console.log('contractDetail ->', contractDetail);
-    dispatch({
-      type: 'invoice/queryByCustomIdAndEffectTime',
-      payload: {
-        apiName: 'queryByCustomIdAndEffectTime',
-        reqType: 'GET',
-        queryData: {
-          customId,
-          effectiveDate,
-        },
-      },
-      successCallback: () => {},
-    });
-  };
-
   queryById = () => {
-    const contractId = getPageQuery('contractId');
+    const { contractId } = this.queryParams;
     const { dispatch } = this.props;
     dispatch({
       type: 'contract/queryById',
@@ -74,14 +63,20 @@ class Record extends PureComponent<IProps, IState> {
           contractId,
         },
       },
-      successCallback: () => {
-        this.queryByCustomIdAndEffectTime();
-      },
+      successCallback: () => {},
     });
+  };
+
+  changeTab = (tabType: string) => {
+    console.log('tabType ->', tabType);
+    const newQueryParams = Object.assign(this.queryParams, { tabType });
+    console.log('newQueryParams ->', newQueryParams);
+    updateRoute(newQueryParams);
   };
 
   render() {
     const { contractDetail } = this.props;
+    const { tabKey } = this.state;
     const genContractInfo = () => {
       const { customId, contractNo, effectiveDate, customName } = contractDetail;
       return (
@@ -104,11 +99,21 @@ class Record extends PureComponent<IProps, IState> {
       );
     };
 
+    const pageTitle = this.queryParams.type === 'edit' ? '编辑' : '查看';
+
     return (
-      <Card className="wrapper-right-content" title="查看/编辑核销记录">
+      <Card className="wrapper-right-content" title={pageTitle}>
         {contractDetail ? genContractInfo() : ''}
-        <InvoiceRecord />
-        <WriteOffSettlement />
+
+        <Tabs defaultActiveKey={tabKey} onChange={this.changeTab}>
+          <TabPane tab="分期核销" key="stageWriteOff">
+            <InvoiceRecord />
+            <WriteOffSettlement />
+          </TabPane>
+          <TabPane tab="服务费核销" key="serviceWriteOff">
+            serviceWriteOff
+          </TabPane>
+        </Tabs>
       </Card>
     );
   }
