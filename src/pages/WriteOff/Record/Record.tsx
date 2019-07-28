@@ -44,14 +44,14 @@ class Record extends PureComponent<IProps, IState> {
 
   componentDidUpdate() {}
 
-  queryByCustomIdAndEffactTime = () => {
+  queryByCustomIdAndEffectTime = () => {
     const { dispatch, contractDetail } = this.props;
     const { customId, effectiveDate } = contractDetail;
     console.log('contractDetail ->', contractDetail);
     dispatch({
-      type: 'invoice/queryByCustomIdAndEffactTime',
+      type: 'invoice/queryByCustomIdAndEffectTime',
       payload: {
-        apiName: 'queryByCustomIdAndEffactTime',
+        apiName: 'queryByCustomIdAndEffectTime',
         reqType: 'GET',
         queryData: {
           customId,
@@ -75,7 +75,7 @@ class Record extends PureComponent<IProps, IState> {
         },
       },
       successCallback: () => {
-        this.queryByCustomIdAndEffactTime();
+        this.queryByCustomIdAndEffectTime();
       },
     });
   };

@@ -6,28 +6,34 @@ import withRouter from 'umi/withRouter';
 import { QnListPage } from '@/utils/Qneen/index';
 import { InvoiceModelState } from '@/models/invoice';
 import { genTableColumns } from '@/utils/format/dataGen';
+import { ContractModelState } from '@/models/contract';
 import tableListParams from '../tableListParams';
 import { getPageQuery } from '@/utils/utils';
+import { IContractDetail } from '../../writeoff.d';
 import styles from '../../WriteOff.less';
+
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
+  contract: ContractModelState;
 }
 
 interface IProps extends ConnectProps, InvoiceModelState {
   dispatch: Dispatch;
   relationToContractLoading: Boolean;
+  contractDetail: IContractDetail;
 }
 
 interface IState {
   selectedRowKeys: Array<any>;
-  defaultTabKey: string;
 }
 
-@connect(({ invoice, loading }: IConnectState) => {
+@connect(({ invoice, loading, contract }: IConnectState) => {
   const { dataList } = invoice;
+  const { detail } = contract;
   return {
     relationToContractLoading: loading.effects['invoice/relationToContract'],
     dataList,
+    contractDetail: detail,
   };
 })
 class ToBeRelated extends PureComponent<IProps, IState> {
@@ -35,7 +41,6 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     super(props);
     this.state = {
       selectedRowKeys: [],
-      defaultTabKey: 'instalment',
     };
   }
 
@@ -67,19 +72,32 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     });
   };
 
+  syncByCustomId = () => {
+    const { dispatch, contractDetail } = this.props;
+    const { customId } = contractDetail;
+    dispatch({
+      type: 'invoice/syncByCustomId',
+      payload: {
+        apiName: 'syncByCustomId',
+        reqType: 'POST',
+        placeholerData: {
+          customId,
+        },
+      },
+      successCallback: () => {
+        message.success('刷新成功');
+      },
+    });
+  };
+
   genMiddleSectionToBeRelated = () => {
     const { selectedRowKeys } = this.state;
     return (
       <Fragment>
         <div className={styles.headLayout}>
           <h3>
-            待关联的发票信息{' '}
-            <a
-              onClick={() => {
-                alert('刷新');
-              }}
-              href="javascript:void(0)"
-            >
+            待关联的发票信息
+            <a onClick={this.syncByCustomId}>
               <Icon type="sync" style={{ marginLeft: '0.5rem' }} />
             </a>
           </h3>

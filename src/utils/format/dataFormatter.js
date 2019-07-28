@@ -33,25 +33,27 @@ export function roundDown(num, bit = 2) {
 
 // 数字增加千分位分隔符
 export function getNumWithCommas(num, separator = ',') {
+  let result = '';
   if (typeof num !== 'undefined') {
-    const parts = num.toString().split('.');
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, separator);
-    return parts.join('.');
-  } else {
-    return '';
+      const parts = num.toString().split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+      result = parts.join('.');
   }
+  return result;
 }
 
 export function formatDate(date, withTime = true) {
+  let result = '';
   if (typeof date === 'undefined') {
-    return '';
+      result = '';
   }
   const m = moment(date);
   if (withTime) {
-    return m.format('YYYY-MM-DD HH:mm');
+      result = m.format('YYYY-MM-DD HH:mm');
   } else {
-    return m.format('YYYY-MM-DD');
+      result = m.format('YYYY-MM-DD');
   }
+  return result;
 }
 
 export function formatMoment(date, format = 'YYYY-MM-DD HH:mm:ss') {
@@ -68,14 +70,14 @@ export function formatTime(time, format = 'HH:mm:ss') {
 
 export function formatFloat(num, comma = true, fixed = 2) {
   let result = 0;
-  if (num !== null && !isNaN(num)) {
-    result = num;
+  if (num !== null && !Number(num)) {
+      result = num;
   }
   if (typeof fixed !== 'undefined') {
-    result = round(result, fixed);
+      result = round(result, fixed);
   }
   if (comma) {
-    result = getNumWithCommas(result);
+      result = getNumWithCommas(result);
   }
   return result;
 }
@@ -84,17 +86,18 @@ export function formatMoney(value, prefix = '￥', suffix = '', colored = true, 
   let content = value;
   let style = {};
   if (value) {
-    if (value < 0) {
-      style = { color: 'red' };
-    } else if (colored) {
-      style = { color: 'green' };
-    }
-    const number = formatFloat(value, true, fixed);
-    content = <span style={style}>{`${prefix}${number}${suffix}`}</span>;
-    // content = (<span style={style} >{number}</span>);
+      if (value < 0) {
+          style = { color: 'red' };
+      } else if (colored) {
+          style = { color: 'green' };
+      }
+      const number = formatFloat(value, true, fixed);
+      content = <span style={style}>{`${prefix}${number}${suffix}`}</span>;
+      // content = (<span style={style} >{number}</span>);
   } else if (value === 0) {
-    content = '-';
+      content = '-';
   }
+  // eslint-disable-next-line react/react-in-jsx-scope
   const result = <div style={{ textAlign: 'right' }}>{content}</div>;
   return result;
 }

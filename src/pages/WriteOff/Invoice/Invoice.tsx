@@ -8,19 +8,19 @@ import { ContractModelState } from '@/models/contract';
 import { getPageQuery } from '@/utils/utils';
 import BeRelated from './BeRelated/BeRelated';
 import ToBeRelated from './ToBeRelated/ToBeRelated';
+import { IContractDetail } from '../writeoff.d';
 import styles from '../WriteOff.less';
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
   contract: ContractModelState;
 }
 
-interface IProps extends ConnectProps, InvoiceModelState, ContractModelState {
+interface IProps extends ConnectProps, InvoiceModelState {
   dispatch: Dispatch;
-  contractDetail: Object;
+  contractDetail: IContractDetail;
 }
 
-interface IState {
-}
+interface IState {}
 
 @connect(({ invoice, contract }: IConnectState) => {
   const { dataList } = invoice;
@@ -42,14 +42,14 @@ class Invoice extends PureComponent<IProps, IState> {
 
   componentDidUpdate() {}
 
-  queryByCustomIdAndEffactTime = () => {
+  queryByCustomIdAndEffectTime = () => {
     const { dispatch, contractDetail } = this.props;
     const { customId, effectiveDate } = contractDetail;
     console.log('contractDetail ->', contractDetail);
     dispatch({
-      type: 'invoice/queryByCustomIdAndEffactTime',
+      type: 'invoice/queryByCustomIdAndEffectTime',
       payload: {
-        apiName: 'queryByCustomIdAndEffactTime',
+        apiName: 'queryByCustomIdAndEffectTime',
         reqType: 'GET',
         queryData: {
           customId,
@@ -73,7 +73,7 @@ class Invoice extends PureComponent<IProps, IState> {
         },
       },
       successCallback: () => {
-        this.queryByCustomIdAndEffactTime();
+        this.queryByCustomIdAndEffectTime();
       },
     });
   };

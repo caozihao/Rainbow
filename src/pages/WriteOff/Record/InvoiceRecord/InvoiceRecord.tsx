@@ -48,7 +48,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
       <Fragment>
         <br />
         <div className={styles.headLayout}>
-          <h3>已关联的发票信息</h3>
+          <h3>已关联的发票信息 11</h3>
           <Button style={{ marginRight: '1rem' }} type="danger">
             删除
           </Button>

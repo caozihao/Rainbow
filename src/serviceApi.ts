@@ -22,8 +22,9 @@ export default {
     updateCommission: `${host}/writeoff/updateCommission`,
   },
   invoice: {
-    queryByCustomIdAndEffactTime: `${host}/invoice/queryByCustomIdAndEffactTime`,
+    queryByCustomIdAndEffectTime: `${host}/invoice/queryByCustomIdAndEffectTime`,
     relationToContract: `${host}/invoice/relationToContract`,
+    unRelationToContract: `${host}/invoice/unRelationToContract`,
     syncByCustomId: `${host}/invoice/sync/:customId`,
   },
 };

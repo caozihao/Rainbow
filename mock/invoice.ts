@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
+import { postRequest } from './common';
 import config from '../config/constant.config';
 
 const Mockjs = require('mockjs');
 const { Random, mock } = Mockjs;
 const { MOCK_API } = config;
 
-const queryByCustomIdAndEffactTime = (req: Request, res: Response) => {
+const queryByCustomIdAndEffectTime = (req: Request, res: Response) => {
   const result = mock({
     'body|10': [
       {
@@ -26,17 +27,9 @@ const queryByCustomIdAndEffactTime = (req: Request, res: Response) => {
   return res.status(200).send(result);
 };
 
-const postRequest = (req: Request, res: Response) => {
-  const result = {
-    code: 0,
-    errMsg: 'string',
-  };
-  return res.status(200).send(result);
-};
-
-
 export default {
-  [`GET ${MOCK_API}/invoice/queryByCustomIdAndEffactTime`]: queryByCustomIdAndEffactTime,
+  [`GET ${MOCK_API}/invoice/queryByCustomIdAndEffectTime`]: queryByCustomIdAndEffectTime,
   [`POST ${MOCK_API}/invoice/relationToContract`]: postRequest,
-  [`POST ${MOCK_API}/invoice/syncByCustomId`]: postRequest,
+  [`POST ${MOCK_API}/invoice/unRelationToContract`]: postRequest,
+  [`POST ${MOCK_API}/invoice/sync/:customId`]: postRequest,
 };
