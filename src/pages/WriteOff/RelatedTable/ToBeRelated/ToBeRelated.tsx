@@ -140,6 +140,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
           });
         },
       },
+      total: writeOffRecordDataList.length,
       middleSection: this.genMiddleSectionToBeRelated(),
     };
 

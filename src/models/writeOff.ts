@@ -5,7 +5,7 @@ import { requestApi } from '../utils/request';
 export const namespace = 'writeOff';
 
 export interface WriteOffModelState {
-  settlementByContractIdDataList: Array<any>;
+  dataList: Array<any>;
   writeOffRecordDataList: Array<any>;
   // dataPageTotal: number;
   // dataPageNo: number;
@@ -13,7 +13,7 @@ export interface WriteOffModelState {
 }
 
 const initailState = {
-  settlementByContractIdDataList: [],
+  dataList: [],
   writeOffRecordDataList: [],
   // dataPageTotal: 0,
   // dataPageNo: 0,
@@ -72,8 +72,14 @@ const WriteOffModel: WriteOffModelType = {
     },
     *queryCommissionByContractId({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
-      const { code, errMsg } = data;
+      const { code, errMsg, body } = data;
       if (!code) {
+        yield put({
+          type: 'save',
+          payload: {
+            dataList: body,
+          },
+        });
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -86,7 +92,7 @@ const WriteOffModel: WriteOffModelType = {
         yield put({
           type: 'save',
           payload: {
-            settlementByContractIdDataList: body,
+            dataList: body,
           },
         });
         successCallback && successCallback();

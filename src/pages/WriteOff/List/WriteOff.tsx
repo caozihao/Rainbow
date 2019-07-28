@@ -129,7 +129,6 @@ class WriteOff extends PureComponent<IProps, IState> {
     const { dataList, dataPageTotal, dataPageNo } = this.props;
     const copyTableListParams = Object.assign({}, tableListParams);
     copyTableListParams['option'] = this.option;
-    console.log('this.props ->', this.props);
 
     const QnListPageProps: object = {
       dataSource: dataList,

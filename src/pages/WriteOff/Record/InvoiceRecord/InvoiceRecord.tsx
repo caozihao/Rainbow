@@ -98,6 +98,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
       columns: genTableColumns(copyTableListParams),
       hasPagination: false,
       rowSelection: null,
+      total: copyInvoiceRecordDataList.length,
       // otherTableProps: {
       //   footer: (pageData: []) => {
       //     console.log('pageData ->', pageData);

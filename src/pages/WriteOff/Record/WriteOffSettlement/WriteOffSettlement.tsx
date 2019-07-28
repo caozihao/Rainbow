@@ -7,7 +7,7 @@ import { QnListPage, QnModal } from '@/utils/Qneen';
 import { WriteOffModelState } from '@/models/writeOff';
 import { genTableColumns } from '@/utils/format/dataGen';
 import { ContractModelState } from '@/models/contract';
-import tableListParams from '../settlementByContractIdDataList.tsx';
+import tableListParams from '../tableListParams.tsx';
 import { IQueryParams, IContractDetail } from '../../writeoff.d';
 import { getPageQuery } from '@/utils/utils';
 import RelatedTable from '../../RelatedTable/RelatedTable';
@@ -22,24 +22,26 @@ interface IConnectState extends ConnectState {
 interface IProps extends ConnectProps, WriteOffModelState {
   dispatch: Dispatch;
   relationToContractLoading: Boolean;
+  dataSource: Array<any>;
+  headTitle: string;
 }
 
 interface IState {}
 
 @connect(({ writeOff, loading }: IConnectState) => {
-  const { settlementByContractIdDataList } = writeOff;
   return {
     // relationToContractLoading: loading.effects['invoice/relationToContract'],
-    settlementByContractIdDataList,
   };
 })
 class WriteOffSettlement extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {};
+    this.pageType = this.queryParams['tabType'];
   }
 
   queryParams: IQueryParams = getPageQuery();
+  pageType = '';
 
   tableListParams = (() => {
     const QnModalProps = {
@@ -83,9 +85,7 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
     return copyTableListParams;
   })();
 
-  componentDidMount() {
-    this.querySettlementByContractId();
-  }
+  componentDidMount() {}
 
   componentDidUpdate() {}
 
@@ -113,38 +113,27 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
     });
   };
 
-  querySettlementByContractId = () => {
-    const { contractId } = this.queryParams;
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'writeOff/querySettlementByContractId',
-      payload: {
-        apiName: 'querySettlementByContractId',
-        reqType: 'GET',
-        placeholerData: {
-          contractId,
-        },
-      },
-      successCallback: () => {},
-    });
-  };
-
-  genMiddleSectionToBeRelated = () => {
+  genMiddleSectionToBeRelated = (headTitle = '') => {
     return (
       <div className={styles.headLayout} style={{ margin: '1rem 0' }}>
-        <h3>核销结算</h3>
+        <h3>{headTitle}</h3>
       </div>
     );
   };
 
   render() {
-    const {} = this.props;
-    const { settlementByContractIdDataList, relationToContractLoading } = this.props;
+    const { dataSource, headTitle } = this.props;
+    const { relationToContractLoading } = this.props;
+    const columns = genTableColumns(this.tableListParams);
+    console.log('columns ->', columns);
+    console.log('dataSurce ->', dataSource);
+
     const QnListPagePropsToBeRelated: object = {
-      dataSource: settlementByContractIdDataList,
+      dataSource,
       columns: genTableColumns(this.tableListParams),
       hasPagination: false,
-      middleSection: this.genMiddleSectionToBeRelated(),
+      middleSection: this.genMiddleSectionToBeRelated(headTitle),
+      total: dataSource.length,
       rowKey: (_, index) => index,
       rowSelection: null,
     };

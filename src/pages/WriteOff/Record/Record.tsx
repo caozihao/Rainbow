@@ -7,6 +7,7 @@ import { InvoiceModelState } from '@/models/invoice';
 import { ContractModelState } from '@/models/contract';
 import { getPageQuery, updateRoute } from '@/utils/utils';
 import InvoiceRecord from './InvoiceRecord/InvoiceRecord';
+import { WriteOffModelState } from '@/models/writeOff';
 import { IQueryParams, IContractDetail } from '../writeoff.d';
 import WriteOffSettlement from './WriteOffSettlement/WriteOffSettlement';
 import styles from '../WriteOff.less';
@@ -14,7 +15,7 @@ import styles from '../WriteOff.less';
 const { TabPane } = Tabs;
 
 interface IConnectState extends ConnectState {
-  invoice: InvoiceModelState;
+  writeOff: WriteOffModelState;
   contract: ContractModelState;
 }
 
@@ -24,11 +25,11 @@ interface IProps extends ConnectProps, InvoiceModelState {
 }
 
 interface IState {
-  tabKey: string;
+  tabType: string;
 }
 
-@connect(({ invoice, contract }: IConnectState) => {
-  const { dataList } = invoice;
+@connect(({ writeOff, contract }: IConnectState) => {
+  const { dataList } = writeOff;
   const { detail } = contract;
   return {
     dataList,
@@ -39,7 +40,7 @@ class Record extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      tabKey: this.queryParams['tabKey'] || 'stageWriteOff',
+      tabType: this.queryParams['tabType'] || 'stageWriteOff',
     };
   }
 
@@ -47,6 +48,7 @@ class Record extends PureComponent<IProps, IState> {
 
   componentDidMount() {
     this.queryById();
+    this.queryDataByContractId();
   }
 
   componentDidUpdate() {}
@@ -67,16 +69,43 @@ class Record extends PureComponent<IProps, IState> {
     });
   };
 
+  queryDataByContractId = (type = 'stageWriteOff') => {
+    const { contractId } = this.queryParams;
+    const { dispatch } = this.props;
+
+    let api =
+      type === 'stageWriteOff' ? 'querySettlementByContractId' : 'queryCommissionByContractId';
+
+    dispatch({
+      type: `writeOff/${api}`,
+      payload: {
+        apiName: api,
+        reqType: 'GET',
+        placeholerData: {
+          contractId,
+        },
+      },
+      successCallback: () => {},
+    });
+  };
+
   changeTab = (tabType: string) => {
     console.log('tabType ->', tabType);
     const newQueryParams = Object.assign(this.queryParams, { tabType });
-    console.log('newQueryParams ->', newQueryParams);
-    updateRoute(newQueryParams);
+    this.setState(
+      {
+        tabType,
+      },
+      () => {
+        this.queryDataByContractId(tabType);
+        updateRoute(newQueryParams);
+      },
+    );
   };
 
   render() {
-    const { contractDetail } = this.props;
-    const { tabKey } = this.state;
+    const { contractDetail, dataList } = this.props;
+    const { tabType } = this.state;
     const genContractInfo = () => {
       const { customId, contractNo, effectiveDate, customName } = contractDetail;
       return (
@@ -100,18 +129,25 @@ class Record extends PureComponent<IProps, IState> {
     };
 
     const pageTitle = this.queryParams.type === 'edit' ? '编辑' : '查看';
+    const headTitle = tabType === 'stageWriteOff' ? '核销结算' : '服务费核销结算';
+    // const dataSource =
+
+    const WriteOffSettlementProps = {
+      dataSource: dataList,
+      headTitle,
+    };
 
     return (
       <Card className="wrapper-right-content" title={pageTitle}>
         {contractDetail ? genContractInfo() : ''}
 
-        <Tabs defaultActiveKey={tabKey} onChange={this.changeTab}>
+        <Tabs activeKey={tabType} onChange={this.changeTab}>
           <TabPane tab="分期核销" key="stageWriteOff">
             <InvoiceRecord />
-            <WriteOffSettlement />
+            <WriteOffSettlement {...WriteOffSettlementProps} />
           </TabPane>
           <TabPane tab="服务费核销" key="serviceWriteOff">
-            serviceWriteOff
+            <WriteOffSettlement {...WriteOffSettlementProps} />
           </TabPane>
         </Tabs>
       </Card>

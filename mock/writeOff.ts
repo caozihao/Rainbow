@@ -54,6 +54,7 @@ const queryWriteOffRecord = (req: Request, res: Response) => {
 
 export default {
   [`GET ${MOCK_API}/writeOff/querySettlementByContractId/:contractId`]: querySettlementByContractId,
+  [`GET ${MOCK_API}/writeOff/queryCommissionByContractId/:contractId`]: querySettlementByContractId,
   [`POST ${MOCK_API}/writeOff/queryWriteOffRecord`]: queryWriteOffRecord,
   [`POST ${MOCK_API}/writeOff/relationToContract`]: postRequest,
   [`GET ${MOCK_API}/writeOff/sync/:customId`]: postRequest,
