@@ -34,9 +34,9 @@ class QnModal extends Component {
     } else {
       const settings = aProps;
       trigger = (
-        <a {...settings} onClick={this.handleTriggerClick}>
+        <div {...settings} onClick={this.handleTriggerClick}>
           {title}
-        </a>
+        </div>
       );
     }
     return trigger;

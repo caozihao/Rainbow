@@ -1,4 +1,6 @@
 export interface IContractDetail {
+  contractId: string;
+  effectDate: string;
   customId: string;
   effectiveDate: string;
   contractNo: string;

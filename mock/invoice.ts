@@ -34,6 +34,6 @@ export default {
   [`GET ${MOCK_API}/invoice/queryByCustomIdAndEffectTime`]: queryByCustomIdAndEffectTime,
   [`POST ${MOCK_API}/invoice/relationToContract`]: postRequest,
   [`POST ${MOCK_API}/invoice/unRelationToContract`]: postRequest,
-  [`POST ${MOCK_API}/invoice/sync/:customId`]: postRequest,
+  [`GET ${MOCK_API}/invoice/sync/:customId`]: postRequest,
   [`GET ${MOCK_API}/invoice/queryRelatedInvoice`]: queryByCustomIdAndEffectTime,
 };

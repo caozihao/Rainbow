@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import { Button } from 'antd';
 import withRouter from 'umi/withRouter';
 import { QnListPage } from '@/utils/Qneen';
 import { InvoiceModelState } from '@/models/invoice';
@@ -71,9 +70,6 @@ class ToBeRelated extends PureComponent<IProps, IState> {
       <Fragment>
         <div className={styles.headLayout} style={{ marginBottom: '1rem' }}>
           <h3>发票记录</h3>
-          <Button style={{ marginRight: '1rem' }} type="danger">
-            删除
-          </Button>
         </div>
       </Fragment>
     );
@@ -101,6 +97,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
       dataSource: copyInvoiceRecordDataList,
       columns: genTableColumns(copyTableListParams),
       hasPagination: false,
+      rowSelection: null,
       // otherTableProps: {
       //   footer: (pageData: []) => {
       //     console.log('pageData ->', pageData);
