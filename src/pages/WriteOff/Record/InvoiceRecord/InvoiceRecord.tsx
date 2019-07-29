@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
+import { Button, message } from 'antd';
 import withRouter from 'umi/withRouter';
 import { QnListPage } from '@/utils/Qneen';
 import { InvoiceModelState } from '@/models/invoice';
@@ -65,11 +66,34 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     });
   };
 
+  exportByContractId = () => {
+    const { contractId, tabType } = this.queryParams;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'writeOff/exportByContractId',
+      payload: {
+        apiName: 'exportByContractId',
+        reqType: 'GET',
+        placeholerData: {
+          contractId,
+        },
+        queryData: {
+          type: tabType === 'stageWriteOff' ? 0 : 1,
+        },
+      },
+      successCallback: () => {
+        message.success('导出成功');
+      },
+    });
+  };
+
   genMiddleSectionBeRelated = () => {
+    const { type } = this.queryParams;
     return (
       <Fragment>
         <div className={styles.headLayout} style={{ marginBottom: '1rem' }}>
           <h3>发票记录</h3>
+          {type === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
         </div>
       </Fragment>
     );

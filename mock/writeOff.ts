@@ -59,4 +59,5 @@ export default {
   [`POST ${MOCK_API}/writeOff/relationToContract`]: postRequest,
   [`GET ${MOCK_API}/writeOff/sync/:customId`]: postRequest,
   [`POST ${MOCK_API}/writeOff/unRelationToContract`]: postRequest,
+  [`GET ${MOCK_API}/writeOff/export/:contractId`]: postRequest,
 };

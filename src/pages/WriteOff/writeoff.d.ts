@@ -12,4 +12,5 @@ export interface IContractDetail {
 export interface IQueryParams {
   type: string;
   contractId: string;
+  tabType: string;
 }

@@ -37,11 +37,9 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {};
-    this.pageType = this.queryParams['tabType'];
   }
 
   queryParams: IQueryParams = getPageQuery();
-  pageType = '';
 
   tableListParams = (() => {
     const QnModalProps = {
@@ -113,24 +111,44 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
     });
   };
 
+  exportByContractId = () => {
+    const { contractId, tabType } = this.queryParams;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'writeOff/exportByContractId',
+      payload: {
+        apiName: 'exportByContractId',
+        reqType: 'GET',
+        placeholerData: {
+          contractId,
+        },
+        queryData:{
+          type: tabType === 'stageWriteOff' ? 0 : 1,
+        }
+      },
+      successCallback: () => {
+        message.success('导出成功')
+      },
+    });
+  };
+
   genMiddleSectionToBeRelated = (headTitle = '') => {
+    const { type } = this.queryParams;
     return (
-      <div className={styles.headLayout} style={{ margin: '1rem 0' }}>
+      <div className={styles.headLayout} style={{ marginBottom: '1rem' }}>
         <h3>{headTitle}</h3>
+        {type === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
       </div>
     );
   };
 
   render() {
-    const { dataSource, headTitle } = this.props;
-    const { relationToContractLoading } = this.props;
-    const columns = genTableColumns(this.tableListParams);
-    console.log('columns ->', columns);
-    console.log('dataSurce ->', dataSource);
+    const { dataSource, headTitle, relationToContractLoading } = this.props;
+    const { type } = this.queryParams;
 
     const QnListPagePropsToBeRelated: object = {
       dataSource,
-      columns: genTableColumns(this.tableListParams),
+      columns: type === 'detail' ? genTableColumns(this.tableListParams) : tableListParams,
       hasPagination: false,
       middleSection: this.genMiddleSectionToBeRelated(headTitle),
       total: dataSource.length,
