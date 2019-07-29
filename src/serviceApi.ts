@@ -29,4 +29,14 @@ export default {
     syncByCustomId: `${host}/invoice/sync/:customId`,
     queryRelatedInvoice: `${host}/invoice/queryRelatedInvoice`,
   },
+  receivable:{
+    queryCustomCommission: `${host}/receivable/queryCustomCommission`,
+    queryCustomHw: `${host}/receivable/queryCustomHw`,
+    queryHwDetail: `${host}/receivable/queryHwDetail`,
+    queryHwSummary: `${host}/receivable/queryHwSummary`,
+    queryServiceDetail: `${host}/receivable/queryServiceDetail`,
+    queryServiceSummary: `${host}/receivable/queryServiceSummary`,
+    updateCustomCommission: `${host}/receivable/updateCustomCommission`,
+    updateCustomHw: `${host}/receivable/updateCustomHw`,
+  }
 };
