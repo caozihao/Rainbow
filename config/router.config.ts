@@ -59,8 +59,26 @@ const router: object = [
         path: '/receivable',
         name: 'receivable',
         // authority: ['admin', 'user'],
-        component: './Receivable/Receivable',
+        // component: './Receivable/Receivable',
         icon: 'pay-circle',
+        hideChildrenInMenu: true,
+        routes: [
+          { path: '/receivable', redirect: '/receivable/list?type=customer&&tabType=HwStage' },
+          // type=customer  客户应收
+          // tabType=HwStage  硬件分期
+          // tabType=service  服务费
+
+          // type=statistics  应收统计
+          // tabType=HwDetail  硬件明细
+          // tabType=HwSummary  硬件汇总
+          // tabType=serviceDetail  服务明细
+          // tabType=serviceSummary  服务汇总
+          {
+            path: '/receivable/list',
+            name: 'list',
+            component: './Receivable/List/Receivable',
+          },
+        ],
       },
       {
         path: '/setting',

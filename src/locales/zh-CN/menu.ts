@@ -55,5 +55,6 @@ export default {
   'menu.writeoff.record': '核销记录',
   'menu.writeoff.invoice': '发票',
   'menu.receivable': '应收管理',
+  'menu.receivable.list': '应收管理',
   'menu.setting': '个人设置',
 };

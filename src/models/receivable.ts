@@ -6,16 +6,16 @@ export const namespace = 'receivable';
 
 export interface ReceivableModelState {
   dataList: Array<any>;
-  // dataPageTotal: number;
-  // dataPageNo: number;
-  // dataPageSize: number;
+  dataPageTotal: number;
+  dataPageNo: number;
+  dataPageSize: number;
 }
 
 const initailState = {
   dataList: [],
-  // dataPageTotal: 0,
-  // dataPageNo: 0,
-  // dataPageSize: 0,
+  dataPageTotal: 0,
+  dataPageNo: 0,
+  dataPageSize: 0,
 };
 
 export interface ReceivableModelType {
@@ -43,8 +43,14 @@ const ReceivableModel: ReceivableModelType = {
   effects: {
     *queryCustomCommission({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
-      const { code, errMsg } = data;
+      const { code, errMsg, body } = data;
       if (!code) {
+        yield put({
+          type: 'save',
+          payload: {
+            dataList: body,
+          },
+        });
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -52,8 +58,14 @@ const ReceivableModel: ReceivableModelType = {
     },
     *queryCustomHw({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
-      const { code, errMsg } = data;
+      const { code, errMsg, body } = data;
       if (!code) {
+        yield put({
+          type: 'save',
+          payload: {
+            dataList: body,
+          },
+        });
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -61,8 +73,14 @@ const ReceivableModel: ReceivableModelType = {
     },
     *queryHwDetail({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
-      const { code, errMsg } = data;
+      const { code, errMsg, body } = data;
       if (!code) {
+        yield put({
+          type: 'save',
+          payload: {
+            dataList: body,
+          },
+        });
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -72,6 +90,12 @@ const ReceivableModel: ReceivableModelType = {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
       if (!code) {
+        yield put({
+          type: 'save',
+          payload: {
+            dataList: body,
+          },
+        });
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -81,7 +105,27 @@ const ReceivableModel: ReceivableModelType = {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
       if (!code) {
+        yield put({
+          type: 'save',
+          payload: {
+            dataList: body,
+          },
+        });
         successCallback && successCallback();
+      } else {
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *queryReceivableRecord({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg, body } = data;
+      if (!code) {
+        yield put({
+          type: 'save',
+          payload: {
+            dataList: body,
+          },
+        });
       } else {
         failCallback && failCallback(errMsg);
       }
@@ -93,9 +137,10 @@ const ReceivableModel: ReceivableModelType = {
         yield put({
           type: 'save',
           payload: {
-            receivableRecordDataList: body,
+            dataList: body,
           },
         });
+        successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
       }

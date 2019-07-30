@@ -122,12 +122,12 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
         placeholerData: {
           contractId,
         },
-        queryData:{
+        queryData: {
           type: tabType === 'stageWriteOff' ? 0 : 1,
-        }
+        },
       },
       successCallback: () => {
-        message.success('导出成功')
+        message.success('导出成功');
       },
     });
   };
@@ -148,7 +148,10 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
 
     const QnListPagePropsToBeRelated: object = {
       dataSource,
-      columns: type === 'detail' ? genTableColumns(this.tableListParams) : tableListParams,
+      columns:
+        type === 'detail'
+          ? genTableColumns(this.tableListParams)
+          : genTableColumns(tableListParams),
       hasPagination: false,
       middleSection: this.genMiddleSectionToBeRelated(headTitle),
       total: dataSource.length,
