@@ -14,10 +14,18 @@
     yarn config set puppeteer_download_host https://npm.taobao.org/mirrors
   ```
 
-### 构建项目
+### clone项目到本地
 
 ```
+git clone https://github.com/caozihao/Rainbow.git
+```
+
+### 构建项目
+
+定位到项目下面
+```
 yarn // 安装依赖包
+yarn start //本地开发
 yarn run build  // 编译代码，过程可能会有些慢，请耐心等待
 ```
 
