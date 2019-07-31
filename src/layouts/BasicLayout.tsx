@@ -92,7 +92,7 @@ class BasicLayout extends PureComponent<BasicLayoutProps> {
    * constructor
    */
 
-  useEffect = () => {
+  useEffect = (() => {
     const { dispatch } = this.props;
     if (dispatch) {
       dispatch({
@@ -102,7 +102,7 @@ class BasicLayout extends PureComponent<BasicLayoutProps> {
         type: 'settings/getSetting',
       });
     }
-  };
+  })();
 
   /**
    * init variables

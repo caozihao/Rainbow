@@ -34,6 +34,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
 
   render(): React.ReactNode {
     const { currentUser = {}, menu } = this.props;
+    console.log('currentUser ->', currentUser);
     if (!menu) {
       return (
         <span className={`${styles.action} ${styles.account}`}>
@@ -64,7 +65,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
           <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-          <span className={styles.name}>{currentUser.name}</span>
+          <span className={styles.name}>{currentUser.name}1111</span>
         </span>
       </HeaderDropdown>
     ) : (
