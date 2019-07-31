@@ -2,7 +2,7 @@
 // export { default as OperationCell } from './OperationCell/OperationCell';
 // export { default as QnEditableCell } from './QnEditableCell/QnEditableCell';
 
-// export { default as QnFilter } from './QnFilter/QnFilter';
+export { default as QnFilter } from './QnFilter/QnFilter';
 // export { default as QnFilterLite } from './QnFilterLite/QnFilterLite';
 
 export { default as QnForm } from './QnForm/QnForm';

@@ -6,14 +6,14 @@ import withRouter from 'umi/withRouter';
 import router from 'umi/router';
 import { Link } from 'dva/router';
 import { genTableColumns } from '@/utils/format/dataGen';
-import { QnListPage, QnFormModal } from '@/utils/Qneen/index';
+import { QnListPage, QnFormModal, QnFilter } from '@/utils/Qneen/index';
 import tableFilterParamsByCustomer from './Customer/tableFilterParamsByCustomer';
 import tableListParamsByHwStage from './Customer/tableListParamsByHwStage';
 import tableListParamsByService from './Customer/tableListParamsByService';
 import tableFilterParamsByStatistics from './Statistics/tableFilterParamsByStatistics';
 import tableListParamsByDetail from './Statistics/tableListParamsByDetail';
 import tableListParamsBySummary from './Statistics/tableListParamsBySummary';
-import { ReceivableModelState, namespace } from '@/models/receivable';
+import { ReceivableModelState } from '@/models/receivable';
 import { IQueryParams } from '../receivable';
 import { getPageQuery, updateRoute } from '@/utils/utils';
 import styles from '../../WriteOff/WriteOff.less';
@@ -164,14 +164,26 @@ class Receivable extends PureComponent<IProps, IState> {
       rowSelection: null,
       middleSection: this.genMiddleSection(),
     };
+
+    console.log('tableFilterParams ->', tableFilterParams);
+
+    const QnFilterProps = {
+      handleChange: () => {},
+      rules: tableFilterParams,
+      col: 2,
+    };
+
+    const genTabContent = <QnFilter {...QnFilterProps} />;
     return (
       <Card className="wrapper-right-content" title="应收管理">
         <Tabs activeKey={type} onChange={this.changeRoute}>
           <TabPane tab="客户应收" key="customer">
-            <QnListPage {...QnListPageProps} />
+            {/* <QnListPage {...QnListPageProps} /> */}
+            {genTabContent}
           </TabPane>
           <TabPane tab="应收统计" key="statistics">
-            <QnListPage {...QnListPageProps} />
+            {/* <QnListPage {...QnListPageProps} /> */}
+            {genTabContent}
           </TabPane>
         </Tabs>
       </Card>
