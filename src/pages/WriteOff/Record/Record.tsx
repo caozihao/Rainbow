@@ -10,7 +10,6 @@ import InvoiceRecord from './InvoiceRecord/InvoiceRecord';
 import { WriteOffModelState } from '@/models/writeOff';
 import { IQueryParams, IContractDetail } from '../writeoff.d';
 import WriteOffSettlement from './WriteOffSettlement/WriteOffSettlement';
-import styles from '../WriteOff.less';
 
 const { TabPane } = Tabs;
 
@@ -117,7 +116,7 @@ class Record extends PureComponent<IProps, IState> {
             <Col span={6}>生效时间：{effectiveDate}</Col>
             <Col span={6}>客户名称：{customName}</Col>
           </Row> */}
-          <div className={styles.headLayout}>
+          <div className="headLayout">
             <span>客户编号：{customId}</span>
             <span>合同编号：{contractNo}</span>
             <span>生效时间：{effectiveDate}</span>

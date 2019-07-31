@@ -173,7 +173,9 @@ class Contract extends PureComponent<IProps, IState> {
         <Button style={{ marginRight: '1rem' }} type="primary">
           创建核销表
         </Button>
-        <Button type="danger">删除合同</Button>
+        <Button type="danger" disabled={!this.state.selectedRowKeys.length}>
+          删除合同
+        </Button>
       </div>
     );
   };

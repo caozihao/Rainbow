@@ -10,8 +10,6 @@ import { ContractModelState } from '@/models/contract';
 import tableListParams from '../queryWriteOffRecordListParams';
 import { getPageQuery } from '@/utils/utils';
 import { IContractDetail, IQueryParams } from '../../writeoff.d';
-import styles from '../../WriteOff.less';
-
 interface IConnectState extends ConnectState {
   writeOff: WriteOffModelState;
   contract: ContractModelState;
@@ -99,7 +97,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   genMiddleSectionToBeRelated = () => {
     const { selectedRowKeys } = this.state;
     return (
-      <div className={styles.headLayout} style={{ margin: '0.5rem 0' }}>
+      <div className="headLayout" style={{ margin: '0.5rem 0' }}>
         <h3>
           待关联的核销记录
           <a onClick={this.syncByCustomId}>

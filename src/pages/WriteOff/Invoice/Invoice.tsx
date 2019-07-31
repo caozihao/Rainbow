@@ -9,7 +9,6 @@ import { getPageQuery } from '@/utils/utils';
 import BeRelated from './BeRelated/BeRelated';
 import ToBeRelated from './ToBeRelated/ToBeRelated';
 import { IContractDetail } from '../writeoff.d';
-import styles from '../WriteOff.less';
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
   contract: ContractModelState;
@@ -91,7 +90,7 @@ class Invoice extends PureComponent<IProps, IState> {
             <Col span={6}>生效时间：{effectiveDate}</Col>
             <Col span={6}>客户名称：{customName}</Col>
           </Row> */}
-          <div className={styles.headLayout}>
+          <div className="headLayout">
             <span>客户编号：{customId}</span>
             <span>合同编号：{contractNo}</span>
             <span>生效时间：{effectiveDate}</span>

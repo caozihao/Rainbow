@@ -3,7 +3,7 @@
  * You can view component api by:
  * https://github.com/ant-design/ant-design-pro-layout
  */
-import React, { PureComponent, useEffect } from 'react';
+import React, { PureComponent, useEffect, Fragment } from 'react';
 import ProLayout, {
   MenuDataItem,
   BasicLayoutProps as ProLayoutProps,
@@ -17,9 +17,10 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState, Dispatch } from '@/models/connect';
 import { isAntDesignPro } from '@/utils/utils';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 import styles from './BasicLayout.less';
 import router from 'umi/router';
+import Title from 'antd/lib/typography/Title';
 
 export interface BasicLayoutProps extends ProLayoutProps {
   breadcrumbNameMap: {
@@ -117,44 +118,54 @@ class BasicLayout extends PureComponent<BasicLayoutProps> {
 
   render() {
     const { children, settings } = this.props;
+    console.log('settings ->', settings);
     return (
-      <ProLayout
-        className={styles.BasicLayout}
-        logo={logo}
-        onCollapse={this.handleMenuCollapse}
-        menuItemRender={(menuItemProps, defaultDom) => {
-          if (menuItemProps.isUrl) {
-            return defaultDom;
-          }
-          return <Link to={menuItemProps.path}>{defaultDom}</Link>;
-        }}
-        breadcrumbRender={(routers = []) => [
-          {
-            path: '/',
-            breadcrumbName: formatMessage({
-              id: 'menu.home',
-              defaultMessage: 'Home',
-            }),
-          },
-          ...routers,
-        ]}
-        itemRender={(route, params, routes, paths) => {
-          const first = routes.indexOf(route) === 0;
-          return first ? (
-            <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
-          ) : (
-            <span>{route.breadcrumbName}</span>
-          );
-        }}
-        footerRender={footerRender}
-        menuDataRender={menuDataRender}
-        formatMessage={formatMessage}
-        rightContentRender={rightProps => <RightContent {...rightProps} />}
-        {...this.props}
-        {...settings}
-      >
-        {children}
-      </ProLayout>
+      <Fragment>
+        <span className={styles.version}>报表管理系统 v0.1</span>
+        <ProLayout
+          {...settings}
+          className={styles.BasicLayout}
+          logo={<img src={logo} style={{ height: 50 }} />}
+          navTheme="light"
+          onCollapse={this.handleMenuCollapse}
+          menuItemRender={(menuItemProps, defaultDom) => {
+            if (menuItemProps.isUrl) {
+              return defaultDom;
+            }
+            return <Link to={menuItemProps.path}>{defaultDom}</Link>;
+          }}
+          breadcrumbRender={(routers = []) => [
+            {
+              path: '/',
+              breadcrumbName: formatMessage({
+                id: 'menu.home',
+                defaultMessage: 'Home',
+              }),
+            },
+            ...routers,
+          ]}
+          itemRender={(route, params, routes, paths) => {
+            const first = routes.indexOf(route) === 0;
+            return first ? (
+              <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
+            ) : (
+              <span>{route.breadcrumbName}</span>
+            );
+          }}
+          // headerRender={data => {
+          //   console.log('data ->', data);
+          //   return "123";
+          // }}
+          footerRender={footerRender}
+          menuDataRender={menuDataRender}
+          formatMessage={formatMessage}
+          rightContentRender={rightProps => <RightContent {...rightProps} />}
+          {...this.props}
+          title=""
+        >
+          {children}
+        </ProLayout>
+      </Fragment>
     );
   }
 }

@@ -10,7 +10,6 @@ import { ContractModelState } from '@/models/contract';
 import tableListParams from '../tableListParams';
 import { getPageQuery } from '@/utils/utils';
 import { IContractDetail,IQueryParams } from '../../writeoff.d';
-import styles from '../../WriteOff.less';
 
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
@@ -96,7 +95,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     const { selectedRowKeys } = this.state;
     return (
       <Fragment>
-        <div className={styles.headLayout}>
+        <div className="headLayout">
           <h3>
             待关联的发票信息
             <a onClick={this.syncByCustomId}>

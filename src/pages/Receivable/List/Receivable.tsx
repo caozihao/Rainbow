@@ -6,7 +6,7 @@ import withRouter from 'umi/withRouter';
 import router from 'umi/router';
 import { Link } from 'dva/router';
 import { genTableColumns } from '@/utils/format/dataGen';
-import { QnListPage, QnFormModal, QnFilter } from '@/utils/Qneen/index';
+import { QnListPage, QnFormModal, QnFilter, QnTable } from '@/utils/Qneen/index';
 import tableFilterParamsByCustomer from './Customer/tableFilterParamsByCustomer';
 import tableListParamsByHwStage from './Customer/tableListParamsByHwStage';
 import tableListParamsByService from './Customer/tableListParamsByService';
@@ -16,7 +16,6 @@ import tableListParamsBySummary from './Statistics/tableListParamsBySummary';
 import { ReceivableModelState } from '@/models/receivable';
 import { IQueryParams } from '../receivable';
 import { getPageQuery, updateRoute } from '@/utils/utils';
-import styles from '../../WriteOff/WriteOff.less';
 
 const { TabPane } = Tabs;
 
@@ -75,14 +74,32 @@ class Receivable extends PureComponent<IProps, IState> {
   getDataByTabType = () => {
     let api = '';
     let tableListParams = {};
+    let middleButtonArea = (
+      <div className="rightFlexArea">
+        <Button className="">导出</Button>
+      </div>
+    );
     switch (this.state.tabType) {
       case 'HwStage':
         api = 'queryCustomHw';
         tableListParams = tableListParamsByHwStage;
+        middleButtonArea = (
+          <div className="rightFlexArea">
+            <Button>导出</Button>
+            <Button type="primary">编辑手动核实到账</Button>
+            <p>Action Plan：服务结清</p>
+          </div>
+        );
         break;
       case 'service':
         api = 'queryCustomCommission';
         tableListParams = tableListParamsByService;
+        middleButtonArea = (
+          <div className="rightFlexArea">
+            <Button type="primary">编辑手动核实到账</Button>
+            <p>Action Plan：服务结清</p>
+          </div>
+        );
         break;
       case 'HwDetail':
         api = 'queryHwDetail';
@@ -106,17 +123,32 @@ class Receivable extends PureComponent<IProps, IState> {
     return {
       api,
       tableListParams,
+      middleButtonArea,
     };
   };
 
-  changeRoute = (key = '') => {
-    let routeUrl = '';
-    if (key === 'customer') {
-      routeUrl = '/receivable/list?type=customer&&tabType=HwStage';
-    } else if (key === 'statistics') {
-      routeUrl = '/receivable/list?type=statistics&&tabType=HwDetail';
+  changeRoute = (key = '', type = '') => {
+    let param = {};
+    if (type === 'type') {
+      let tabType = '';
+      if (key === 'customer') {
+        tabType = 'HwStage';
+      } else {
+        tabType = 'HwDetail';
+      }
+      param = {
+        type: key,
+        tabType,
+      };
+    } else {
+      param = {
+        tabType: key,
+      };
     }
-    this.setState({ type: key }, () => {
+
+    this.setState({ ...param }, () => {
+      const { type, tabType } = this.state;
+      let routeUrl = `/receivable/list?type=${type}&&tabType=${tabType}`;
       router.push(routeUrl);
     });
   };
@@ -140,7 +172,7 @@ class Receivable extends PureComponent<IProps, IState> {
   genMiddleSection = () => {
     return (
       <Fragment>
-        <div className={styles.headLayout} style={{ marginBottom: '1rem' }}>
+        <div className="headLayout" style={{ marginBottom: '1rem' }}>
           <h3>发票记录</h3>
           <Button onClick={() => {}}>导出</Button>
         </div>
@@ -150,22 +182,17 @@ class Receivable extends PureComponent<IProps, IState> {
 
   render() {
     const { dataList } = this.props;
-    const { type } = this.state;
-    const { tableListParams } = this.getDataByTabType();
+    const { type, tabType } = this.state;
+    const { tableListParams, middleButtonArea } = this.getDataByTabType();
     const { tableFilterParams } = this.getDataByPageType();
 
-    const QnListPageProps: object = {
+    const QnTableProps: object = {
       dataSource: dataList,
       columns: genTableColumns(tableListParams),
-      filterRules: tableFilterParams,
       total: dataList.length,
       hasPagination: false,
-      col: 2,
       rowSelection: null,
-      middleSection: this.genMiddleSection(),
     };
-
-    console.log('tableFilterParams ->', tableFilterParams);
 
     const QnFilterProps = {
       handleChange: () => {},
@@ -174,16 +201,53 @@ class Receivable extends PureComponent<IProps, IState> {
     };
 
     const genTabContent = <QnFilter {...QnFilterProps} />;
+
+    const table = <QnTable {...QnTableProps} />;
+
+    const genTabChildContentByCustomer = (
+      <Fragment>
+        {middleButtonArea}
+        <Tabs activeKey={tabType} onChange={item => this.changeRoute(item, 'tabType')}>
+          <TabPane tab="硬件分期" key="HwStage">
+            {table}
+          </TabPane>
+          <TabPane tab="服务费" key="service">
+            {table}
+          </TabPane>
+        </Tabs>
+      </Fragment>
+    );
+
+    const genTabChildContentByStatistics = (
+      <Fragment>
+        {middleButtonArea}
+        <Tabs activeKey={tabType} onChange={item => this.changeRoute(item, 'tabType')}>
+          <TabPane tab="硬件明细" key="HwDetail">
+            {table}
+          </TabPane>
+          <TabPane tab="硬件汇总" key="HwSummary">
+            {table}
+          </TabPane>
+          <TabPane tab="服务明细" key="serviceDetail">
+            {table}
+          </TabPane>
+          <TabPane tab="服务汇总" key="serviceSummary">
+            {table}
+          </TabPane>
+        </Tabs>
+      </Fragment>
+    );
+
     return (
       <Card className="wrapper-right-content" title="应收管理">
-        <Tabs activeKey={type} onChange={this.changeRoute}>
+        <Tabs activeKey={type} onChange={item => this.changeRoute(item, 'type')}>
           <TabPane tab="客户应收" key="customer">
-            {/* <QnListPage {...QnListPageProps} /> */}
             {genTabContent}
+            {genTabChildContentByCustomer}
           </TabPane>
           <TabPane tab="应收统计" key="statistics">
-            {/* <QnListPage {...QnListPageProps} /> */}
             {genTabContent}
+            {genTabChildContentByStatistics}
           </TabPane>
         </Tabs>
       </Card>

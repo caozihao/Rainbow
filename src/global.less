@@ -24,16 +24,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.wrapper-right-content {
-  flex: 1 1;
-  overflow: scroll;
-}
 
 ul,
 ol {
   list-style: none;
 }
 
+* {
+  padding: 0;
+  margin: 0;
+}
+
+// p {
+//   margin: 0 !important;
+// }
 
 .color-red {
   color: red;
@@ -62,5 +66,37 @@ ol {
         }
       }
     }
+  }
+}
+
+.wrapper-right-content {
+  flex: 1 1;
+  overflow: scroll;
+}
+
+.headLayout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.oboveArea {
+  position: relative;
+  top: 30px;
+}
+
+.rightFlexArea {
+  position: relative;
+  top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  p {
+    margin: 0;
+  }
+
+  >* {
+    margin-right: 1rem
   }
 }

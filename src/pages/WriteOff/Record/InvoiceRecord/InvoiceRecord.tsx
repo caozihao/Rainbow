@@ -8,7 +8,6 @@ import { InvoiceModelState } from '@/models/invoice';
 import { ContractModelState } from '@/models/contract';
 import { genTableColumns } from '@/utils/format/dataGen';
 import tableListParams from '../invoiceRecordDataList';
-import styles from '../../WriteOff.less';
 import { getPageQuery } from '@/utils/utils';
 import { IQueryParams, IContractDetail } from '../../writeoff.d';
 
@@ -91,7 +90,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     const { type } = this.queryParams;
     return (
       <Fragment>
-        <div className={styles.headLayout} style={{ marginBottom: '1rem' }}>
+        <div className="headLayout" style={{ marginBottom: '1rem' }}>
           <h3>发票记录</h3>
           {type === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
         </div>

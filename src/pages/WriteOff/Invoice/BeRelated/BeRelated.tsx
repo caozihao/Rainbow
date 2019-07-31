@@ -8,7 +8,6 @@ import { InvoiceModelState } from '@/models/invoice';
 import { genTableColumns } from '@/utils/format/dataGen';
 import tableListParams from '../tableListParams';
 import { getPageQuery } from '@/utils/utils';
-import styles from '../../WriteOff.less';
 import { IQueryParams } from '../../writeoff.d';
 
 const { TabPane } = Tabs;
@@ -54,12 +53,12 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     return (
       <Fragment>
         <br />
-        <div className={styles.headLayout}>
+        <div className="headLayout">
           <h3>已关联的发票信息</h3>
           <Button
             onClick={this.unRelationToContract}
             disabled={!selectedRowKeys.length}
-            className={styles.deleteButton}
+            className="oboveArea"
             type="danger"
           >
             删除

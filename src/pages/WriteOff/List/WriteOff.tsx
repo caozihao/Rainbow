@@ -17,8 +17,6 @@ import {
   initializeFilterParams,
 } from '@/utils/utils';
 
-
-
 interface IConnectState extends ConnectState {
   [namespace]: WriteOffModelState;
   contract: ContractModelState;
@@ -134,6 +132,7 @@ class WriteOff extends PureComponent<IProps, IState> {
       dataSource: dataList,
       columns: genTableColumns(copyTableListParams),
       title: '核销',
+      rowSelection: null,
       // rowSelection: {
       //   onChange: (selectedRowKeys = [], selectedRows = []) => {
       //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);

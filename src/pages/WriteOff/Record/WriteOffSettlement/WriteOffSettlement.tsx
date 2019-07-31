@@ -8,12 +8,10 @@ import { WriteOffModelState } from '@/models/writeOff';
 import { genTableColumns } from '@/utils/format/dataGen';
 import { ContractModelState } from '@/models/contract';
 import tableListParams from '../tableListParams.tsx';
+import cloneDeep from 'lodash/cloneDeep';
 import { IQueryParams, IContractDetail } from '../../writeoff.d';
 import { getPageQuery } from '@/utils/utils';
 import RelatedTable from '../../RelatedTable/RelatedTable';
-
-import styles from '../../WriteOff.less';
-
 interface IConnectState extends ConnectState {
   writeOff: WriteOffModelState;
   contract: ContractModelState;
@@ -51,34 +49,33 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
         footer: null,
       },
     };
-    const copyTableListParams = Object.assign(tableListParams, {
-      control: {
-        name: 'control',
-        title: '',
-        render: (text, record) => {
-          const { settlementId } = record;
-          const RelatedTableProps = {
-            writeOffType: 0,
-            settlementId,
-          };
-          return (
-            <Fragment>
-              <a href="javascript:void(0)">
-                <QnModal {...QnModalProps}>
-                  <RelatedTable {...RelatedTableProps} />
-                </QnModal>
-              </a>
-              <a
-                href="javascript:void(0)"
-                onClick={() => this.unRelationToContract(RelatedTableProps)}
-              >
-                <Icon type="minus" />
-              </a>
-            </Fragment>
-          );
-        },
+    const copyTableListParams = cloneDeep(tableListParams);
+    copyTableListParams.control = {
+      name: 'control',
+      title: '',
+      render: (text, record) => {
+        const { settlementId } = record;
+        const RelatedTableProps = {
+          writeOffType: 0,
+          settlementId,
+        };
+        return (
+          <Fragment>
+            <a href="javascript:void(0)">
+              <QnModal {...QnModalProps}>
+                <RelatedTable {...RelatedTableProps} />
+              </QnModal>
+            </a>
+            <a
+              href="javascript:void(0)"
+              onClick={() => this.unRelationToContract(RelatedTableProps)}
+            >
+              <Icon type="minus" />
+            </a>
+          </Fragment>
+        );
       },
-    });
+    };
 
     return copyTableListParams;
   })();
@@ -135,7 +132,7 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
   genMiddleSectionToBeRelated = (headTitle = '') => {
     const { type } = this.queryParams;
     return (
-      <div className={styles.headLayout} style={{ marginBottom: '1rem' }}>
+      <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
         <h3>{headTitle}</h3>
         {type === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
       </div>
@@ -145,13 +142,16 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
   render() {
     const { dataSource, headTitle, relationToContractLoading } = this.props;
     const { type } = this.queryParams;
+    console.log('type ->', type);
+    console.log('tableListParams ->', tableListParams);
+    console.log('this.tableListParams ->', this.tableListParams);
 
     const QnListPagePropsToBeRelated: object = {
       dataSource,
       columns:
         type === 'detail'
-          ? genTableColumns(this.tableListParams)
-          : genTableColumns(tableListParams),
+          ? genTableColumns(tableListParams)
+          : genTableColumns(this.tableListParams),
       hasPagination: false,
       middleSection: this.genMiddleSectionToBeRelated(headTitle),
       total: dataSource.length,
