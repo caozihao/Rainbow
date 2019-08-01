@@ -7,9 +7,13 @@ import slash from 'slash2';
 import webpackPlugin from './plugin.config';
 import config from './constant.config';
 
-const {MOCK_API} = config;
+const { MOCK_API, HOST_API, DEV_MODE } = config;
+
+const host = DEV_MODE === 'mock' ? MOCK_API : HOST_API;
 
 const { pwa, primaryColor } = defaultSettings;
+
+console.log('host ->', host);
 
 // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
@@ -141,11 +145,11 @@ export default {
     basePath: '/',
   },
   chainWebpack: webpackPlugin,
-  // proxy: {
-  //   [`${MOCK_API}`]: {
-  //     target: `http://localhost:8000/${MOCK_API}`,
-  //     changeOrigin: true,
-  //     pathRewrite: { [`^${MOCK_API}`]: '' },
-  //   },
-  // },
+  proxy: {
+    '/rcs': {
+      target: `${host}`,
+      changeOrigin: true,
+      pathRewrite: { '^/rcs': '' },
+    },
+  },
 } as IConfig;

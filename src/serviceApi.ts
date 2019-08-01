@@ -1,7 +1,7 @@
 import config from '../config/constant.config';
 const { MOCK_API, HOST_API, DEV_MODE } = config;
 
-const host = DEV_MODE === 'mock' ? MOCK_API : HOST_API;
+const host = DEV_MODE === 'mock' ? MOCK_API : '/rcs';
 
 export default {
   contract: {
@@ -29,7 +29,7 @@ export default {
     syncByCustomId: `${host}/invoice/sync/:customId`,
     queryRelatedInvoice: `${host}/invoice/queryRelatedInvoice`,
   },
-  receivable:{
+  receivable: {
     queryCustomCommission: `${host}/receivable/queryCustomCommission`,
     queryCustomHw: `${host}/receivable/queryCustomHw`,
     queryHwDetail: `${host}/receivable/queryHwDetail`,
@@ -38,5 +38,5 @@ export default {
     queryServiceSummary: `${host}/receivable/queryServiceSummary`,
     updateCustomCommission: `${host}/receivable/updateCustomCommission`,
     updateCustomHw: `${host}/receivable/updateCustomHw`,
-  }
+  },
 };
