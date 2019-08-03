@@ -41,18 +41,18 @@ const router: object = [
             name: 'list',
             component: './WriteOff/List/WriteOff',
           },
-          {
-            // 查看 /writeoff/record?type=detail
-            // 编辑 /writeoff/record?type=edit&&id=1
-            path: '/writeoff/record',
-            name: 'record',
-            component: './WriteOff/Record/Record',
-          },
-          {
-            path: '/writeoff/invoice',
-            name: 'invoice',
-            component: './WriteOff/Invoice/Invoice',
-          },
+          // {
+          //   // 查看 /writeoff/record?type=detail
+          //   // 编辑 /writeoff/record?type=edit&&id=1
+          //   path: '/writeoff/record',
+          //   name: 'record',
+          //   component: './WriteOff/Record/Record',
+          // },
+          // {
+          //   path: '/writeoff/invoice',
+          //   name: 'invoice',
+          //   component: './WriteOff/Invoice/Invoice',
+          // },
         ],
       },
       {

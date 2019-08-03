@@ -142,9 +142,9 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
   render() {
     const { dataSource, headTitle, relationToContractLoading } = this.props;
     const { type } = this.queryParams;
-    console.log('type ->', type);
-    console.log('tableListParams ->', tableListParams);
-    console.log('this.tableListParams ->', this.tableListParams);
+    // console.log('type ->', type);
+    // console.log('tableListParams ->', tableListParams);
+    // console.log('this.tableListParams ->', this.tableListParams);
 
     const QnListPagePropsToBeRelated: object = {
       dataSource,

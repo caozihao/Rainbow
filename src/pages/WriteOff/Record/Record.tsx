@@ -127,7 +127,7 @@ class Record extends PureComponent<IProps, IState> {
       );
     };
 
-    const pageTitle = this.queryParams.type === 'edit' ? '编辑' : '查看';
+    // const pageTitle = this.queryParams.type === 'edit' ? '编辑' : '查看';
     const headTitle = tabType === 'stageWriteOff' ? '核销结算' : '服务费核销结算';
     // const dataSource =
 
@@ -137,18 +137,19 @@ class Record extends PureComponent<IProps, IState> {
     };
 
     return (
-      <Card className="wrapper-right-content" title={pageTitle}>
-        {contractDetail ? genContractInfo() : ''}
-
-        <Tabs activeKey={tabType} onChange={this.changeTab}>
-          <TabPane tab="分期核销" key="stageWriteOff">
-            <InvoiceRecord />
-            <WriteOffSettlement {...WriteOffSettlementProps} />
-          </TabPane>
-          <TabPane tab="服务费核销" key="serviceWriteOff">
-            <WriteOffSettlement {...WriteOffSettlementProps} />
-          </TabPane>
-        </Tabs>
+      <Card className="wrapper-right-content" title="" bordered={false}>
+        <Fragment>
+          {contractDetail ? genContractInfo() : ''}
+          <Tabs activeKey={tabType} onChange={this.changeTab}>
+            <TabPane tab="分期核销" key="stageWriteOff">
+              <InvoiceRecord />
+              <WriteOffSettlement {...WriteOffSettlementProps} />
+            </TabPane>
+            <TabPane tab="服务费核销" key="serviceWriteOff">
+              <WriteOffSettlement {...WriteOffSettlementProps} />
+            </TabPane>
+          </Tabs>
+        </Fragment>
       </Card>
     );
   }

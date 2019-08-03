@@ -67,7 +67,7 @@ const ContractModel: ContractModelType = {
     },
     *queryList({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
-      console.log('queryList data ->', data);
+
       const { code, errMsg, body } = data;
       if (!code) {
         const { totalSize, currentPage, pageSize, dataList } = body;

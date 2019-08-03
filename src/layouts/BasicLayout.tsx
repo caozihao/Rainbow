@@ -118,7 +118,7 @@ class BasicLayout extends PureComponent<BasicLayoutProps> {
 
   render() {
     const { children, settings } = this.props;
-    console.log('settings ->', settings);
+
     return (
       <Fragment>
         <span className={styles.version}>报表管理系统 v0.1</span>
