@@ -102,7 +102,7 @@ class Invoice extends PureComponent<IProps, IState> {
     };
 
     return (
-      <Card className="wrapper-right-content" title="添加发票" bordered={false}>
+      <Card className="wrapper-right-content" title="" bordered={false}>
         {contractDetail ? genContractInfo() : ''}
         <ToBeRelated />
         <BeRelated />

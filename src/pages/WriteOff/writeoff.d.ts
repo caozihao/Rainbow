@@ -10,7 +10,7 @@ export interface IContractDetail {
 }
 
 export interface IQueryParams {
-  type: string;
+  pageType: string;
   contractId: string;
   tabType: string;
 }

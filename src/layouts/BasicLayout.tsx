@@ -79,13 +79,13 @@ class BasicLayout extends PureComponent<BasicLayoutProps> {
     // console.log('BasicLayout this.props->', this.props);
     // console.log('BasicLayout history->', history);
 
-    history.listen(({ search }: any) => {
-      const { action, goBack } = history;
-      if (action === 'POP' && !search) {
-        // 如下路由："writeoff/list?currentPage=1&pageSize=10"，url上带参数的路由在浏览器回退的时候，路由会变成 "writeoff/list"，并不是我们想得到的路由，需要再往前回退一页，所以goBack(-2)
-        goBack(-2);
-      }
-    });
+    // history.listen(({ search }: any) => {
+    //   const { action, goBack } = history;
+    //   if (action === 'POP' && !search) {
+    //     // 如下路由："writeoff/list?currentPage=1&pageSize=10"，url上带参数的路由在浏览器回退的时候，路由会变成 "writeoff/list"，并不是我们想得到的路由，需要再往前回退一页，所以goBack(-2)
+    //     goBack(-2);
+    //   }
+    // });
   }
 
   /**

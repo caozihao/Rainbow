@@ -80,7 +80,7 @@ const ContractModel: ContractModelType = {
             dataPageSize: parseInt(pageSize, 10),
           },
         });
-        successCallback && successCallback();
+        successCallback && successCallback(dataList);
       } else {
         failCallback && failCallback(errMsg);
       }

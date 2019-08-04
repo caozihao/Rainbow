@@ -280,7 +280,10 @@ class QnFilter extends Component {
     const nameKey = settings.nameKey || 'label';
     const valueKey = settings.valueKey || 'value';
     const multiple = mode === 'multiple';
-    const { ifIsOptGroup } = otherProps;
+    let ifIsOptGroup = null;
+    if (otherProps) {
+      ifIsOptGroup = otherProps.ifIsOptGroup;
+    }
     const result = this.getLabelFromSelectOptions(
       value,
       settings.options,

@@ -78,7 +78,7 @@ class WriteOff extends PureComponent<IProps, IState> {
           <Icon
             type="plus"
             title="添加发票"
-            onClick={() => this.addTab('invoice', {})}
+            onClick={() => this.addTab('invoice', { contractId })}
             style={{ marginRight: '0.5rem' }}
           />
 
@@ -86,13 +86,13 @@ class WriteOff extends PureComponent<IProps, IState> {
             type="edit"
             title="编辑核销记录"
             style={{ marginRight: '0.5rem' }}
-            onClick={() => this.addTab('edit', { type: 'edit', contractId })}
+            onClick={() => this.addTab('edit', { pageType: 'edit', contractId })}
           />
           <Icon
             type="search"
             title="查看核销记录"
             style={{ marginRight: '0.5rem' }}
-            onClick={() => this.addTab('detail', { type: 'detail', contractId })}
+            onClick={() => this.addTab('detail', { pageType: 'detail', contractId })}
           />
         </Fragment>
       );
@@ -101,6 +101,7 @@ class WriteOff extends PureComponent<IProps, IState> {
 
   getQnListPageProps = () => {
     const { dataList, dataPageTotal, dataPageNo } = this.props;
+    // console.log('dataList ->', dataList);
     const copyTableListParams = Object.assign({}, tableListParams);
     copyTableListParams['option'] = this.option;
 
@@ -136,29 +137,27 @@ class WriteOff extends PureComponent<IProps, IState> {
     this.tableFilterParams = initializeFilterParams(tableFilterParams);
   }
 
-  componentDidUpdate(prevProps: IProps) {
-    const { dataList } = prevProps;
+  componentDidUpdate(prevProps: IProps) {}
+
+  updateList = () => {
     const { panes } = this.state;
-    let result = null;
-    if (!isEqual(dataList, this.props.dataList)) {
-      const newPanes = panes.map(v => {
-        if (v.key === 'list') {
-          v.content = (
-            <Card>
-              <QnListPage {...this.getQnListPageProps()} />
-            </Card>
-          );
-        }
-        return v;
-      });
-      result = {
-        panes: newPanes,
-      };
-    }
-    return result;
-  }
+    const newPanes = panes.map(v => {
+      if (v.key === 'list') {
+        v.content = (
+          <Card bordered={false}>
+            <QnListPage {...this.getQnListPageProps()} />
+          </Card>
+        );
+      }
+      return v;
+    });
+    this.setState({
+      panes: newPanes,
+    });
+  };
 
   queryList = (params: object) => {
+    console.log('params ->', params);
     const copyParams = dealWithQueryParams(params);
     const { dispatch } = this.props;
     dispatch({
@@ -168,7 +167,8 @@ class WriteOff extends PureComponent<IProps, IState> {
         reqType: 'POST',
         bodyData: copyParams,
       },
-      successCallback: () => {
+      successCallback: (dataList: []) => {
+        this.updateList();
         updateRoute(copyParams);
       },
     });
@@ -198,6 +198,7 @@ class WriteOff extends PureComponent<IProps, IState> {
   // handleClick = (e: Object): void => {};
 
   onChange = (activeKey: string) => {
+    console.log('activeKey ->', activeKey);
     this.setState({ activeKey });
   };
 
@@ -211,23 +212,37 @@ class WriteOff extends PureComponent<IProps, IState> {
     console.log('type ->', type);
     const { panes } = this.state;
     let tabItem = {};
-    let activeKey = type;
-    updateRoute(params);
-    switch (type) {
-      case 'invoice':
-        tabItem = { title: '添加发票', content: <Invoice {...params} />, key: 'invoice' };
-        break;
-      case 'detail':
-        tabItem = { title: '查看核销记录', content: <Record {...params} />, key: 'detail' };
-        break;
-      case 'edit':
-        tabItem = { title: '编辑核销记录', content: <Record {...params} />, key: 'edit' };
-        break;
-      default:
-        break;
+    let { contractId } = params;
+    let activeKey = `${type}_${contractId}`;
+    if (!panes.filter(v => v.key === activeKey).length) {
+      updateRoute(params);
+      switch (type) {
+        case 'invoice':
+          tabItem = {
+            title: '添加发票',
+            content: <Invoice {...params} />,
+            key: `invoice_${contractId}`,
+          };
+          break;
+        case 'detail':
+          tabItem = {
+            title: '查看核销记录',
+            content: <Record {...params} />,
+            key: `detail_${contractId}`,
+          };
+          break;
+        case 'edit':
+          tabItem = {
+            title: '编辑核销记录',
+            content: <Record {...params} />,
+            key: `edit_${contractId}`,
+          };
+          break;
+        default:
+          break;
+      }
+      panes.push(tabItem);
     }
-
-    panes.push(tabItem);
     this.setState({ panes, activeKey });
   };
 
@@ -259,6 +274,7 @@ class WriteOff extends PureComponent<IProps, IState> {
           activeKey={activeKey}
           type="editable-card"
           onEdit={this.onEdit}
+          className="display-tab"
         >
           {panes.map(pane => (
             <TabPane tab={pane.title} key={pane.key}>

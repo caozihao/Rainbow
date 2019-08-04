@@ -130,18 +130,18 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
   };
 
   genMiddleSectionToBeRelated = (headTitle = '') => {
-    const { type } = this.queryParams;
+    const { pageType } = this.queryParams;
     return (
       <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
         <h3>{headTitle}</h3>
-        {type === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
+        {pageType === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
       </div>
     );
   };
 
   render() {
     const { dataSource, headTitle, relationToContractLoading } = this.props;
-    const { type } = this.queryParams;
+    const { pageType } = this.queryParams;
     // console.log('type ->', type);
     // console.log('tableListParams ->', tableListParams);
     // console.log('this.tableListParams ->', this.tableListParams);
@@ -149,7 +149,7 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
     const QnListPagePropsToBeRelated: object = {
       dataSource,
       columns:
-        type === 'detail'
+        pageType === 'detail'
           ? genTableColumns(tableListParams)
           : genTableColumns(this.tableListParams),
       hasPagination: false,

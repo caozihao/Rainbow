@@ -87,12 +87,12 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   };
 
   genMiddleSectionBeRelated = () => {
-    const { type } = this.queryParams;
+    const { pageType } = this.queryParams;
     return (
       <Fragment>
         <div className="headLayout" style={{ marginBottom: '1rem' }}>
           <h3>发票记录</h3>
-          {type === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
+          {pageType === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
         </div>
       </Fragment>
     );
