@@ -25,12 +25,12 @@ const formDict = {
     required: true,
   },
   customName: genInputParam('客户名称'),
-  xiaoshoujinhli: genInputParam('归属销售经理'),
-  xiaoshoujinliyuangonghao: genInputParam('销售经理员工号'),
+  salesName: genInputParam('归属销售经理'),
+  salesNo: genInputParam('销售经理员工号'),
 
-  contactName: genInputParam('联系人'),
-  tel: genInputParam('联系方式'),
-  email: genInputParam('邮箱'),
+  // contactName: genInputParam('联系人'),
+  // tel: genInputParam('联系方式'),
+  // email: genInputParam('邮箱'),
 
   // effectiveDate: {
   //   title: '生效日期',
@@ -60,6 +60,18 @@ const formDict = {
   receivableNum: genInputParam('应收期数'),
   firstPayment: genInputParam('首付款'),
   periodPayment: genInputParam('每期应付'),
+  contactsInfo: {
+    tag: 'QnDynamicForm',
+    title: '',
+    otherProps: {
+      item: {
+        connectName: '联系人',
+        position: '职位',
+        connectWay: '联系方式',
+        email: '邮箱',
+      },
+    },
+  },
   // file: {
   //   title: '合同文件',
   //   tag: 'File',

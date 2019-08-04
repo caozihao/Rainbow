@@ -9,6 +9,8 @@ import { genTableColumns } from '../../../utils/format/dataGen';
 import tableFilterParams from './tableFilterParams';
 import { ContractModelState, namespace } from '../../../models/contract';
 import { formDict, formInitialValueObj } from './formParams';
+import debounce from 'lodash/debounce';
+
 import {
   getPageQuery,
   dealWithQueryParams,
@@ -89,8 +91,8 @@ class Contract extends PureComponent<IProps, IState> {
       rowsNumber: 2,
       rowSplitTitleDict: {
         0: '基础信息',
-        6: '联系人信息',
-        9: '交易信息',
+        6: '交易信息',
+        12: '联系人信息',
         // 14: '上传合同',
       },
     };
@@ -126,9 +128,9 @@ class Contract extends PureComponent<IProps, IState> {
       return (
         <Fragment>
           <Button style={{ marginRight: '10px' }}>查看</Button>
-          <QnFormModal {...copyQnFormModalProps}>
+          {/* <QnFormModal {...copyQnFormModalProps}>
             <Button type="primary">修改</Button>
-          </QnFormModal>
+          </QnFormModal> */}
         </Fragment>
       );
     },
@@ -159,13 +161,14 @@ class Contract extends PureComponent<IProps, IState> {
       },
     });
   };
+  queryListByDebounce = debounce(this.queryList, 1000);
 
   handlePageChange = (currentPage: number, pageSize: number) => {
-    this.queryList({ pageSize, currentPage });
+    this.queryListByDebounce({ pageSize, currentPage });
   };
 
   handleFilterChange = (filterParams: object) => {
-    this.queryList({ ...filterParams });
+    this.queryListByDebounce({ ...filterParams });
   };
 
   genMiddleSection = () => {
@@ -187,7 +190,7 @@ class Contract extends PureComponent<IProps, IState> {
     const { dataList, dataPageTotal, dataPageNo } = this.props;
     const copyTableListParams = Object.assign({}, tableListParams);
     copyTableListParams['option'] = this.option;
-    console.log('this.props ->', this.props);
+    // console.log('this.props ->', this.props);
 
     const QnListPageProps: object = {
       dataSource: dataList,

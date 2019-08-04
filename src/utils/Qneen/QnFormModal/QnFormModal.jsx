@@ -17,6 +17,7 @@ import {
 import QnSelect from '../QnSelect/QnSelect.jsx';
 import QnListTagAdder from '../QnListTagAdder/QnListTagAdder.jsx';
 import QnUpload from '../QnUpload/QnUpload.jsx';
+import QnDynamicForm from '../QnDynamicForm/QnDynamicForm.jsx';
 // import './QnFormModal.less';
 const log = console.log.bind(console);
 const FormItem = Form.Item;
@@ -98,13 +99,13 @@ class QnFormModal extends Component {
     const name = typeof itemData === 'string' ? itemData : itemData.name;
     // const { name } = itemData;
 
-    const { tag, title, required } = dataDict[name];
+    const { tag, title, required, otherProps } = dataDict[name];
     let rules = [];
     if (required) {
       rules = [
         {
           required: true,
-          message: `${name}不能为空`,
+          message: `${title}不能为空`,
         },
       ];
     } else {
@@ -115,7 +116,6 @@ class QnFormModal extends Component {
     const otherPropsOfDict =
       typeof dataDict[name].otherProps === 'undefined' ? {} : dataDict[name].otherProps;
     const itemProps = { ...inputLayout, ...otherPropsOfDict, ...otherPropsOfForm };
-    // log('itemProps', { ...otherPropsOfDict, ...otherPropsOfForm });
     const formPartDict = {
       Input: <Input {...itemProps} />,
       InputNumber: <InputNumber {...itemProps} />,
@@ -124,18 +124,28 @@ class QnFormModal extends Component {
       Select: <QnSelect {...itemProps} options={dataDict[name].options} />,
       QnListTagAdder: <QnListTagAdder {...itemProps} />,
       File: <QnUpload {...itemProps} />,
+      QnDynamicForm: <QnDynamicForm {...otherProps} />,
     };
 
     const formPart = formPartDict[tag];
     // 空对象在索引不存在的key值时, 会返回undefined ,但null和undefind若索引会报错并卡死
     const initialValue = initialValueObj || {};
-    const formItemLayout = {
+    let formItemLayout = {
       labelCol: { span: 7 },
       wrapperCol: { span: 14 },
     };
 
+    let colSpan = Math.ceil(24 / rowsNumber);
+    if (tag === 'QnDynamicForm') {
+      colSpan = 24;
+      formItemLayout = {
+        labelCol: { span: 0 },
+        wrapperCol: { span: 24 },
+      };
+    }
+
     return (
-      <Col span={Math.ceil(24 / rowsNumber)} key={name}>
+      <Col span={colSpan} key={name}>
         <FormItem {...formItemLayout} label={title}>
           {getFieldDecorator(name, {
             // valuePropName: 'value',
