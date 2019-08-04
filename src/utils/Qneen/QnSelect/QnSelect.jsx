@@ -26,6 +26,7 @@ class QnSelect extends Component {
   }
 
   onChange = value => {
+    const { formItemName, formProps } = this.props;
     this.setState({ value }, () => {
       if (typeof this.props.onChange === 'function') {
         this.props.onChange(value);
@@ -33,6 +34,19 @@ class QnSelect extends Component {
     });
   };
 
+  onFocus = value => {
+    const { formItemName, formProps, onFocus } = this.props;
+    this.setState({ value }, () => {
+      if (typeof onFocus === 'function') {
+        if (formItemName && formProps && formItemName === 'salesNo') {
+          const salesName = formProps.getFieldValue('salesName');
+          onFocus(salesName);
+        } else {
+          onFocus(value);
+        }
+      }
+    });
+  };
   getSelectOptions = (data, nameKey = 'label', valueKey = 'value') => {
     const options = [];
     if (Array.isArray(data)) {
@@ -42,7 +56,7 @@ class QnSelect extends Component {
         options.push(
           <Option key={`${value}`} value={`${value}`}>
             {name}
-          </Option>
+          </Option>,
         );
       }
     }
@@ -62,14 +76,14 @@ class QnSelect extends Component {
             childrenGroup.push(
               <Option key={`${v[valueKey]}`} value={`${v[valueKey]}`}>
                 {v[nameKey]}
-              </Option>
+              </Option>,
             );
           });
         }
         options.push(
           <OptGroup key={`${value}`} label={`${name}`}>
             {childrenGroup}
-          </OptGroup>
+          </OptGroup>,
         );
       }
     }
@@ -169,6 +183,7 @@ class QnSelect extends Component {
         /* value={this.state.value} */
         onChange={this.onChange}
         onDeselect={onDeselect}
+        onFocus={this.onFocus}
         disabled={disabled}
       >
         {ifIsOptGroup
@@ -194,6 +209,7 @@ QnSelect.propTypes = {
 
 QnSelect.defaultProps = {
   onChange: () => {},
+  onFocus: () => {},
   onDeselect: () => {},
   options: [],
   nameKey: 'label', // TODO 使得他可以是一个数组, 会将数组中的数据组合后用来显示
@@ -207,5 +223,6 @@ QnSelect.defaultProps = {
   otherProps: {
     placeholder: '请选择(支持输入搜索)',
   },
+  formItemName: '',
 };
 export default QnSelect;

@@ -99,7 +99,7 @@ class QnFormModal extends Component {
     const name = typeof itemData === 'string' ? itemData : itemData.name;
     // const { name } = itemData;
 
-    const { tag, title, required, otherProps } = dataDict[name];
+    const { tag, title, required, ...otherProps } = dataDict[name];
     let rules = [];
     if (required) {
       rules = [
@@ -116,11 +116,23 @@ class QnFormModal extends Component {
     const otherPropsOfDict =
       typeof dataDict[name].otherProps === 'undefined' ? {} : dataDict[name].otherProps;
     const itemProps = { ...inputLayout, ...otherPropsOfDict, ...otherPropsOfForm };
+    if (tag === 'QnSelect') {
+      // console.log('name ->', name);
+      // console.log('onChange ->', onChange);
+    }
     const formPartDict = {
       Input: <Input {...itemProps} />,
       InputNumber: <InputNumber {...itemProps} />,
       DatePicker: <DatePicker {...itemProps} />,
-      QnSelect: <QnSelect {...itemProps} options={dataDict[name].options} />,
+      QnSelect: (
+        <QnSelect
+          {...itemProps}
+          options={dataDict[name].options}
+          formItemName={name}
+          formProps={this.props.form}
+          {...otherProps}
+        />
+      ),
       Select: <QnSelect {...itemProps} options={dataDict[name].options} />,
       QnListTagAdder: <QnListTagAdder {...itemProps} />,
       File: <QnUpload {...itemProps} />,

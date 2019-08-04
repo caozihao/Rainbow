@@ -39,4 +39,7 @@ export default {
     updateCustomCommission: `${host}/receivable/updateCustomCommission`,
     updateCustomHw: `${host}/receivable/updateCustomHw`,
   },
+  account:{
+    queryByName: `${host}/account/queryByName`,
+  }
 };

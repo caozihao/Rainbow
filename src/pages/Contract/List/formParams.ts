@@ -1,6 +1,6 @@
 import { productTypeOption, constractStatusOption, contractTypeOption } from '../../../constant';
 
-const genInputParam = (name: string) => {
+const genInputParam = (name: string,otherProps={}) => {
   return {
     title: name,
     tag: 'Input',
@@ -26,7 +26,12 @@ const formDict = {
   },
   customName: genInputParam('客户名称'),
   salesName: genInputParam('归属销售经理'),
-  salesNo: genInputParam('销售经理员工号'),
+  salesNo: {
+    title: '销售经理员工号',
+    // options: productTypeOption,
+    tag: 'QnSelect',
+    required: true,
+  },
 
   // contactName: genInputParam('联系人'),
   // tel: genInputParam('联系方式'),

@@ -3,24 +3,26 @@ import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
 import { Card, Button, message } from 'antd';
 import withRouter from 'umi/withRouter';
-import { QnListPage, QnFormModal } from '../../../utils/Qneen/index';
+import { QnListPage, QnFormModal } from '@/utils/Qneen/index';
 import tableListParams from './tableListParams';
-import { genTableColumns } from '../../../utils/format/dataGen';
+import { genTableColumns } from '@/utils/format/dataGen';
 import tableFilterParams from './tableFilterParams';
-import { ContractModelState, namespace } from '../../../models/contract';
+import { ContractModelState } from '@/models/contract';
 import { formDict, formInitialValueObj } from './formParams';
 import debounce from 'lodash/debounce';
+import { AccountModelState } from '@/models/account';
 
 import {
   getPageQuery,
   dealWithQueryParams,
   updateRoute,
   initializeFilterParams,
-} from '../../../utils/utils';
+} from '@/utils/utils';
 import { formatMoment } from '../../../utils/format/dataFormatter';
 
 interface IConnectState extends ConnectState {
-  [namespace]: ContractModelState;
+  contract: ContractModelState;
+  account: AccountModelState;
 }
 interface IProps extends ConnectProps, ContractModelState {
   dispatch: Dispatch;
@@ -31,13 +33,15 @@ interface IState {
   ifShowFormLoading: boolean;
 }
 
-@connect(({ contract }: IConnectState) => {
+@connect(({ contract, account }: IConnectState) => {
   const { dataList, dataPageTotal, dataPageNo, dataPageSize } = contract;
+  const { accountList } = account;
   return {
     dataList,
     dataPageTotal,
     dataPageNo,
     dataPageSize,
+    accountList,
   };
 })
 class Contract extends PureComponent<IProps, IState> {
@@ -97,6 +101,9 @@ class Contract extends PureComponent<IProps, IState> {
       },
     };
 
+    const copyformDict = formDict;
+    copyformDict.salesNo.onFocus = this.queryByName;
+
     const commonParams = {
       formDict,
       formInitialValueObj,
@@ -109,7 +116,7 @@ class Contract extends PureComponent<IProps, IState> {
 
     if (type === 'QnListPage') {
       result = { ...commonParams, modalOtherProps };
-    } else {
+    } else if (type === 'QnFormModal') {
       result = { ...commonParams, ...modalOtherProps };
     }
     return result;
@@ -161,6 +168,23 @@ class Contract extends PureComponent<IProps, IState> {
       },
     });
   };
+
+  queryByName = (accountName = '') => {
+    console.log('name ->', name);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'account/queryByName',
+      payload: {
+        apiName: 'queryByName',
+        reqType: 'GET',
+        queryData: {
+          accountName,
+        },
+      },
+      successCallback: () => {},
+    });
+  };
+
   queryListByDebounce = debounce(this.queryList, 1000);
 
   handlePageChange = (currentPage: number, pageSize: number) => {

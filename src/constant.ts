@@ -9,14 +9,14 @@ export const contractTypeOption = [{ label: '硬件', value: '0' }, { label: '�
 export const constractStatusOption = [
   {
     label: 'Normal',
-    value: 'Normal',
+    value: '0',
   },
   {
     label: 'Legal',
-    value: 'Legal',
+    value: '1',
   },
   {
     label: '3rdParty',
-    value: '3rdParty',
+    value: '2',
   },
 ];
