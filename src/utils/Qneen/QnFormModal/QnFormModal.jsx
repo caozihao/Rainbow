@@ -98,8 +98,18 @@ class QnFormModal extends Component {
     const name = typeof itemData === 'string' ? itemData : itemData.name;
     // const { name } = itemData;
 
-    const { tag, title } = dataDict[name];
-    const rules = dataDict[name].rules || [];
+    const { tag, title, required } = dataDict[name];
+    let rules = [];
+    if (required) {
+      rules = [
+        {
+          required: true,
+          message: `${name}不能为空`,
+        },
+      ];
+    } else {
+      rules = dataDict[name].rules || [];
+    }
 
     const otherPropsOfForm = typeof itemData.otherProps === 'undefined' ? {} : itemData.otherProps;
     const otherPropsOfDict =
@@ -284,6 +294,7 @@ QnFormModal.defaultProps = {
   //     valueKey: 'name',
   //   },
   // },
+  required: false,
   formDict: null,
   formInitialValueObj: null,
   hasTooltip: false,

@@ -58,12 +58,13 @@ class ToBeRelated extends PureComponent<IProps, IState> {
           <Button
             onClick={this.unRelationToContract}
             disabled={!selectedRowKeys.length}
-            className="oboveArea"
+            // className="oboveArea"
             type="danger"
           >
             删除
           </Button>
         </div>
+        <br />
       </Fragment>
     );
   };
@@ -121,14 +122,15 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     return (
       <Spin spinning={!!unRelationToContractLoading}>
         {this.genMiddleSectionBeRelated()}
-        <Tabs defaultActiveKey={defaultTabKey} onChange={this.changeTab}>
+        <QnListPage {...QnListPagePropsBeRelated} />
+        {/* <Tabs defaultActiveKey={defaultTabKey} onChange={this.changeTab}>
           <TabPane tab="分期" key="instalment">
             <QnListPage {...QnListPagePropsBeRelated} />
           </TabPane>
           <TabPane tab="服务费" key="serviceFee">
             <QnListPage {...QnListPagePropsBeRelated} />
           </TabPane>
-        </Tabs>
+        </Tabs> */}
       </Spin>
     );
   }

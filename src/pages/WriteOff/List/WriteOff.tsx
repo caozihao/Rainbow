@@ -248,11 +248,11 @@ class WriteOff extends PureComponent<IProps, IState> {
 
   remove = (targetKey: string) => {
     let { panes: oldPanes } = this.state;
-
     const panes = oldPanes.filter(pane => pane.key !== targetKey);
-
-    const activeKey = panes[0].key;
-
+    let activeKey = '';
+    if (panes.length) {
+      activeKey = panes[0].key;
+    }
     this.setState({ panes, activeKey });
   };
 

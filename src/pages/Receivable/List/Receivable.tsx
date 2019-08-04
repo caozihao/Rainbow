@@ -173,7 +173,7 @@ class Receivable extends PureComponent<IProps, IState> {
     return (
       <Fragment>
         <div className="headLayout" style={{ marginBottom: '1rem' }}>
-          <h3>发票记录</h3>
+          {/* <h3>发票记录</h3> */}
           <Button onClick={() => {}}>导出</Button>
         </div>
       </Fragment>

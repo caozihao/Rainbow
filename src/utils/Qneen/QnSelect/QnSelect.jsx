@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { Select } from 'antd';
-// import './QnSelect.less';
-// const Option = Select.Option;
+
+const { Option, OptGroup } = Select;
 const log = console.log.bind(console);
 
 class QnSelect extends Component {
@@ -33,9 +33,8 @@ class QnSelect extends Component {
     });
   };
 
-  getSelectOptions = (data, nameKey = 'name', valueKey = 'id') => {
+  getSelectOptions = (data, nameKey = 'label', valueKey = 'value') => {
     const options = [];
-    const Option = Select.Option;
     if (Array.isArray(data)) {
       for (let i = 0; i < data.length; i += 1) {
         const name = data[i][nameKey];
@@ -44,6 +43,33 @@ class QnSelect extends Component {
           <Option key={`${value}`} value={`${value}`}>
             {name}
           </Option>
+        );
+      }
+    }
+    return options;
+  };
+
+  getSelectOptionsGroup = (data, nameKey = 'label', valueKey = 'value') => {
+    const options = [];
+    if (Array.isArray(data)) {
+      for (let i = 0; i < data.length; i += 1) {
+        const name = data[i][nameKey];
+        const value = data[i][valueKey];
+        const children = data[i]['children'];
+        const childrenGroup = [];
+        if (children.length) {
+          children.forEach(v => {
+            childrenGroup.push(
+              <Option key={`${v[valueKey]}`} value={`${v[valueKey]}`}>
+                {v[nameKey]}
+              </Option>
+            );
+          });
+        }
+        options.push(
+          <OptGroup key={`${value}`} label={`${name}`}>
+            {childrenGroup}
+          </OptGroup>
         );
       }
     }
@@ -119,22 +145,35 @@ class QnSelect extends Component {
       }
     }
 
-    const { onChange, onDeselect, options, nameKey, valueKey, disabled } = this.props;
+    const {
+      onDeselect,
+      options,
+      nameKey,
+      valueKey,
+      disabled,
+      otherProps,
+      width,
+      style,
+      allowClear,
+    } = this.props;
+    const { ifIsOptGroup } = otherProps;
     return (
       <Select
         className="QnSelect"
         {...filterProps}
         {...modeProps}
-        {...this.props.otherProps}
-        style={{ width: this.props.width, ...this.props.style }}
-        allowClear={this.props.allowClear}
+        {...otherProps}
+        style={{ width, ...style }}
+        allowClear={allowClear}
         value={this.formatSelectValue(this.state.value)}
         /* value={this.state.value} */
         onChange={this.onChange}
         onDeselect={onDeselect}
         disabled={disabled}
       >
-        {this.getSelectOptions(options, nameKey, valueKey)}
+        {ifIsOptGroup
+          ? this.getSelectOptionsGroup(options, nameKey, valueKey)
+          : this.getSelectOptions(options, nameKey, valueKey)}
       </Select>
     );
   }
@@ -157,7 +196,7 @@ QnSelect.defaultProps = {
   onChange: () => {},
   onDeselect: () => {},
   options: [],
-  nameKey: 'name', // TODO 使得他可以是一个数组, 会将数组中的数据组合后用来显示
+  nameKey: 'label', // TODO 使得他可以是一个数组, 会将数组中的数据组合后用来显示
   valueKey: 'value',
   disabled: false,
   width: '100%',
@@ -165,8 +204,8 @@ QnSelect.defaultProps = {
   allowClear: true,
   // mode 可以设置多选
   // 其他属性,原封不动的传入antd原生select组件
-  // otherProps: {
-  //   placeholder: '请选择(支持输入搜索)',
-  // },
+  otherProps: {
+    placeholder: '请选择(支持输入搜索)',
+  },
 };
 export default QnSelect;

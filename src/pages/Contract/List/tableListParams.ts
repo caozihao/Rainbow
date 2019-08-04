@@ -16,7 +16,7 @@ export default {
     title: '产品类型',
   },
   type: {
-    name: 'type',
+    name: 'productType',
     title: '合同类型',
   },
   totalAmount: {

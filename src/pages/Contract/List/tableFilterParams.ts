@@ -1,4 +1,5 @@
-import {rangeTimeProps} from '../../../utils/format/dataFormatter';
+import { rangeTimeProps } from '../../../utils/format/dataFormatter';
+import { productTypeOption, contractTypeOption } from '../../../constant';
 
 export default [
   {
@@ -17,14 +18,9 @@ export default [
     tag: 'Select',
     name: 'productType',
     title: '产品类型',
-    initValue: [],
     // otherProps: {mode: 'multiple' },
     // mode: 'multiple',
-    options: [
-      { label: '直销', value: '直销' },
-      { label: '传销', value: '渠道' },
-      { label: '爱德堡', value: '爱德堡' },
-    ],
+    options: productTypeOption,
   },
   {
     tag: 'Select',
@@ -33,7 +29,7 @@ export default [
     // initValue: [],
     // otherProps: {mode: 'multiple' },
     // mode: 'multiple',
-    options: [{ label: '类型一', value: '1' }, { label: '类型二', value: '2' }],
+    options: contractTypeOption,
   },
   {
     tag: 'RangePicker',

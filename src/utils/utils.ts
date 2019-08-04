@@ -42,7 +42,7 @@ export function initializeFilterParams(tableFilterParams: Array<any>) {
       const startDateValue = queryParam[dateArr[0]];
       const endDateValue = queryParam[dateArr[1]];
       if (startDateValue && endDateValue) {
-        v.initValue = [moment(parseInt(startDateValue, 10)), moment(parseInt(endDateValue, 10))];
+        v.initValue = [moment(startDateValue), moment(endDateValue)];
       }
     }
     return v;

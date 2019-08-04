@@ -89,8 +89,9 @@ class Contract extends PureComponent<IProps, IState> {
       rowsNumber: 2,
       rowSplitTitleDict: {
         0: '基础信息',
-        8: '交易信息',
-        14: '上传合同',
+        6: '联系人信息',
+        9: '交易信息',
+        // 14: '上传合同',
       },
     };
 
@@ -186,7 +187,7 @@ class Contract extends PureComponent<IProps, IState> {
     const { dataList, dataPageTotal, dataPageNo } = this.props;
     const copyTableListParams = Object.assign({}, tableListParams);
     copyTableListParams['option'] = this.option;
-    // console.log('this.props ->', this.props);
+    console.log('this.props ->', this.props);
 
     const QnListPageProps: object = {
       dataSource: dataList,

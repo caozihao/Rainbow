@@ -83,7 +83,7 @@ class Invoice extends PureComponent<IProps, IState> {
       const { customId, contractNo, effectiveDate, customName } = contractDetail;
       return (
         <Fragment>
-          <h3>合同信息</h3>
+          {/* <h3>合同信息</h3> */}
           {/* <Row>
             <Col span={6}>客户编号：{customId}</Col>
             <Col span={6}>合同编号：{contractNo}</Col>

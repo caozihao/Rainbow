@@ -44,7 +44,7 @@ const ReceivableModel: ReceivableModelType = {
     *queryCustomCommission({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -59,7 +59,7 @@ const ReceivableModel: ReceivableModelType = {
     *queryCustomHw({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -74,7 +74,7 @@ const ReceivableModel: ReceivableModelType = {
     *queryHwDetail({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -89,7 +89,7 @@ const ReceivableModel: ReceivableModelType = {
     *queryHwSummary({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -104,7 +104,7 @@ const ReceivableModel: ReceivableModelType = {
     *queryServiceDetail({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -119,7 +119,7 @@ const ReceivableModel: ReceivableModelType = {
     *queryReceivableRecord({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -133,7 +133,7 @@ const ReceivableModel: ReceivableModelType = {
     *queryServiceSummary({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -148,7 +148,7 @@ const ReceivableModel: ReceivableModelType = {
     *updateCustomCommission({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -157,7 +157,7 @@ const ReceivableModel: ReceivableModelType = {
     *updateCustomHw({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);

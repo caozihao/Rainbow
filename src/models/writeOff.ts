@@ -46,7 +46,7 @@ const WriteOffModel: WriteOffModelType = {
     *createWriteOff({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -55,7 +55,7 @@ const WriteOffModel: WriteOffModelType = {
     *deleteByWriteOffId({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -64,7 +64,7 @@ const WriteOffModel: WriteOffModelType = {
     *exportByContractId({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -73,7 +73,7 @@ const WriteOffModel: WriteOffModelType = {
     *queryCommissionByContractId({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -88,7 +88,7 @@ const WriteOffModel: WriteOffModelType = {
     *querySettlementByContractId({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -103,7 +103,7 @@ const WriteOffModel: WriteOffModelType = {
     *queryWriteOffRecord({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -117,7 +117,7 @@ const WriteOffModel: WriteOffModelType = {
     *relationToContract({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -126,7 +126,7 @@ const WriteOffModel: WriteOffModelType = {
     *unRelationToContract({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -135,7 +135,7 @@ const WriteOffModel: WriteOffModelType = {
     *syncByCustomId({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);

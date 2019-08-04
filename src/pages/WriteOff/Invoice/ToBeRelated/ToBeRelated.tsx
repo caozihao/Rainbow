@@ -109,11 +109,11 @@ class ToBeRelated extends PureComponent<IProps, IState> {
               style={{ marginRight: '1rem' }}
               type="primary"
             >
-              添加到分期
+              添加
             </Button>
-            <Button disabled={!selectedRowKeys.length} onClick={() => this.relationToContract('1')}>
+            {/* <Button disabled={!selectedRowKeys.length} onClick={() => this.relationToContract('1')}>
               添加到服务费
-            </Button>
+            </Button> */}
           </div>
         </div>
         <br />

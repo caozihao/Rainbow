@@ -1,13 +1,16 @@
+import { productTypeOption, constractStatusOption, contractTypeOption } from '../../../constant';
+
 const genInputParam = (name: string) => {
   return {
     title: name,
     tag: 'Input',
-    rules: [
-      {
-        required: true,
-        message: `${name}不能为空`,
-      },
-    ],
+    required: true,
+    // rules: [
+    //   {
+    //     required: true,
+    //     message: `${name}不能为空`,
+    //   },
+    // ],
     otherProps: {},
   };
 };
@@ -17,132 +20,50 @@ const formDict = {
   customId: genInputParam('客户编号'),
   type: {
     title: '合同类型',
-    options: [
-      {
-        title: '1',
-        name: 'all',
-      },
-      {
-        title: '2',
-        name: 'sale',
-      },
-      {
-        title: '3',
-        name: 'customer',
-      },
-    ],
+    options: contractTypeOption,
     tag: 'QnSelect',
-    rules: [
-      {
-        required: true,
-        message: '合同类型不能为空',
-      },
-    ],
-    otherProps: {
-      nameKey: 'title',
-      valueKey: 'name',
-    },
+    required: true,
   },
   customName: genInputParam('客户名称'),
+  xiaoshoujinhli: genInputParam('归属销售经理'),
+  xiaoshoujinliyuangonghao: genInputParam('销售经理员工号'),
+
   contactName: genInputParam('联系人'),
   tel: genInputParam('联系方式'),
   email: genInputParam('邮箱'),
-  effectiveDate: {
-    title: '生效日期',
-    tag: 'DatePicker',
-    rules: [
-      {
-        required: true,
-        message: '生效日期不能为空',
-      },
-    ],
-  },
+
+  // effectiveDate: {
+  //   title: '生效日期',
+  //   tag: 'DatePicker',
+  //   rules: [
+  //     {
+  //       required: true,
+  //       message: '生效日期不能为空',
+  //     },
+  //   ],
+  // },
   //
   productType: {
     title: '产品类型',
-    options: [
-      {
-        title: '销售',
-        name: '1',
-      },
-      {
-        title: '渠道',
-        name: '2',
-      },
-      {
-        title: '爱德堡',
-        name: '3',
-      },
-    ],
+    options: productTypeOption,
     tag: 'QnSelect',
-    rules: [
-      {
-        required: true,
-        message: '合同类型不能为空',
-      },
-    ],
-    otherProps: {
-      nameKey: 'title',
-      valueKey: 'name',
-    },
+    required: true,
   },
   status: {
     title: '合同状态',
     // Normal,Legal,3rd party
-    options: [
-      {
-        title: 'Normal',
-        name: 'Normal',
-      },
-      {
-        title: 'Legal',
-        name: 'Legal',
-      },
-      {
-        title: '3rdParty',
-        name: '3rdParty',
-      },
-    ],
+    options: constractStatusOption,
     tag: 'QnSelect',
-    rules: [
-      {
-        required: true,
-        message: '合同状态不能为空',
-      },
-    ],
-    otherProps: {
-      nameKey: 'title',
-      valueKey: 'name',
-    },
+    required: true,
   },
   totalAmount: genInputParam('总金额'),
   receivableNum: genInputParam('应收期数'),
   firstPayment: genInputParam('首付款'),
-  periodPayment: {
-    title: '每期应付',
-    // Normal,Legal,3rd party
-    options: [
-      {
-        title: '自动生成',
-        name: 'auto',
-      },
-    ],
-    tag: 'QnSelect',
-    rules: [
-      {
-        required: true,
-        message: '每期应付不能为空',
-      },
-    ],
-    otherProps: {
-      nameKey: 'title',
-      valueKey: 'name',
-    },
-  },
-  file: {
-    title: '合同文件',
-    tag: 'File',
-  },
+  periodPayment: genInputParam('每期应付'),
+  // file: {
+  //   title: '合同文件',
+  //   tag: 'File',
+  // },
 };
 
 const formInitialValueObj = {

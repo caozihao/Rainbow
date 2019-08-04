@@ -1,4 +1,12 @@
+import { productTypeOption, constractStatusOption, contractTypeOption } from '../../../constant';
+
 export default [
+  {
+    tag: 'Input',
+    name: 'customName',
+    title: '客户名称',
+    // initValue: undefined,
+  },
   {
     tag: 'Input',
     name: 'contractNo',
@@ -6,23 +14,12 @@ export default [
     // initValue: undefined,
   },
   {
-    tag: 'Input',
-    name: 'customId',
-    title: '客户编号',
-    // initValue: undefined,
-  },
-  {
     tag: 'Select',
     name: 'productType',
     title: '产品类型',
-    initValue: [],
     // otherProps: {mode: 'multiple' },
     // mode: 'multiple',
-    options: [
-      { label: '直销', value: '直销' },
-      { label: '传销', value: '渠道' },
-      { label: '爱德堡', value: '爱德堡' },
-    ],
+    options: productTypeOption,
   },
   {
     tag: 'Select',
@@ -31,6 +28,6 @@ export default [
     // initValue: [],
     // otherProps: {mode: 'multiple' },
     // mode: 'multiple',
-    options: [{ label: '类型一', value: '1' }, { label: '类型二', value: '2' }],
+    options: contractTypeOption,
   },
 ];

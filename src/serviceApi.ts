@@ -8,7 +8,7 @@ export default {
     create: `${host}/contract/create`,
     getContractFileById: `${host}/contract/getContractFile/:id`,
     modify: `${host}/contract/modify`,
-    queryList: `${host}/contract/query`,
+    queryList: `${host}/contract/query`, // ok
     queryById: `${host}/contract/queryById/:contractId`,
   },
   writeOff: {

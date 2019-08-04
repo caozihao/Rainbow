@@ -41,7 +41,7 @@ const ContractModel: ContractModelType = {
     *create({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code, 10)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -50,7 +50,7 @@ const ContractModel: ContractModelType = {
     *getContractFileById({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -59,7 +59,7 @@ const ContractModel: ContractModelType = {
     *modify({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -69,7 +69,7 @@ const ContractModel: ContractModelType = {
       const data = yield call(requestApi, { ...payload, namespace });
 
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         const { totalSize, currentPage, pageSize, dataList } = body;
         yield put({
           type: 'save',
@@ -88,7 +88,7 @@ const ContractModel: ContractModelType = {
     *queryById({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {

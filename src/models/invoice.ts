@@ -35,7 +35,7 @@ const InvoiceModel: InvoiceModelType = {
     *queryByCustomIdAndEffectTime({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -50,7 +50,7 @@ const InvoiceModel: InvoiceModelType = {
     *relationToContract({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -59,7 +59,7 @@ const InvoiceModel: InvoiceModelType = {
     *unRelationToContract({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);
@@ -68,7 +68,7 @@ const InvoiceModel: InvoiceModelType = {
     *queryRelatedInvoice({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
@@ -83,7 +83,7 @@ const InvoiceModel: InvoiceModelType = {
     *syncByCustomId({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
-      if (!code) {
+      if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
         failCallback && failCallback(errMsg);

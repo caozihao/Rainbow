@@ -57,7 +57,7 @@ class QnFilter extends Component {
         {
           tags,
         },
-        this.saveFilterParams,
+        // this.saveFilterParams,
       );
     }
   }
@@ -67,6 +67,8 @@ class QnFilter extends Component {
     const { tags } = this.state;
     const allValues = this.props.form.getFieldsValue();
     const transferFormData = this.transferFormData(allValues);
+    console.log('allValues ->', allValues);
+    console.log('transferFormData ->', transferFormData);
     handleChange(transferFormData);
     saveDataToStore(tags);
   };
@@ -451,8 +453,8 @@ class QnFilter extends Component {
           if (nameArr.length && value.length) {
             const startDateKey = nameArr[0];
             const endDateKey = nameArr[1];
-            const startDateValue = value[0].format('x');
-            const endDateValue = value[1].format('x');
+            const startDateValue = value[0].format('YYYY-MM-DD');
+            const endDateValue = value[1].format('YYYY-MM-D');
             cleanData[startDateKey] = startDateValue;
             cleanData[endDateKey] = endDateValue;
           }
