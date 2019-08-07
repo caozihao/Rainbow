@@ -31,6 +31,7 @@ interface IProps extends ConnectProps, ContractModelState {
 interface IState {
   selectedRowKeys: object;
   ifShowFormLoading: boolean;
+  contactsInfo: string;
 }
 
 @connect(({ contract, account }: IConnectState) => {
@@ -88,6 +89,27 @@ class Contract extends PureComponent<IProps, IState> {
     return promise;
   };
 
+  saveDynamicFormData = (formDict: object) => {
+    console.log('formDict ->', formDict);
+    let length = formDict.keys.length;
+    let arr = [];
+    for (let i = 0; i < length; i++) {
+      arr.push({
+        connectName: formDict[`connectName_${i}`],
+        connectWay: formDict[`connectWay_${i}`],
+        email: formDict[`email_${i}`],
+        position: formDict[`position_${i}`],
+      });
+    }
+
+    const contactsInfo = JSON.stringify(arr);
+    console.log('contactsInfo ->', contactsInfo);
+
+    this.setState({
+      contactsInfo,
+    });
+  };
+
   QnFormModalProps = (type: string) => {
     const { ifShowFormLoading } = this.state;
     const modalOtherProps = {
@@ -101,8 +123,7 @@ class Contract extends PureComponent<IProps, IState> {
       },
     };
 
-    const copyformDict = formDict;
-    copyformDict.salesNo.onFocus = this.queryByName;
+    formDict.salesNo.onFocus = this.queryByName;
 
     const commonParams = {
       formDict,
@@ -110,6 +131,7 @@ class Contract extends PureComponent<IProps, IState> {
       handleTriggerClick: () => {},
       handleOk: this.addAndUpdate,
       ifShowFormLoading,
+      saveDynamicFormData: this.saveDynamicFormData,
     };
 
     let result = {};
@@ -119,6 +141,7 @@ class Contract extends PureComponent<IProps, IState> {
     } else if (type === 'QnFormModal') {
       result = { ...commonParams, ...modalOtherProps };
     }
+
     return result;
   };
 
@@ -148,7 +171,6 @@ class Contract extends PureComponent<IProps, IState> {
   componentDidMount() {
     this.queryList(getPageQuery());
     this.tableFilterParams = initializeFilterParams(tableFilterParams);
-    console.log(' this.tableFilterParams ->', this.tableFilterParams);
   }
 
   componentDidUpdate() {}

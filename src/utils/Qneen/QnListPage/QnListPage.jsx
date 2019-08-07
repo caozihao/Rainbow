@@ -47,6 +47,7 @@ class QnListPage extends Component {
           formDict={this.props.formDict}
           formInitValueObj={this.props.formInitValueObj}
           handleOk={this.props.handleOk}
+          saveDynamicFormData={this.props.saveDynamicFormData}
           {...this.props.modalOtherProps}
         />
       );

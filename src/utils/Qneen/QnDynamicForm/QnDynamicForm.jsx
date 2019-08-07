@@ -5,6 +5,7 @@
 import React, { Component, Fragment } from 'react';
 import propTypes from 'prop-types';
 import { Form, Input, Icon, Button, Row, Col, message } from 'antd';
+import styles from './QnDynamicForm.less';
 
 let id = 0;
 
@@ -58,8 +59,10 @@ class QnDynamicForm extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const { keys, names } = values;
-        // console.log('Received values of form: ', values);
-        message.success('保存成功')
+        console.log('Received values of form: ', values);
+        console.log('this.props ', this.props);
+        this.props.saveDynamicFormData(values);
+        message.success('保存成功');
       }
     });
   };
@@ -73,7 +76,7 @@ class QnDynamicForm extends Component {
     for (const key in item) {
       number++;
       result.push(
-        <Col span={12}>
+        <Col span={12} key={key}>
           <Form.Item {...this.formItemLayout} label={item[key]} required key={key}>
             {getFieldDecorator(`${key}_${index}`, {
               validateTrigger: ['onChange', 'onBlur'],
@@ -86,11 +89,13 @@ class QnDynamicForm extends Component {
               ],
             })(<Input placeholder={`请输入${item[key]}`} />)}
             {number === 4 ? (
-              <Icon
-                className="dynamic-delete-button"
-                type="minus-circle-o"
-                onClick={() => this.remove(data)}
-              />
+              <Fragment>
+                <Icon
+                  className={styles.deleteButton}
+                  type="minus-circle-o"
+                  onClick={() => this.remove(data)}
+                />
+              </Fragment>
             ) : null}
           </Form.Item>
         </Col>,

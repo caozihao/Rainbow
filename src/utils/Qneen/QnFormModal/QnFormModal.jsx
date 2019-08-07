@@ -93,13 +93,11 @@ class QnFormModal extends Component {
       style: { width: '100%' },
     };
 
-    const { rowsNumber } = this.props;
-
-    // log('itemData', itemData);
+    const { rowsNumber, saveDynamicFormData } = this.props;
     const name = typeof itemData === 'string' ? itemData : itemData.name;
     // const { name } = itemData;
 
-    const { tag, title, required, ...otherProps } = dataDict[name];
+    const { tag, title, required, otherProps, ...otherParams } = dataDict[name];
     let rules = [];
     if (required) {
       rules = [
@@ -115,11 +113,12 @@ class QnFormModal extends Component {
     const otherPropsOfForm = typeof itemData.otherProps === 'undefined' ? {} : itemData.otherProps;
     const otherPropsOfDict =
       typeof dataDict[name].otherProps === 'undefined' ? {} : dataDict[name].otherProps;
-    const itemProps = { ...inputLayout, ...otherPropsOfDict, ...otherPropsOfForm };
+    const itemProps = { ...inputLayout, ...otherPropsOfDict, ...otherPropsOfForm, ...otherParams };
     if (tag === 'QnSelect') {
       // console.log('name ->', name);
       // console.log('onChange ->', onChange);
     }
+
     const formPartDict = {
       Input: <Input {...itemProps} />,
       InputNumber: <InputNumber {...itemProps} />,
@@ -136,7 +135,9 @@ class QnFormModal extends Component {
       Select: <QnSelect {...itemProps} options={dataDict[name].options} />,
       QnListTagAdder: <QnListTagAdder {...itemProps} />,
       File: <QnUpload {...itemProps} />,
-      QnDynamicForm: <QnDynamicForm {...otherProps} />,
+      QnDynamicForm: (
+        <QnDynamicForm {...otherProps} {...itemProps} saveDynamicFormData={saveDynamicFormData} />
+      ),
     };
 
     const formPart = formPartDict[tag];
@@ -326,6 +327,7 @@ QnFormModal.defaultProps = {
   width: 500,
   rowsNumber: 1,
   rowSplitTitleDict: null,
+  saveDynamicFormData: () => {},
 };
 
 export default Form.create()(QnFormModal);
