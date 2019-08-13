@@ -24,7 +24,7 @@ interface IConnectState extends ConnectState {
   contract: ContractModelState;
   account: AccountModelState;
 }
-interface IProps extends ConnectProps, ContractModelState {
+interface IProps extends ConnectProps, ContractModelState, AccountModelState {
   dispatch: Dispatch;
 }
 
@@ -51,13 +51,14 @@ class Contract extends PureComponent<IProps, IState> {
     this.state = {
       selectedRowKeys: [],
       ifShowFormLoading: false,
+      contactsInfo: '',
     };
   }
 
   addAndUpdate = (values: object) => {
-    console.log('values ->', values);
+    const { contactsInfo } = this.state;
     const copyValue = Object.assign({}, values);
-    copyValue['effectiveDate'] = formatMoment(copyValue['effectiveDate']);
+    copyValue['contactsInfo'] = contactsInfo;
 
     let api = 'contract/create';
     let successMesage = '添加成功！';
@@ -77,7 +78,7 @@ class Contract extends PureComponent<IProps, IState> {
         payload: {
           apiName: 'create',
           reqType: 'POST',
-          bodyData: values,
+          bodyData: copyValue,
         },
         successCallback: () => {
           message.success(successMesage);
@@ -90,7 +91,7 @@ class Contract extends PureComponent<IProps, IState> {
   };
 
   saveDynamicFormData = (formDict: object) => {
-    console.log('formDict ->', formDict);
+    // console.log('formDict ->', formDict);
     let length = formDict.keys.length;
     let arr = [];
     for (let i = 0; i < length; i++) {
@@ -103,7 +104,7 @@ class Contract extends PureComponent<IProps, IState> {
     }
 
     const contactsInfo = JSON.stringify(arr);
-    console.log('contactsInfo ->', contactsInfo);
+    // console.log('contactsInfo ->', contactsInfo);
 
     this.setState({
       contactsInfo,
@@ -112,6 +113,8 @@ class Contract extends PureComponent<IProps, IState> {
 
   QnFormModalProps = (type: string) => {
     const { ifShowFormLoading } = this.state;
+    const { accountList } = this.props;
+    // console.log('accountList ->', accountList);
     const modalOtherProps = {
       width: 800,
       rowsNumber: 2,
@@ -124,6 +127,12 @@ class Contract extends PureComponent<IProps, IState> {
     };
 
     formDict.salesNo.onFocus = this.queryByName;
+    formDict.salesNo.options = accountList.map((v, i) => {
+      const { accountNo, name } = v;
+      return { label: name, value: accountNo };
+    });
+
+    // console.log('formDict.salesNo.options ->', formDict.salesNo.options);
 
     const commonParams = {
       formDict,
@@ -192,8 +201,9 @@ class Contract extends PureComponent<IProps, IState> {
   };
 
   queryByName = (accountName = '') => {
-    console.log('name ->', name);
+    // console.log('accountName ->', accountName);
     const { dispatch } = this.props;
+
     dispatch({
       type: 'account/queryByName',
       payload: {
@@ -236,7 +246,6 @@ class Contract extends PureComponent<IProps, IState> {
     const { dataList, dataPageTotal, dataPageNo } = this.props;
     const copyTableListParams = Object.assign({}, tableListParams);
     copyTableListParams['option'] = this.option;
-    // console.log('this.props ->', this.props);
 
     const QnListPageProps: object = {
       dataSource: dataList,

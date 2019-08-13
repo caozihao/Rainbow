@@ -25,7 +25,7 @@ const formDict = {
     required: true,
   },
   customName: genInputParam('客户名称'),
-  salesName: genInputParam('归属销售经理'),
+  salesName: genInputParam('归属销售经理',{required:false}),
   salesNo: {
     title: '销售经理员工号',
     // options: productTypeOption,

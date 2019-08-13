@@ -1,6 +1,7 @@
 import { Effect } from 'dva';
 import { Reducer } from 'redux';
 import { requestApi } from '../utils/request';
+import { message } from 'antd';
 
 export const namespace = 'account';
 export interface AccountModelState {
@@ -33,11 +34,12 @@ const AccountModel: AccountModelType = {
         yield put({
           type: 'save',
           payload: {
-            dataList: body,
+            accountList: body,
           },
         });
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },

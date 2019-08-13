@@ -67,8 +67,7 @@ class QnDynamicForm extends Component {
     });
   };
 
-  genInputGroup = (data, index) => {
-    // console.log('data ->', data);
+  genInputGroup = (k, index) => {
     const { item } = this.props;
     const { getFieldDecorator } = this.props.form;
     const result = [];
@@ -76,9 +75,9 @@ class QnDynamicForm extends Component {
     for (const key in item) {
       number++;
       result.push(
-        <Col span={12} key={key}>
+        <Col span={12} key={`${k}_${key}`}>
           <Form.Item {...this.formItemLayout} label={item[key]} required key={key}>
-            {getFieldDecorator(`${key}_${index}`, {
+            {getFieldDecorator(`${key}_${k}`, {
               validateTrigger: ['onChange', 'onBlur'],
               rules: [
                 {
@@ -93,7 +92,7 @@ class QnDynamicForm extends Component {
                 <Icon
                   className={styles.deleteButton}
                   type="minus-circle-o"
-                  onClick={() => this.remove(data)}
+                  onClick={() => this.remove(k)}
                 />
               </Fragment>
             ) : null}
@@ -111,8 +110,8 @@ class QnDynamicForm extends Component {
 
     const keys = getFieldValue('keys');
 
-    let formItems = keys.map((data, index) => {
-      return this.genInputGroup(data, index);
+    let formItems = keys.map((k, index) => {
+      return this.genInputGroup(k, index);
     });
 
     formItems = <Row>{formItems}</Row>;
