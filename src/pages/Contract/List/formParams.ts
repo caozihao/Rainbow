@@ -1,6 +1,6 @@
 import { productTypeOption, constractStatusOption, contractTypeOption } from '../../../constant';
 
-const genInputParam = (name: string,otherProps={}) => {
+const genInputParam = (name: string, otherProps = {}) => {
   return {
     title: name,
     tag: 'Input',
@@ -25,7 +25,7 @@ const formDict = {
     required: true,
   },
   customName: genInputParam('客户名称'),
-  salesName: genInputParam('归属销售经理',{required:false}),
+  salesName: genInputParam('归属销售经理', { required: false }),
   salesNo: {
     title: '销售经理员工号',
     // options: productTypeOption,
@@ -83,10 +83,4 @@ const formDict = {
   // },
 };
 
-const formInitialValueObj = {
-  // tagSort: 'portrait',
-  // speaker: 'all',
-  // recorderType: [],
-};
-
-export { formDict, formInitialValueObj };
+export { formDict };

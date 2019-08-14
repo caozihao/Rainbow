@@ -8,7 +8,7 @@ import tableListParams from './tableListParams';
 import { genTableColumns } from '@/utils/format/dataGen';
 import tableFilterParams from './tableFilterParams';
 import { ContractModelState } from '@/models/contract';
-import { formDict, formInitialValueObj } from './formParams';
+import { formDict } from './formParams';
 import debounce from 'lodash/debounce';
 import { AccountModelState } from '@/models/account';
 
@@ -18,7 +18,6 @@ import {
   updateRoute,
   initializeFilterParams,
 } from '@/utils/utils';
-import { formatMoment } from '../../../utils/format/dataFormatter';
 
 interface IConnectState extends ConnectState {
   contract: ContractModelState;
@@ -35,7 +34,7 @@ interface IState {
 }
 
 @connect(({ contract, account }: IConnectState) => {
-  const { dataList, dataPageTotal, dataPageNo, dataPageSize } = contract;
+  const { dataList, dataPageTotal, dataPageNo, dataPageSize, detail } = contract;
   const { accountList } = account;
   return {
     dataList,
@@ -43,6 +42,7 @@ interface IState {
     dataPageNo,
     dataPageSize,
     accountList,
+    detail,
   };
 })
 class Contract extends PureComponent<IProps, IState> {
@@ -61,9 +61,11 @@ class Contract extends PureComponent<IProps, IState> {
     copyValue['contactsInfo'] = contactsInfo;
 
     let api = 'contract/create';
+    let apiName = 'create';
     let successMesage = '添加成功！';
-    if (copyValue['_id']) {
+    if (copyValue['contractId']) {
       api = 'contract/modify';
+      apiName = 'modify';
       successMesage = '修改成功！';
     }
 
@@ -76,12 +78,13 @@ class Contract extends PureComponent<IProps, IState> {
       dispatch({
         type: api,
         payload: {
-          apiName: 'create',
+          apiName,
           reqType: 'POST',
           bodyData: copyValue,
         },
         successCallback: () => {
           message.success(successMesage);
+          this.queryList(getPageQuery());
           resolve();
         },
       });
@@ -91,15 +94,15 @@ class Contract extends PureComponent<IProps, IState> {
   };
 
   saveDynamicFormData = (formDict: object) => {
-    // console.log('formDict ->', formDict);
-    let length = formDict.keys.length;
+    console.log('formDict ->', formDict);
+    const { keys } = formDict;
     let arr = [];
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < keys.length; i++) {
       arr.push({
-        connectName: formDict[`connectName_${i}`],
-        connectWay: formDict[`connectWay_${i}`],
-        email: formDict[`email_${i}`],
-        position: formDict[`position_${i}`],
+        connectName: formDict[`connectName_${keys[i]}`],
+        connectWay: formDict[`connectWay_${keys[i]}`],
+        email: formDict[`email_${keys[i]}`],
+        position: formDict[`position_${keys[i]}`],
       });
     }
 
@@ -136,8 +139,6 @@ class Contract extends PureComponent<IProps, IState> {
 
     const commonParams = {
       formDict,
-      formInitialValueObj,
-      handleTriggerClick: () => {},
       handleOk: this.addAndUpdate,
       ifShowFormLoading,
       saveDynamicFormData: this.saveDynamicFormData,
@@ -158,18 +159,26 @@ class Contract extends PureComponent<IProps, IState> {
     name: 'option',
     title: '操作',
     render: (text, record) => {
+      const { contractId } = record;
       const copyQnFormModalProps = Object.assign({}, this.QnFormModalProps('QnFormModal'));
-      copyQnFormModalProps['buttonProps'] = {
-        type: 'primary',
-        title: '修改',
+
+      const extraData = {
+        buttonProps: {
+          type: 'primary',
+          title: '修改',
+        },
+        title: '修改合同',
+        handleOk: this.addAndUpdate,
+        handleTriggerClick: () => this.queryById(contractId),
+        formInitialValueObj: this.props.detail,
+        keyName: 'contractId',
+        keyValue: this.props.detail.contractId,
       };
-      copyQnFormModalProps['title'] = '修改合同';
+
       return (
         <Fragment>
           <Button style={{ marginRight: '10px' }}>查看</Button>
-          {/* <QnFormModal {...copyQnFormModalProps}>
-            <Button type="primary">修改</Button>
-          </QnFormModal> */}
+          <QnFormModal {...copyQnFormModalProps} {...extraData}></QnFormModal>
         </Fragment>
       );
     },
@@ -197,6 +206,22 @@ class Contract extends PureComponent<IProps, IState> {
       successCallback: () => {
         updateRoute(copyParams);
       },
+    });
+  };
+
+  queryById = (contractId: string) => {
+    console.log('queryById contractId ->', contractId);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'contract/queryById',
+      payload: {
+        apiName: 'queryById',
+        reqType: 'GET',
+        placeholerData: {
+          contractId,
+        },
+      },
+      successCallback: () => {},
     });
   };
 

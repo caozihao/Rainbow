@@ -58,10 +58,19 @@ class QnFormModal extends Component {
   };
 
   handleModalOk = () => {
+    const { handleOk, formInitialValueObj, keyName, keyValue } = this.props;
     this.props.form.validateFields((error, values) => {
       if (!error) {
-        if (typeof this.props.handleOk === 'function') {
-          const result = this.props.handleOk(values);
+        if (typeof handleOk === 'function') {
+          if (
+            formInitialValueObj &&
+            Object.assign(formInitialValueObj).length &&
+            keyName &&
+            keyValue
+          ) {
+            values[keyName] = keyValue;
+          }
+          const result = handleOk(values);
           if (result instanceof Promise) {
             result.then(() => {
               this.handleOkAfterSubmit();
@@ -93,7 +102,7 @@ class QnFormModal extends Component {
       style: { width: '100%' },
     };
 
-    const { rowsNumber, saveDynamicFormData } = this.props;
+    const { rowsNumber, saveDynamicFormData, formInitialValueObj } = this.props;
     const name = typeof itemData === 'string' ? itemData : itemData.name;
     // const { name } = itemData;
 
@@ -114,9 +123,9 @@ class QnFormModal extends Component {
     const otherPropsOfDict =
       typeof dataDict[name].otherProps === 'undefined' ? {} : dataDict[name].otherProps;
     const itemProps = { ...inputLayout, ...otherPropsOfDict, ...otherPropsOfForm, ...otherParams };
-    if (tag === 'QnSelect') {
-      // console.log('name ->', name);
-      // console.log('onChange ->', onChange);
+    let QnDynamicFormInitData = null;
+    if (tag === 'QnDynamicForm' && formInitialValueObj && Object.keys(formInitialValueObj).length) {
+      QnDynamicFormInitData = formInitialValueObj[name];
     }
 
     const formPartDict = {
@@ -136,7 +145,12 @@ class QnFormModal extends Component {
       QnListTagAdder: <QnListTagAdder {...itemProps} />,
       File: <QnUpload {...itemProps} />,
       QnDynamicForm: (
-        <QnDynamicForm {...otherProps} {...itemProps} saveDynamicFormData={saveDynamicFormData} />
+        <QnDynamicForm
+          {...otherProps}
+          {...itemProps}
+          initData={QnDynamicFormInitData}
+          saveDynamicFormData={saveDynamicFormData}
+        />
       ),
     };
 
@@ -328,6 +342,8 @@ QnFormModal.defaultProps = {
   rowsNumber: 1,
   rowSplitTitleDict: null,
   saveDynamicFormData: () => {},
+  keyName: '',
+  keyValue: '',
 };
 
 export default Form.create()(QnFormModal);

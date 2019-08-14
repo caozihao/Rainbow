@@ -4,7 +4,24 @@ export const productTypeOption = [
   { label: '爱德堡', value: '2' },
 ];
 
+export const productTypeDict = {
+  0: '直销',
+  1: '渠道',
+  2: '爱德堡',
+};
+
 export const contractTypeOption = [{ label: '硬件', value: '0' }, { label: '服务', value: '1' }];
+
+export const contractTypeDict = {
+  0: '硬件',
+  1: '服务',
+};
+
+export const constractStatusDict = {
+  '0': 'Normal',
+  '1': 'Legal',
+  '2': '3rdParty',
+};
 
 export const constractStatusOption = [
   {

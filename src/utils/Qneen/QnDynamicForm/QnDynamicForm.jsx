@@ -3,7 +3,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-loop-func */
 import React, { Component, Fragment } from 'react';
-import propTypes from 'prop-types';
+import propTypes, { object } from 'prop-types';
 import { Form, Input, Icon, Button, Row, Col, message } from 'antd';
 import styles from './QnDynamicForm.less';
 
@@ -105,18 +105,33 @@ class QnDynamicForm extends Component {
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-
-    getFieldDecorator('keys', { initialValue: [] });
+    const { item, initData } = this.props;
+    console.log('initData ->', initData);
+    const initialValue = [];
+    if (initData) {
+      let copyInitData = JSON.parse(initData);
+      copyInitData = copyInitData.filter(v => Object.keys(v).length !== 0);
+      if (copyInitData.length) {
+        copyInitData = copyInitData.forEach((v, i) => {
+          const obj = {};
+          for (const k in v) {
+            obj[`${k}_${i}`] = v[k];
+          }
+          initialValue.push(obj);
+        });
+      }
+    }
+    getFieldDecorator('keys', { initialValue });
 
     const keys = getFieldValue('keys');
+    console.log('initialValue ->', initialValue);
+    console.log('keys ->', keys);
 
     let formItems = keys.map((k, index) => {
       return this.genInputGroup(k, index);
     });
 
     formItems = <Row>{formItems}</Row>;
-
-    const { item } = this.props;
 
     return (
       <Form onSubmit={this.handleSubmit}>

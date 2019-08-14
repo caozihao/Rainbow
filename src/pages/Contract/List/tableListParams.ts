@@ -1,3 +1,5 @@
+import { productTypeDict, contractTypeDict, constractStatusDict } from '@/constant';
+
 export default {
   contractNo: {
     name: 'contractNo',
@@ -14,10 +16,16 @@ export default {
   productType: {
     name: 'productType',
     title: '产品类型',
+    render: (text: string) => {
+      return productTypeDict[text];
+    },
   },
   type: {
     name: 'productType',
     title: '合同类型',
+    render: (text: string) => {
+      return contractTypeDict[text];
+    },
   },
   totalAmount: {
     name: 'totalAmount',
