@@ -1,5 +1,5 @@
-import { rangeTimeProps } from '../../../utils/format/dataFormatter';
-import { productTypeOption, contractTypeOption } from '../../../constant';
+import { rangeTimeProps } from '@/utils/format/dataFormatter';
+import { productTypeOption, contractTypeOption } from '@/constant';
 
 export default [
   {

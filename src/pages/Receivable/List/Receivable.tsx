@@ -15,15 +15,20 @@ import tableListParamsByDetail from './Statistics/tableListParamsByDetail';
 import tableListParamsBySummary from './Statistics/tableListParamsBySummary';
 import { ReceivableModelState } from '@/models/receivable';
 import { IQueryParams } from '../receivable';
-import { getPageQuery, updateRoute } from '@/utils/utils';
+import contractTableListParams from './Customer/tableListParamsByContract';
+import { getPageQuery, updateRoute, dealWithQueryParams } from '@/utils/utils';
+import { ContractModelState } from '@/models/contract';
+import debounce from 'lodash/debounce';
 
 const { TabPane } = Tabs;
 
 interface IConnectState extends ConnectState {
   receivable: ReceivableModelState;
+  contract: ContractModelState;
 }
-interface IProps extends ConnectProps, ReceivableModelState {
+interface IProps extends ConnectProps, ReceivableModelState, ContractModelState {
   dispatch: Dispatch;
+  [key: string]: any;
 }
 
 interface IState {
@@ -31,10 +36,20 @@ interface IState {
   tabType: string;
 }
 
-@connect(({ receivable }: IConnectState) => {
+@connect(({ receivable, contract }: IConnectState) => {
   const { dataList } = receivable;
+  const {
+    dataList: contractDataList,
+    dataPageTotal: contractDataPageTotal,
+    dataPageNo: contractDataPageNo,
+    dataPageSize: contractDataPageSize,
+  } = contract;
   return {
     dataList,
+    contractDataList,
+    contractDataPageTotal,
+    contractDataPageNo,
+    contractDataPageSize,
   };
 })
 class Receivable extends PureComponent<IProps, IState> {
@@ -47,28 +62,19 @@ class Receivable extends PureComponent<IProps, IState> {
   }
 
   componentDidMount() {
-    this.queryList(getPageQuery());
+    this.queryContractList(getPageQuery());
   }
 
   componentDidUpdate() {}
 
   queryParams: IQueryParams = getPageQuery();
 
-  getDataByPageType = () => {
-    let tableFilterParams: Array<any> = [];
-    switch (this.state.type) {
-      case 'customer':
-        tableFilterParams = tableFilterParamsByCustomer;
-        break;
-      case 'statistics':
-        tableFilterParams = tableFilterParamsByStatistics;
-        break;
-      default:
-        break;
-    }
-    return {
-      tableFilterParams,
-    };
+  option = {
+    name: 'option',
+    title: '操作',
+    render: (text, record) => {
+      return <Button>查看</Button>;
+    },
   };
 
   getDataByTabType = () => {
@@ -153,23 +159,6 @@ class Receivable extends PureComponent<IProps, IState> {
     });
   };
 
-  queryList = (params: object) => {
-    const { api } = this.getDataByTabType();
-    const { dispatch } = this.props;
-    dispatch({
-      type: `receivable/${api}`,
-      payload: {
-        apiName: api,
-        reqType: 'POST',
-        bodyData: params,
-        // placeholerData
-      },
-      successCallback: () => {
-        updateRoute(params);
-      },
-    });
-  };
-
   genMiddleSection = () => {
     return (
       <Fragment>
@@ -181,43 +170,117 @@ class Receivable extends PureComponent<IProps, IState> {
     );
   };
 
+  queryContractList = (params: object) => {
+    console.log('params ->', params);
+    const copyParams = dealWithQueryParams(params);
+    const { tabType, type, pageType, ...otherParams } = copyParams;
+    const { dispatch } = this.props;
+    // console.log('copyParams ->', copyParams);
+    dispatch({
+      type: 'contract/queryList',
+      payload: {
+        apiName: 'queryList',
+        reqType: 'POST',
+        bodyData: {
+          ...otherParams,
+        },
+      },
+      successCallback: (dataList: []) => {
+        updateRoute(copyParams);
+      },
+    });
+  };
+
+  queryList = (params: object) => {
+    const { api } = this.getDataByTabType();
+    const { dispatch } = this.props;
+    console.log('api ->', api);
+    dispatch({
+      type: `receivable/${api}`,
+      payload: {
+        apiName: api,
+        reqType: 'POST',
+        bodyData: params,
+      },
+      successCallback: () => {
+        updateRoute(params);
+      },
+    });
+  };
+
+  queryContractListByDebounce = debounce(this.queryContractList, 1000);
+  queryListByDebounce = debounce(this.queryList, 1000);
+
+  handleContractPageChange = (currentPage: number, pageSize: number) => {
+    this.queryContractListByDebounce({ pageSize, currentPage });
+  };
+
+  handleContractFilterChange = (filterParams: object) => {
+    this.queryContractListByDebounce({ ...filterParams });
+  };
+
+  handleFilterChange = (filterParams: object) => {
+    this.queryListByDebounce({ ...filterParams });
+  };
+
   render() {
-    const { dataList } = this.props;
+    const { dataList, contractDataList, contractDataPageTotal, contractDataPageNo } = this.props;
     const { type, tabType } = this.state;
     const { tableListParams, middleButtonArea } = this.getDataByTabType();
-    const { tableFilterParams } = this.getDataByPageType();
 
-    const QnTableProps: object = {
-      dataSource: dataList,
-      columns: genTableColumns(tableListParams),
-      total: dataList.length,
-      hasPagination: false,
-      rowSelection: null,
-    };
+    let QnTableProps = {};
+    let QnFilterProps = {};
 
-    const QnFilterProps = {
-      handleChange: () => {},
-      rules: tableFilterParams,
-      col: 2,
-    };
+    if (type === 'customer') {
+      const copyTableListParams = Object.assign({}, contractTableListParams);
+      copyTableListParams['option'] = this.option;
+
+      QnTableProps = {
+        dataSource: contractDataList,
+        columns: genTableColumns(copyTableListParams),
+        handlePageChange: this.handleContractPageChange,
+        total: contractDataPageTotal,
+        current: contractDataPageNo,
+        rowKey: item => item.contractId,
+      };
+
+      QnFilterProps = {
+        handleChange: this.handleContractFilterChange,
+        rules: tableFilterParamsByCustomer,
+        col: 2,
+      };
+    } else if (type === 'statistics') {
+      QnTableProps = {
+        dataSource: dataList,
+        columns: genTableColumns(tableListParams),
+        total: dataList.length,
+        hasPagination: false,
+      };
+
+      QnFilterProps = {
+        handleChange: this.handleFilterChange,
+        rules: tableFilterParamsByStatistics,
+        col: 2,
+      };
+    }
 
     const genTabContent = <QnFilter {...QnFilterProps} />;
 
     const table = <QnTable {...QnTableProps} />;
 
-    const genTabChildContentByCustomer = (
-      <Fragment>
-        {middleButtonArea}
-        <Tabs activeKey={tabType} onChange={item => this.changeRoute(item, 'tabType')}>
-          <TabPane tab="硬件分期" key="HwStage">
-            {table}
-          </TabPane>
-          <TabPane tab="服务费" key="service">
-            {table}
-          </TabPane>
-        </Tabs>
-      </Fragment>
-    );
+    // const genTabChildContentByCustomer = (
+    //   <Fragment>
+    //     {middleButtonArea}
+    //     <Tabs activeKey={tabType} onChange={item => this.changeRoute(item, 'tabType')}>
+    //       <TabPane tab="硬件分期" key="HwStage">
+    //         {table}
+    //       </TabPane>
+    //       <TabPane tab="服务费" key="service">
+    //         {table}
+    //       </TabPane>
+    //     </Tabs>
+    //   </Fragment>
+    // );
 
     const genTabChildContentByStatistics = (
       <Fragment>
@@ -244,7 +307,7 @@ class Receivable extends PureComponent<IProps, IState> {
         <Tabs activeKey={type} onChange={item => this.changeRoute(item, 'type')}>
           <TabPane tab="客户应收" key="customer">
             {genTabContent}
-            {genTabChildContentByCustomer}
+            {table}
           </TabPane>
           <TabPane tab="应收统计" key="statistics">
             {genTabContent}
