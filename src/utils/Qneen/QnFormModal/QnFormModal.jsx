@@ -62,14 +62,16 @@ class QnFormModal extends Component {
     this.props.form.validateFields((error, values) => {
       if (!error) {
         if (typeof handleOk === 'function') {
+          console.log('keyName ->', keyName);
           if (
             formInitialValueObj &&
-            Object.assign(formInitialValueObj).length &&
+            Object.keys(formInitialValueObj).length &&
             keyName &&
             keyValue
           ) {
             values[keyName] = keyValue;
           }
+
           const result = handleOk(values);
           if (result instanceof Promise) {
             result.then(() => {
@@ -102,7 +104,7 @@ class QnFormModal extends Component {
       style: { width: '100%' },
     };
 
-    const { rowsNumber, saveDynamicFormData, formInitialValueObj } = this.props;
+    const { rowsNumber, saveDynamicFormData, formInitialValueObj, type } = this.props;
     const name = typeof itemData === 'string' ? itemData : itemData.name;
     // const { name } = itemData;
 
@@ -150,13 +152,14 @@ class QnFormModal extends Component {
           {...itemProps}
           initData={QnDynamicFormInitData}
           saveDynamicFormData={saveDynamicFormData}
+          type={type}
         />
       ),
     };
 
     const formPart = formPartDict[tag];
     // 空对象在索引不存在的key值时, 会返回undefined ,但null和undefind若索引会报错并卡死
-    const initialValue = initialValueObj || {};
+    const defaultInitialValue = initialValueObj || {};
     let formItemLayout = {
       labelCol: { span: 7 },
       wrapperCol: { span: 14 },
@@ -171,13 +174,14 @@ class QnFormModal extends Component {
       };
     }
 
+    const initialValue =
+      typeof defaultInitialValue[name] === 'undefined' ? undefined : defaultInitialValue[name];
     return (
       <Col span={colSpan} key={name}>
         <FormItem {...formItemLayout} label={title}>
           {getFieldDecorator(name, {
             // valuePropName: 'value',
-            initialValue:
-              typeof initialValue[name] === 'undefined' ? undefined : initialValue[name],
+            initialValue,
             rules,
           })(formPart)}
         </FormItem>
@@ -229,6 +233,7 @@ class QnFormModal extends Component {
       otherProps,
       width,
       rowSplitTitleDict,
+      type,
     } = this.props;
 
     let trigger = null;
@@ -250,6 +255,13 @@ class QnFormModal extends Component {
       rowSplitTitleDict,
     );
 
+    let extraParam = {};
+    if (type === 'detail') {
+      extraParam = {
+        footer: null,
+      };
+    }
+
     return (
       <span className="QnFormModal">
         {hasTooltip ? <Tooltip title={title}>{trigger}</Tooltip> : trigger}
@@ -257,11 +269,12 @@ class QnFormModal extends Component {
           className="mainModal"
           title={title}
           visible={this.state.visible}
+          maskClosable={false}
           onOk={this.handleModalOk}
           onCancel={this.handleModalCancel}
-          maskClosable={false}
           width={width}
           closable
+          {...extraParam}
           {...otherProps}
         >
           <Spin spinning={ifShowFormLoading}>{formItemData}</Spin>
@@ -344,6 +357,7 @@ QnFormModal.defaultProps = {
   saveDynamicFormData: () => {},
   keyName: '',
   keyValue: '',
+  type: 'form', // detail | ""，默认是表单
 };
 
 export default Form.create()(QnFormModal);

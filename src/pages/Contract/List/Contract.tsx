@@ -59,6 +59,7 @@ class Contract extends PureComponent<IProps, IState> {
     const { contactsInfo } = this.state;
     const copyValue = Object.assign({}, values);
     copyValue['contactsInfo'] = contactsInfo;
+    console.log('values ->', values);
 
     let api = 'contract/create';
     let apiName = 'create';
@@ -85,6 +86,9 @@ class Contract extends PureComponent<IProps, IState> {
         successCallback: () => {
           message.success(successMesage);
           this.queryList(getPageQuery());
+          this.setState({
+            ifShowFormLoading: false,
+          });
           resolve();
         },
       });
@@ -175,9 +179,27 @@ class Contract extends PureComponent<IProps, IState> {
         keyValue: this.props.detail.contractId,
       };
 
+      const extraDetailData = {
+        buttonProps: {
+          type: 'default',
+          title: '查看',
+          style: {
+            marginRight: '10px',
+          },
+        },
+        title: '查看合同',
+        type: 'detail',
+        handleTriggerClick: () => this.queryById(contractId),
+        formInitialValueObj: this.props.detail,
+      };
+
       return (
         <Fragment>
-          <Button style={{ marginRight: '10px' }}>查看</Button>
+          <QnFormModal
+            {...copyQnFormModalProps}
+            {...extraDetailData}
+            style={{ marginRight: '10px' }}
+          ></QnFormModal>
           <QnFormModal {...copyQnFormModalProps} {...extraData}></QnFormModal>
         </Fragment>
       );

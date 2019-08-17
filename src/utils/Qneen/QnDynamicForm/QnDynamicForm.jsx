@@ -60,25 +60,27 @@ class QnDynamicForm extends Component {
       if (!err) {
         const { keys, names } = values;
         console.log('Received values of form: ', values);
-        console.log('this.props ', this.props);
+        // console.log('this.props ', this.props);
         this.props.saveDynamicFormData(values);
         message.success('保存成功');
       }
     });
   };
 
-  genInputGroup = (k, index) => {
-    const { item } = this.props;
+  genInputGroup = (k, index, initialValue) => {
+    const { item, type } = this.props;
     const { getFieldDecorator } = this.props.form;
     const result = [];
     let number = 0;
     for (const key in item) {
+      const dataKey = `${key}_${index}`;
       number++;
       result.push(
-        <Col span={12} key={`${k}_${key}`}>
+        <Col span={12} key={dataKey}>
           <Form.Item {...this.formItemLayout} label={item[key]} required key={key}>
-            {getFieldDecorator(`${key}_${k}`, {
+            {getFieldDecorator(dataKey, {
               validateTrigger: ['onChange', 'onBlur'],
+              initialValue: initialValue[k] ? initialValue[k][dataKey] : '',
               rules: [
                 {
                   required: true,
@@ -87,7 +89,7 @@ class QnDynamicForm extends Component {
                 },
               ],
             })(<Input placeholder={`请输入${item[key]}`} />)}
-            {number === 4 ? (
+            {number === 4 && type === 'form' ? (
               <Fragment>
                 <Icon
                   className={styles.deleteButton}
@@ -105,9 +107,10 @@ class QnDynamicForm extends Component {
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { item, initData } = this.props;
-    console.log('initData ->', initData);
+    const { item, initData, type } = this.props;
+    // console.log('this.props ->', this.props);
     const initialValue = [];
+    const keysInitialValue = [];
     if (initData) {
       let copyInitData = JSON.parse(initData);
       copyInitData = copyInitData.filter(v => Object.keys(v).length !== 0);
@@ -118,34 +121,46 @@ class QnDynamicForm extends Component {
             obj[`${k}_${i}`] = v[k];
           }
           initialValue.push(obj);
+          keysInitialValue.push(i);
+          id++;
         });
       }
     }
-    getFieldDecorator('keys', { initialValue });
+
+    getFieldDecorator('keys', { initialValue: keysInitialValue });
 
     const keys = getFieldValue('keys');
-    console.log('initialValue ->', initialValue);
-    console.log('keys ->', keys);
+    // console.log('initialValue ->', initialValue);
+    // console.log('keysInitialValue ->', keysInitialValue);
+    // console.log('keys ->', keys);
 
-    let formItems = keys.map((k, index) => {
-      return this.genInputGroup(k, index);
-    });
+    let formItems =
+      keys &&
+      keys.map((k, index) => {
+        return this.genInputGroup(k, index, initialValue);
+      });
 
     formItems = <Row>{formItems}</Row>;
 
     return (
       <Form onSubmit={this.handleSubmit}>
         {formItems}
-        <Form.Item {...this.formItemLayoutWithOutLabel}>
-          <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
-            <Icon type="plus" /> 添加联系人
-          </Button>
-        </Form.Item>
-        <Form.Item {...this.formItemLayoutWithOutLabel}>
-          <Button type="primary" htmlType="submit" style={{ width: '60%' }}>
-            提交
-          </Button>
-        </Form.Item>
+        {type === 'form' ? (
+          <Fragment>
+            <Form.Item {...this.formItemLayoutWithOutLabel}>
+              <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
+                <Icon type="plus" /> 添加联系人
+              </Button>
+            </Form.Item>
+            <Form.Item {...this.formItemLayoutWithOutLabel}>
+              <Button type="primary" htmlType="submit" style={{ width: '60%' }}>
+                提交
+              </Button>
+            </Form.Item>
+          </Fragment>
+        ) : (
+          ''
+        )}
       </Form>
     );
   }
