@@ -1,6 +1,7 @@
 import { Effect } from 'dva';
 import { Reducer } from 'redux';
 import { requestApi } from '../utils/request';
+import { message } from 'antd';
 
 export const namespace = 'receivable';
 
@@ -22,15 +23,7 @@ export interface ReceivableModelType {
   namespace: string;
   state: ReceivableModelState;
   effects: {
-    queryCustomCommission: Effect;
-    queryCustomHw: Effect;
-    queryHwDetail: Effect;
-    queryHwSummary: Effect;
-    queryServiceDetail: Effect;
-    queryReceivableRecord: Effect;
-    queryServiceSummary: Effect;
-    updateCustomCommission: Effect;
-    updateCustomHw: Effect;
+    [key: string]: Effect;
   };
   reducers: {
     save: Reducer<ReceivableModelState>;
@@ -53,6 +46,7 @@ const ReceivableModel: ReceivableModelType = {
         });
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -68,6 +62,7 @@ const ReceivableModel: ReceivableModelType = {
         });
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -83,6 +78,7 @@ const ReceivableModel: ReceivableModelType = {
         });
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -98,6 +94,7 @@ const ReceivableModel: ReceivableModelType = {
         });
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -113,6 +110,7 @@ const ReceivableModel: ReceivableModelType = {
         });
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -127,6 +125,7 @@ const ReceivableModel: ReceivableModelType = {
           },
         });
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -142,6 +141,7 @@ const ReceivableModel: ReceivableModelType = {
         });
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -151,6 +151,7 @@ const ReceivableModel: ReceivableModelType = {
       if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -160,6 +161,7 @@ const ReceivableModel: ReceivableModelType = {
       if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },

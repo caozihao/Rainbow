@@ -9,7 +9,7 @@ import { genTableColumns } from '@/utils/format/dataGen';
 import { ContractModelState } from '@/models/contract';
 import tableListParams from '../tableListParams';
 import { getPageQuery } from '@/utils/utils';
-import { IContractDetail,IQueryParams } from '../../writeoff.d';
+import { IContractDetail, IQueryParams } from '../../writeoff.d';
 
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
@@ -20,6 +20,8 @@ interface IProps extends ConnectProps, InvoiceModelState {
   dispatch: Dispatch;
   relationToContractLoading: Boolean;
   contractDetail: IContractDetail;
+  toBeRelatedDataList: Array<any>;
+  queryInvoice: Function;
 }
 
 interface IState {
@@ -27,11 +29,12 @@ interface IState {
 }
 
 @connect(({ invoice, loading, contract }: IConnectState) => {
-  const { dataList } = invoice;
+  const { dataList, toBeRelatedDataList } = invoice;
   const { detail } = contract;
   return {
     relationToContractLoading: loading.effects['invoice/relationToContract'],
     dataList,
+    toBeRelatedDataList,
     contractDetail: detail,
   };
 })
@@ -50,7 +53,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   componentDidUpdate() {}
 
   relationToContract = (type: string) => {
-    const { dispatch } = this.props;
+    const { dispatch, queryInvoice } = this.props;
     const { selectedRowKeys } = this.state;
     const { contractId } = this.queryParams;
     dispatch({
@@ -68,6 +71,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
         this.setState({
           selectedRowKeys: [],
         });
+        queryInvoice();
         message.success('添加成功');
       },
     });
@@ -86,7 +90,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
         },
       },
       successCallback: () => {
-        message.success('刷新成功');
+        message.success('同步成功！');
       },
     });
   };
@@ -122,13 +126,13 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   };
 
   render() {
-    const { dataList, relationToContractLoading } = this.props;
+    const { toBeRelatedDataList, relationToContractLoading } = this.props;
     const { selectedRowKeys } = this.state;
     const copyTableListParams = Object.assign({}, tableListParams);
 
     console.log('selectedRowKeys ->', selectedRowKeys);
     const QnListPagePropsToBeRelated: object = {
-      dataSource: dataList,
+      dataSource: toBeRelatedDataList,
       columns: genTableColumns(copyTableListParams),
       title: '',
       rowSelection: {
@@ -141,7 +145,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
         },
       },
       col: 2,
-      total: dataList.length,
+      total: toBeRelatedDataList.length,
       hasPagination: false,
       middleSection: this.genMiddleSectionToBeRelated(),
     };

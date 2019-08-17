@@ -1,6 +1,7 @@
 import { Effect } from 'dva';
 import { Reducer } from 'redux';
 import { requestApi } from '../utils/request';
+import { message } from 'antd';
 
 export const namespace = 'writeOff';
 
@@ -24,15 +25,7 @@ export interface WriteOffModelType {
   namespace: string;
   state: WriteOffModelState;
   effects: {
-    createWriteOff: Effect;
-    deleteByWriteOffId: Effect;
-    exportByContractId: Effect;
-    queryCommissionByContractId: Effect;
-    querySettlementByContractId: Effect;
-    queryWriteOffRecord: Effect;
-    relationToContract: Effect;
-    unRelationToContract: Effect;
-    syncByCustomId: Effect;
+    [key: string]: Effect;
   };
   reducers: {
     save: Reducer<WriteOffModelState>;
@@ -49,6 +42,7 @@ const WriteOffModel: WriteOffModelType = {
       if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -58,6 +52,7 @@ const WriteOffModel: WriteOffModelType = {
       if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -67,36 +62,49 @@ const WriteOffModel: WriteOffModelType = {
       if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
     *queryCommissionByContractId({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
-      const { code, errMsg, body } = data;
+      const {
+        code,
+        errMsg,
+        body: { dataList, actionPlan },
+      } = data;
       if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
-            dataList: body,
+            dataList,
+            actionPlan,
           },
         });
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
     *querySettlementByContractId({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
-      const { code, errMsg, body } = data;
+      const {
+        code,
+        errMsg,
+        body: { dataList, actionPlan },
+      } = data;
       if (!parseInt(code)) {
         yield put({
           type: 'save',
           payload: {
-            dataList: body,
+            dataList,
+            actionPlan,
           },
         });
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -111,6 +119,7 @@ const WriteOffModel: WriteOffModelType = {
           },
         });
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -120,6 +129,7 @@ const WriteOffModel: WriteOffModelType = {
       if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -129,6 +139,7 @@ const WriteOffModel: WriteOffModelType = {
       if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -138,6 +149,7 @@ const WriteOffModel: WriteOffModelType = {
       if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },

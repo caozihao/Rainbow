@@ -1,6 +1,7 @@
 import { Effect } from 'dva';
 import { Reducer } from 'redux';
 import { requestApi } from '../utils/request';
+import { message } from 'antd';
 
 export const namespace = 'contract';
 export interface ContractModelState {
@@ -23,11 +24,7 @@ export interface ContractModelType {
   namespace: string;
   state: ContractModelState;
   effects: {
-    create: Effect;
-    getContractFileById: Effect;
-    modify: Effect;
-    queryList: Effect;
-    queryById: Effect;
+    [key: string]: Effect;
   };
   reducers: {
     save: Reducer<ContractModelState>;
@@ -44,6 +41,7 @@ const ContractModel: ContractModelType = {
       if (!parseInt(code, 10)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -53,6 +51,7 @@ const ContractModel: ContractModelType = {
       if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -62,6 +61,7 @@ const ContractModel: ContractModelType = {
       if (!parseInt(code)) {
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -82,6 +82,7 @@ const ContractModel: ContractModelType = {
         });
         successCallback && successCallback(dataList);
       } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },
@@ -97,6 +98,17 @@ const ContractModel: ContractModelType = {
         });
         successCallback && successCallback();
       } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *batchDelete({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg, body } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
         failCallback && failCallback(errMsg);
       }
     },

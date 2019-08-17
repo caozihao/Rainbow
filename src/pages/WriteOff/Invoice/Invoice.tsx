@@ -9,6 +9,7 @@ import { getPageQuery } from '@/utils/utils';
 import BeRelated from './BeRelated/BeRelated';
 import ToBeRelated from './ToBeRelated/ToBeRelated';
 import { IContractDetail } from '../writeoff.d';
+import { formatDate } from '@/utils/format/dataFormatter';
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
   contract: ContractModelState;
@@ -41,18 +42,23 @@ class Invoice extends PureComponent<IProps, IState> {
 
   componentDidUpdate() {}
 
-  queryByCustomIdAndEffectTime = () => {
+  queryInvoice = () => {
     const { dispatch, contractDetail } = this.props;
     const { customId, effectiveDate } = contractDetail;
+
+    let effectiveDateData = effectiveDate ? formatDate(effectiveDate, false) : '';
+    const contractId = getPageQuery('contractId');
     console.log('contractDetail ->', contractDetail);
+
     dispatch({
-      type: 'invoice/queryByCustomIdAndEffectTime',
+      type: 'invoice/queryInvoice',
       payload: {
-        apiName: 'queryByCustomIdAndEffectTime',
-        reqType: 'GET',
-        queryData: {
+        apiName: 'queryInvoice',
+        reqType: 'POST',
+        bodyData: {
           customId,
-          effectiveDate,
+          contractId,
+          effectiveDate: effectiveDateData,
         },
       },
       successCallback: () => {},
@@ -72,7 +78,7 @@ class Invoice extends PureComponent<IProps, IState> {
         },
       },
       successCallback: () => {
-        this.queryByCustomIdAndEffectTime();
+        this.queryInvoice();
       },
     });
   };
@@ -104,8 +110,8 @@ class Invoice extends PureComponent<IProps, IState> {
     return (
       <Card className="wrapper-right-content" title="" bordered={false}>
         {contractDetail ? genContractInfo() : ''}
-        <ToBeRelated />
-        <BeRelated />
+        <ToBeRelated queryInvoice={this.queryInvoice} />
+        <BeRelated queryInvoice={this.queryInvoice} />
       </Card>
     );
   }

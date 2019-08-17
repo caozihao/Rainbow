@@ -89,7 +89,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
         },
       },
       successCallback: () => {
-        message.success('刷新成功');
+        message.success('同步成功！');
       },
     });
   };

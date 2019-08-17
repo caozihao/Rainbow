@@ -10,20 +10,21 @@ export default {
     modify: `${host}/contract/modify`,
     queryList: `${host}/contract/query`, // ok
     queryById: `${host}/contract/queryById/:contractId`,
+    batchDelete: `${host}/contract/delete`,
   },
   writeOff: {
-    createWriteOff: `${host}/writeoff/createWriteOff`,
-    deleteByWriteOffId: `${host}/writeoff/delete/:writeOffId`,
-    exportByContractId: `${host}/writeoff/export/:contractId`,
-    queryCommissionByContractId: `${host}/writeoff/queryCommissionByContractId/:contractId`,
-    querySettlementByContractId: `${host}/writeoff/querySettlementByContractId/:contractId`,
-    queryWriteOffRecord: `${host}/writeoff/queryWriteOffRecord`,
-    relationToContract: `${host}/writeoff/relationToContract`,
-    syncByCustomId: `${host}/writeoff/sync/:customId`,
-    unRelationToContract: `${host}/writeoff/unRelationToContract`,
+    createWriteOff: `${host}/writeOff/createWriteOff`,
+    deleteByWriteOffId: `${host}/writeOff/delete/:writeOffId`,
+    exportByContractId: `${host}/writeOff/export/:contractId`,
+    queryCommissionByContractId: `${host}/writeOff/queryCommissionByContractId/:contractId`,
+    querySettlementByContractId: `${host}/writeOff/querySettlementByContractId/:contractId`,
+    queryWriteOffRecord: `${host}/writeOff/queryWriteOffRecord`,
+    relationToContract: `${host}/writeOff/relationToContract`,
+    syncByCustomId: `${host}/writeOff/sync/:customId`,
+    unRelationToContract: `${host}/writeOff/unRelationToContract`,
   },
   invoice: {
-    queryByCustomIdAndEffectTime: `${host}/invoice/queryByCustomIdAndEffectTime`,
+    queryInvoice: `${host}/invoice/queryInvoice`,
     relationToContract: `${host}/invoice/relationToContract`,
     unRelationToContract: `${host}/invoice/unRelationToContract`,
     syncByCustomId: `${host}/invoice/sync/:customId`,
@@ -39,7 +40,7 @@ export default {
     updateCustomCommission: `${host}/receivable/updateCustomCommission`,
     updateCustomHw: `${host}/receivable/updateCustomHw`,
   },
-  account:{
+  account: {
     queryByName: `${host}/account/queryByName`,
-  }
+  },
 };

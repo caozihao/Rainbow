@@ -28,7 +28,7 @@ interface IProps extends ConnectProps, ContractModelState, AccountModelState {
 }
 
 interface IState {
-  selectedRowKeys: object;
+  selectedRowKeys: Array<string>;
   ifShowFormLoading: boolean;
   contactsInfo: string;
 }
@@ -264,6 +264,26 @@ class Contract extends PureComponent<IProps, IState> {
     });
   };
 
+  batchDelete = () => {
+    const { dispatch } = this.props;
+    const { selectedRowKeys } = this.state;
+    console.log('selectedRowKeys ->', selectedRowKeys);
+    dispatch({
+      type: 'contract/batchDelete',
+      payload: {
+        apiName: 'batchDelete',
+        reqType: 'POST',
+        bodyData: {
+          contractIds: selectedRowKeys,
+        },
+      },
+      successCallback: () => {
+        message.success('删除成功!');
+        this.queryList(getPageQuery());
+      },
+    });
+  };
+
   queryListByDebounce = debounce(this.queryList, 1000);
 
   handlePageChange = (currentPage: number, pageSize: number) => {
@@ -280,7 +300,11 @@ class Contract extends PureComponent<IProps, IState> {
         <Button style={{ marginRight: '1rem' }} type="primary">
           创建核销表
         </Button>
-        <Button type="danger" disabled={!this.state.selectedRowKeys.length}>
+        <Button
+          type="danger"
+          disabled={!this.state.selectedRowKeys.length}
+          onClick={this.batchDelete}
+        >
           删除合同
         </Button>
       </div>

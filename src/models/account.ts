@@ -16,7 +16,7 @@ export interface AccountModelType {
   namespace: string;
   state: AccountModelState;
   effects: {
-    queryByName: Effect;
+    [key: string]: Effect;
   };
   reducers: {
     save: Reducer<AccountModelState>;

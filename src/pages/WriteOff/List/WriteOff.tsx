@@ -11,6 +11,7 @@ import { genTableColumns } from '@/utils/format/dataGen';
 import tableFilterParams from './tableFilterParams';
 import { ContractModelState } from '@/models/contract';
 import { WriteOffModelState, namespace } from '@/models/writeOff';
+import debounce from 'lodash/debounce';
 import Invoice from '../Invoice/Invoice';
 import Record from '../Record/Record';
 
@@ -174,12 +175,15 @@ class WriteOff extends PureComponent<IProps, IState> {
     });
   };
 
+  queryListByDebounce = debounce(this.queryList, 1000);
+
+
   handlePageChange = (currentPage: number, pageSize: number) => {
-    this.queryList({ pageSize, currentPage });
+    this.queryListByDebounce({ pageSize, currentPage });
   };
 
   handleFilterChange = (filterParams: object) => {
-    this.queryList({ ...filterParams });
+    this.queryListByDebounce({ ...filterParams });
   };
 
   // genMiddleSection = () => {

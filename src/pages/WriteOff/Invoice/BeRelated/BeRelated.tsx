@@ -19,18 +19,21 @@ interface IConnectState extends ConnectState {
 interface IProps extends ConnectProps, InvoiceModelState {
   dispatch: Dispatch;
   unRelationToContractLoading: boolean;
+  queryInvoice: Function;
 }
 
 interface IState {
   selectedRowKeys: Array<any>;
   defaultTabKey: string;
+  beRelatedDataList: Array<any>;
 }
 
 @connect(({ invoice, loading }: IConnectState) => {
-  const { dataList } = invoice;
+  const { dataList, beRelatedDataList } = invoice;
   return {
     unRelationToContractLoading: loading.effects['invoice/unRelationToContract'],
     dataList,
+    beRelatedDataList,
   };
 })
 class ToBeRelated extends PureComponent<IProps, IState> {
@@ -70,7 +73,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   };
 
   unRelationToContract = () => {
-    const { dispatch } = this.props;
+    const { dispatch, queryInvoice } = this.props;
     const { selectedRowKeys } = this.state;
     const { contractId } = this.queryParams;
     dispatch({
@@ -87,6 +90,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
         this.setState({
           selectedRowKeys: [],
         });
+        queryInvoice();
         message.success('删除成功');
       },
     });
@@ -97,12 +101,12 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   };
 
   render() {
-    const { dataList, unRelationToContractLoading } = this.props;
+    const { beRelatedDataList, unRelationToContractLoading } = this.props;
     const { defaultTabKey, selectedRowKeys } = this.state;
     const copyTableListParams = Object.assign({}, tableListParams);
 
     const QnListPagePropsBeRelated: object = {
-      dataSource: dataList,
+      dataSource: beRelatedDataList,
       columns: genTableColumns(copyTableListParams),
       title: '已关联的发票信息',
       rowSelection: {
@@ -115,7 +119,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
         },
       },
       col: 2,
-      total: dataList.length,
+      total: beRelatedDataList.length,
       hasPagination: false,
     };
 
