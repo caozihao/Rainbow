@@ -1,6 +1,8 @@
 export function round(num, bit = 2) {
   const precision = 10 ** bit;
-  return Math.round(num * precision) / precision;
+  return isNaN(Math.round(num * precision) / precision)
+    ? num
+    : Math.round(num * precision) / precision;
 }
 
 export function roundUp(num, bit = 2) {

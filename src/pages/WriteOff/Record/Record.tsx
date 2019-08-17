@@ -75,6 +75,7 @@ class Record extends PureComponent<IProps, IState> {
     let api =
       type === 'stageWriteOff' ? 'querySettlementByContractId' : 'queryCommissionByContractId';
 
+    console.log('api ->', api);
     dispatch({
       type: `writeOff/${api}`,
       payload: {
@@ -128,12 +129,11 @@ class Record extends PureComponent<IProps, IState> {
     };
 
     // const pageTitle = this.queryParams.type === 'edit' ? '编辑' : '查看';
-    const headTitle = tabType === 'stageWriteOff' ? '核销结算' : '服务费核销结算';
+
     // const dataSource =
 
     const WriteOffSettlementProps = {
       dataSource: dataList,
-      headTitle,
     };
 
     return (

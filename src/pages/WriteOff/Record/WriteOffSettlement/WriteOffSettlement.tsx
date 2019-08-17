@@ -7,7 +7,8 @@ import { QnListPage, QnModal } from '@/utils/Qneen';
 import { WriteOffModelState } from '@/models/writeOff';
 import { genTableColumns } from '@/utils/format/dataGen';
 import { ContractModelState } from '@/models/contract';
-import tableListParams from '../tableListParams.tsx';
+import serviceWriteOffTableListParams from './serviceWriteOffTableListParams';
+import stageWriteOffTableListParams from './stageWriteOffTableListParams';
 import cloneDeep from 'lodash/cloneDeep';
 import { IQueryParams, IContractDetail } from '../../writeoff.d';
 import { getPageQuery } from '@/utils/utils';
@@ -37,9 +38,7 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
     this.state = {};
   }
 
-  queryParams: IQueryParams = getPageQuery();
-
-  tableListParams = (() => {
+  getTableListParams = (tableListParams: any) => {
     const QnModalProps = {
       title: '核销记录',
       triggerType: 'a',
@@ -78,7 +77,7 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
     };
 
     return copyTableListParams;
-  })();
+  };
 
   componentDidMount() {}
 
@@ -86,7 +85,7 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
 
   unRelationToContract = ({ settlementId = '', writeOffType = 0 }) => {
     const { dispatch } = this.props;
-    const { contractId } = this.queryParams;
+    const { contractId } = getPageQuery();
     dispatch({
       type: 'writeOff/unRelationToContract',
       payload: {
@@ -94,9 +93,9 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
         reqType: 'POST',
         bodyData: {
           contractId,
-          WriteOffIds: [],
+          writeOffIds: [],
           settlementId,
-          writeOffType,
+          // writeOffType,
         },
       },
       successCallback: () => {
@@ -109,7 +108,7 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
   };
 
   exportByContractId = () => {
-    const { contractId, tabType } = this.queryParams;
+    const { contractId, tabType } = getPageQuery();
     const { dispatch } = this.props;
     dispatch({
       type: 'writeOff/exportByContractId',
@@ -120,7 +119,7 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
           contractId,
         },
         queryData: {
-          type: tabType === 'stageWriteOff' ? 0 : 1,
+          type: tabType === 'serviceWriteOff' ? 1 : 0,
         },
       },
       successCallback: () => {
@@ -130,32 +129,38 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
   };
 
   genMiddleSectionToBeRelated = (headTitle = '') => {
-    const { pageType } = this.queryParams;
+    const { pageType, tabType } = getPageQuery();
     return (
       <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
         <h3>{headTitle}</h3>
-        {pageType === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
+        {pageType === 'detail' && tabType === 'serviceWriteOff' ? (
+          <Button onClick={this.exportByContractId}>导出</Button>
+        ) : (
+          ''
+        )}
       </div>
     );
   };
 
   render() {
-    const { dataSource, headTitle, relationToContractLoading } = this.props;
-    const { pageType } = this.queryParams;
-    // console.log('type ->', type);
+    const { dataSource, relationToContractLoading } = this.props;
+    const { tabType, pageType } = getPageQuery();
+    const headTitle = tabType === 'serviceWriteOff' ? '服务费核销结算' : '核销结算';
+    const tableListParams =
+      tabType === 'serviceWriteOff' ? serviceWriteOffTableListParams : stageWriteOffTableListParams;
+    // console.log('tabType ->', tabType);
     // console.log('tableListParams ->', tableListParams);
-    // console.log('this.tableListParams ->', this.tableListParams);
 
     const QnListPagePropsToBeRelated: object = {
       dataSource,
       columns:
         pageType === 'detail'
           ? genTableColumns(tableListParams)
-          : genTableColumns(this.tableListParams),
+          : genTableColumns(this.getTableListParams(tableListParams)),
       hasPagination: false,
       middleSection: this.genMiddleSectionToBeRelated(headTitle),
       total: dataSource.length,
-      rowKey: (_, index) => index,
+      rowKey: item => `${tabType}_${item.settlementId}`,
       rowSelection: null,
     };
 

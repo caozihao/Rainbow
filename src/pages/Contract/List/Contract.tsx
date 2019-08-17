@@ -18,6 +18,7 @@ import {
   updateRoute,
   initializeFilterParams,
 } from '@/utils/utils';
+import Item from 'antd/lib/list/Item';
 
 interface IConnectState extends ConnectState {
   contract: ContractModelState;
@@ -339,6 +340,7 @@ class Contract extends PureComponent<IProps, IState> {
       hasAdder: true,
       adderType: 'modal',
       middleSection: this.genMiddleSection(),
+      rowKey: item => item.contractId,
       ...this.QnFormModalProps('QnListPage'),
     };
     return (

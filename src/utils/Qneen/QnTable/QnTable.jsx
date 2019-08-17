@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import { Table } from 'antd';
 import ColumnSwitch from '../ColumnSwitch/ColumnSwitch';
+import isEqual from 'lodash/isEqual';
 import './QnTable.less';
 
 const log = console.log.bind(console);
@@ -26,7 +27,12 @@ class QnTable extends Component {
     this.setState({ filteredColumns });
   }
 
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(nextProps.columns, this.props.columns)) {
+      const filteredColumns = this.getFilteredColumns(this.getAllColumnValues(nextProps.columns));
+      this.setState({ filteredColumns });
+    }
+  }
 
   componentDidUpdate = prevProps => {};
 
@@ -130,7 +136,6 @@ class QnTable extends Component {
           pagination={pagination}
           loading={loading}
           rowSelection={rowSelection}
-
           scroll={this.props.scroll}
         />
       </div>

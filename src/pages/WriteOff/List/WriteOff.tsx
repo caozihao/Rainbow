@@ -125,6 +125,7 @@ class WriteOff extends PureComponent<IProps, IState> {
       handleFilterChange: this.handleFilterChange,
       total: dataPageTotal,
       current: dataPageNo,
+      rowKey: item=>item.contractId,
       // middleSection: this.genMiddleSection(),
       // ...this.QnFormModalProps('QnListPage'),
     };

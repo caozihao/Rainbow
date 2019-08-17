@@ -90,7 +90,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     const { pageType } = this.queryParams;
     return (
       <Fragment>
-        <div className="headLayout" style={{ marginBottom: '1rem' }}>
+        <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
           <h3>发票记录</h3>
           {pageType === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
         </div>

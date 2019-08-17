@@ -8,6 +8,8 @@ export const namespace = 'writeOff';
 export interface WriteOffModelState {
   dataList: Array<any>;
   writeOffRecordDataList: Array<any>;
+  toBeRelatedDataList: Array<any>;
+  beRelatedDataList: Array<any>;
   // dataPageTotal: number;
   // dataPageNo: number;
   // dataPageSize: number;
@@ -16,6 +18,8 @@ export interface WriteOffModelState {
 const initailState = {
   dataList: [],
   writeOffRecordDataList: [],
+  toBeRelatedDataList: [],
+  beRelatedDataList: [],
   // dataPageTotal: 0,
   // dataPageNo: 0,
   // dataPageSize: 0,
@@ -112,10 +116,14 @@ const WriteOffModel: WriteOffModelType = {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
       if (!parseInt(code)) {
+        let beRelatedDataList = body.filter(v => !!v.contractId);
+        let toBeRelatedDataList = body.filter(v => !v.contractId);
         yield put({
           type: 'save',
           payload: {
             writeOffRecordDataList: body,
+            beRelatedDataList,
+            toBeRelatedDataList,
           },
         });
       } else {

@@ -45,8 +45,6 @@ class Invoice extends PureComponent<IProps, IState> {
   queryInvoice = () => {
     const { dispatch, contractDetail } = this.props;
     const { customId, effectiveDate } = contractDetail;
-
-    let effectiveDateData = effectiveDate ? formatDate(effectiveDate, false) : '';
     const contractId = getPageQuery('contractId');
     console.log('contractDetail ->', contractDetail);
 
@@ -58,7 +56,7 @@ class Invoice extends PureComponent<IProps, IState> {
         bodyData: {
           customId,
           contractId,
-          effectiveDate: effectiveDateData,
+          effectiveDate: effectiveDate ? formatDate(effectiveDate, false) : '',
         },
       },
       successCallback: () => {},

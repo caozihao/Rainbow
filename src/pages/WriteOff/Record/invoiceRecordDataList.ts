@@ -20,6 +20,9 @@ export default {
   amount: {
     name: 'amount',
     title: '发票金额',
+    render: (text: string) => {
+      return round(text)
+    },
   },
   firstPayment: {
     name: 'firstPayment',

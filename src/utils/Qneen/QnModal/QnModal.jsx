@@ -84,6 +84,7 @@ class QnModal extends Component {
       <div className={`${QnModal}${className ? ` ${className}` : ''}`} style={display}>
         {this.trigger}
         <Modal
+          destroyOnClose
           className="mainModal"
           title={this.props.title}
           visible={this.state.visible}

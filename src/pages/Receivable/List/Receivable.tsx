@@ -173,7 +173,7 @@ class Receivable extends PureComponent<IProps, IState> {
   genMiddleSection = () => {
     return (
       <Fragment>
-        <div className="headLayout" style={{ marginBottom: '1rem' }}>
+        <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
           {/* <h3>发票记录</h3> */}
           <Button onClick={() => {}}>导出</Button>
         </div>

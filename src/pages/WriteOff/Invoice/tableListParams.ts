@@ -1,3 +1,5 @@
+import {round} from '@/utils/format/math'
+
 export default {
   identifierCode: {
     name: 'identifierCode',
@@ -22,6 +24,9 @@ export default {
   amount: {
     name: 'amount',
     title: '发票金额',
+    render: (text: string) => {
+      return round(text)
+    },
   },
   billingDate: {
     name: 'billingDate',

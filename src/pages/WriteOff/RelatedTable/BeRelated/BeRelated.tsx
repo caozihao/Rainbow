@@ -21,6 +21,7 @@ interface IProps extends ConnectProps, WriteOffModelState {
   unRelationToContractLoading: boolean;
   settlementId: string;
   writeOffType: string;
+  queryWriteOffRecord: Function;
 }
 
 interface IState {
@@ -28,10 +29,10 @@ interface IState {
 }
 
 @connect(({ writeOff, loading }: IConnectState) => {
-  const { writeOffRecordDataList } = writeOff;
+  const { beRelatedDataList } = writeOff;
   return {
     unRelationToContractLoading: loading.effects['writeOff/unRelationToContract'],
-    writeOffRecordDataList,
+    beRelatedDataList,
   };
 })
 class ToBeRelated extends PureComponent<IProps, IState> {
@@ -65,7 +66,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   };
 
   unRelationToContract = () => {
-    const { dispatch, settlementId, writeOffType } = this.props;
+    const { dispatch, settlementId, writeOffType,queryWriteOffRecord } = this.props;
     const { selectedRowKeys } = this.state;
     const { contractId } = this.queryParams;
     dispatch({
@@ -75,27 +76,28 @@ class ToBeRelated extends PureComponent<IProps, IState> {
         reqType: 'POST',
         bodyData: {
           contractId,
-          WriteOffIds: selectedRowKeys,
+          writeOffIds: selectedRowKeys,
           settlementId,
-          writeOffType,
+          // writeOffType,
         },
       },
       successCallback: () => {
         this.setState({
           selectedRowKeys: [],
         });
+        queryWriteOffRecord();
         message.success('取消关联成功');
       },
     });
   };
 
   render() {
-    const { writeOffRecordDataList, unRelationToContractLoading } = this.props;
+    const { beRelatedDataList, unRelationToContractLoading } = this.props;
     const { selectedRowKeys } = this.state;
     const copyTableListParams = Object.assign({}, tableListParams);
 
     const QnListPagePropsBeRelated: object = {
-      dataSource: writeOffRecordDataList,
+      dataSource: beRelatedDataList,
       columns: genTableColumns(copyTableListParams),
       title: '已关联的核销记录',
       rowSelection: {
@@ -107,8 +109,8 @@ class ToBeRelated extends PureComponent<IProps, IState> {
           });
         },
       },
-      total: writeOffRecordDataList.length,
-      rowKey: (_, index) => index,
+      total: beRelatedDataList.length,
+      rowKey: item => item.writeOffId,
       middleSection: this.genMiddleSectionBeRelated(),
       hasPagination: false,
     };

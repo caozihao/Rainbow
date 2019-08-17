@@ -1,4 +1,5 @@
 import { productTypeDict, contractTypeDict, constractStatusDict } from '@/constant';
+import {round} from '@/utils/format/math'
 
 export default {
   contractNo: {
@@ -30,6 +31,9 @@ export default {
   totalAmount: {
     name: 'totalAmount',
     title: '总金额',
+    render: (text: string) => {
+      return round(text)
+    },
   },
   effectiveDate: {
     name: 'effectiveDate',

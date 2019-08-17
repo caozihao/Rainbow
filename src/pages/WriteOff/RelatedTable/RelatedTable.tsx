@@ -7,6 +7,7 @@ import BeRelated from './BeRelated/BeRelated';
 import ToBeRelated from './ToBeRelated/ToBeRelated';
 import { ContractModelState } from '@/models/contract';
 import { getPageQuery } from '@/utils/utils';
+import { formatDate } from '@/utils/format/dataFormatter';
 import { IQueryParams, IContractDetail } from '../writeoff';
 
 interface IConnectState extends ConnectState {
@@ -44,7 +45,7 @@ class ReletedTable extends PureComponent<IProps, IState> {
 
   queryWriteOffRecord = () => {
     const { dispatch, contractDetail, writeOffType, settlementId } = this.props;
-    const { contractId, customId, effectDate } = contractDetail;
+    const { contractId, customId, effectiveDate } = contractDetail;
     dispatch({
       type: 'writeOff/queryWriteOffRecord',
       payload: {
@@ -53,9 +54,8 @@ class ReletedTable extends PureComponent<IProps, IState> {
         bodyData: {
           contractId,
           customId,
-          effectDate,
+          effectiveDate: effectiveDate ? formatDate(effectiveDate, false) : '',
           settlementId,
-          writeOffType,
         },
       },
       successCallback: () => {},
@@ -69,11 +69,12 @@ class ReletedTable extends PureComponent<IProps, IState> {
     const ToBeRelatedProps = {
       settlementId,
       writeOffType,
+      queryWriteOffRecord: this.queryWriteOffRecord,
     };
     return (
       <div /* className={styles.ReletedTable} */>
         <ToBeRelated {...ToBeRelatedProps} />
-        <BeRelated {...ToBeRelatedProps}/>
+        <BeRelated {...ToBeRelatedProps} />
       </div>
     );
   }
