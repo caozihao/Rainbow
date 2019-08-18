@@ -55,10 +55,10 @@ export function requestApi({
     req.params = queryData;
   }
 
-  if (bodyData && Object.keys(bodyData).length) {
+  if (bodyData) {
     req.data = JSON.stringify(bodyData);
   }
-  console.log('url ->',url);
+  console.log('url ->', url);
   return request(url, req);
 }
 

@@ -1,4 +1,10 @@
+import {round} from '@/utils/format/math'
+
 export default {
+  index: {
+    name: 'index',
+    title: '序号',
+  },
   nper: {
     name: 'nper',
     title: '期数',
@@ -6,6 +12,9 @@ export default {
   unOverdueAmount: {
     name: 'unOverdueAmount',
     title: '未逾期金额',
+    render: (text: string) => {
+      return round(text)
+    },
   },
   day1_30: {
     name: 'day1_30',
@@ -42,5 +51,8 @@ export default {
   total: {
     name: 'total',
     title: '本期合计',
+    render: (text: string) => {
+      return round(text)
+    },
   },
 };

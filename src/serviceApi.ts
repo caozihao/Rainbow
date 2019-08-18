@@ -31,8 +31,9 @@ export default {
     queryRelatedInvoice: `${host}/invoice/queryRelatedInvoice`,
   },
   receivable: {
-    queryCustomService: `${host}/receivable/queryCustomService`,
-    queryCustomHw: `${host}/receivable/queryCustomHw`,
+    queryHWAndServiceSummary: `${host}/receivable/queryHWAndServiceSummary`,
+    queryCustomService: `${host}/receivable/queryCustomService/:contractId`,
+    queryCustomHw: `${host}/receivable/queryCustomHw/:contractId`,
     queryHwDetail: `${host}/receivable/queryHwDetail`,
     queryHwSummary: `${host}/receivable/queryHwSummary`,
     queryServiceDetail: `${host}/receivable/queryServiceDetail`,

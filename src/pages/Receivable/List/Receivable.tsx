@@ -57,8 +57,8 @@ class Receivable extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      type: this.queryParams.type,
-      tabType: this.queryParams.tabType,
+      type: this.queryParams.type || 'customer',
+      tabType: this.queryParams.tabType || 'HwStage',
       panes: [
         {
           title: '应收管理',
@@ -71,7 +71,12 @@ class Receivable extends PureComponent<IProps, IState> {
   }
 
   componentDidMount() {
-    this.queryContractList(getPageQuery());
+    const { type, tabType, ...otherParamns } = getPageQuery();
+    if (type === 'customer' || !type) {
+      this.queryContractList(otherParamns);
+    } else if (type === 'statistics') {
+      this.queryList(otherParamns);
+    }
   }
 
   updatePanes = () => {
@@ -93,8 +98,8 @@ class Receivable extends PureComponent<IProps, IState> {
   genContentPane = () => {
     const { dataList, contractDataList, contractDataPageTotal, contractDataPageNo } = this.props;
 
-    let type = 'customer';
-    let tabType = 'HwStage';
+    let type = getPageQuery('type') || 'customer';
+    let tabType = getPageQuery('tabType') || 'HwStage';
     if (this.state) {
       const { type: stateType, tabType: stateTabType } = this.state;
       type = stateType;
@@ -102,11 +107,12 @@ class Receivable extends PureComponent<IProps, IState> {
     }
 
     const { tableListParams, middleButtonArea } = this.getDataByTabType();
+    // console.log('tableListParams ->', tableListParams);
 
     let QnTableProps = {};
     let QnFilterProps = {};
 
-    if (type === 'customer') {
+    if (type === 'customer' || !type) {
       const copyTableListParams = Object.assign({}, contractTableListParams);
       copyTableListParams['option'] = this.option;
 
@@ -125,11 +131,20 @@ class Receivable extends PureComponent<IProps, IState> {
         col: 2,
       };
     } else if (type === 'statistics') {
+      const dataSource = dataList.map((v, i) => {
+        v.index = i + 1;
+        return v;
+      });
+
+      // console.log('tableListParams ->', tableListParams);
+      // console.log('dataSource ->', dataSource);
+
       QnTableProps = {
-        dataSource: dataList,
+        dataSource,
         columns: genTableColumns(tableListParams),
         total: dataList.length,
         hasPagination: false,
+        rowKey: (_, index) => index,
       };
 
       QnFilterProps = {
@@ -166,6 +181,9 @@ class Receivable extends PureComponent<IProps, IState> {
             {table}
           </TabPane>
           <TabPane tab="服务汇总" key="serviceSummary">
+            {table}
+          </TabPane>
+          <TabPane tab="硬件+服务汇总" key="HwAndServiceSummary">
             {table}
           </TabPane>
         </Tabs>
@@ -208,27 +226,25 @@ class Receivable extends PureComponent<IProps, IState> {
   getDataByTabType = () => {
     let api = '';
     let tableListParams = {};
-    let middleButtonArea = (
-      <div className="rightFlexArea">
-        <Button className="">导出</Button>
-      </div>
-    );
-    switch (this.state ? this.state.tabType : 'HwStage') {
-
+    switch (this.state ? this.state.tabType : getPageQuery('tabType') || 'HwStage') {
       case 'HwDetail':
         api = 'queryHwDetail';
+        tableListParams = tableListParamsByDetail;
+        break;
+      case 'serviceDetail':
+        api = 'queryServiceDetail';
         tableListParams = tableListParamsByDetail;
         break;
       case 'HwSummary':
         api = 'queryHwSummary';
         tableListParams = tableListParamsBySummary;
         break;
-      case 'serviceDetail':
-        api = 'queryServiceDetail';
-        tableListParams = tableListParamsByDetail;
-        break;
       case 'serviceSummary':
         api = 'queryServiceSummary';
+        tableListParams = tableListParamsBySummary;
+        break;
+      case 'HwAndServiceSummary':
+        api = 'queryHWAndServiceSummary';
         tableListParams = tableListParamsBySummary;
         break;
       default:
@@ -237,7 +253,6 @@ class Receivable extends PureComponent<IProps, IState> {
     return {
       api,
       tableListParams,
-      middleButtonArea,
     };
   };
 
@@ -265,6 +280,13 @@ class Receivable extends PureComponent<IProps, IState> {
       let routeUrl = `/receivable/list?type=${type}&&tabType=${tabType}`;
       router.push(routeUrl);
       this.updatePanes();
+
+      const { type: typeKey, tabType: tabTypeKey, ...otherParamns } = getPageQuery();
+      if (key === 'customer') {
+        this.queryContractList(otherParamns);
+      } else {
+        this.queryList(otherParamns);
+      }
     });
   };
 
@@ -280,7 +302,7 @@ class Receivable extends PureComponent<IProps, IState> {
   };
 
   queryContractList = (params: object) => {
-    console.log('params ->', params);
+    // console.log('params ->', params);
     const copyParams = dealWithQueryParams(params);
     const { tabType, type, pageType, ...otherParams } = copyParams;
     const { dispatch } = this.props;
@@ -296,7 +318,7 @@ class Receivable extends PureComponent<IProps, IState> {
       },
       successCallback: (dataList: []) => {
         this.updatePanes();
-        updateRoute(copyParams);
+        // updateRoute(copyParams);
       },
     });
   };
@@ -304,7 +326,8 @@ class Receivable extends PureComponent<IProps, IState> {
   queryList = (params: object) => {
     const { api } = this.getDataByTabType();
     const { dispatch } = this.props;
-    console.log('api ->', api);
+    // console.log('api ->', api);
+    // console.log('params ->', params);
     dispatch({
       type: `receivable/${api}`,
       payload: {
@@ -313,7 +336,8 @@ class Receivable extends PureComponent<IProps, IState> {
         bodyData: params,
       },
       successCallback: () => {
-        updateRoute(params);
+        this.updatePanes();
+        // updateRoute(copyParams);
       },
     });
   };
@@ -333,23 +357,64 @@ class Receivable extends PureComponent<IProps, IState> {
     this.queryListByDebounce({ ...filterParams });
   };
 
-  onChangePanesTab = (activePanesTabKey: string) => {
-    console.log('activeKey ->', activePanesTabKey);
-    this.setState({ activePanesTabKey });
-  };
-
   onEditPanesTab = (targetKey: string, action: string) => {
     console.log('targetKey ->', targetKey);
     console.log('action ->', action);
     this[action](targetKey);
   };
 
+  queryViewList = () => {
+    const { dispatch } = this.props;
+    const { contractType, contractId } = getPageQuery();
+    let api = '';
+    if (contractType === '0') {
+      api = 'queryCustomHw';
+    } else {
+      api = 'queryCustomService';
+    }
+    console.log('contractId ->', contractId);
+    dispatch({
+      type: `receivable/${api}`,
+      payload: {
+        apiName: api,
+        reqType: 'POST',
+        placeholerData: {
+          contractId,
+        },
+      },
+      successCallback: () => {},
+    });
+  };
+
+  onChangePanesTab = (activePanesTabKey: string) => {
+    this.setState({ activePanesTabKey });
+    let panelType = activePanesTabKey.split('_')[0];
+    let contractId = activePanesTabKey.split('_')[1];
+    let contractType = activePanesTabKey.split('_')[2];
+    console.log('activeKey ->', activePanesTabKey);
+    console.log('contractId ->', contractId);
+    const { currentPage, pageSize, tabType, type } = getPageQuery();
+
+    switch (panelType) {
+      case 'list':
+        updateRoute({ currentPage, pageSize, tabType, type });
+        this.queryContractList(getPageQuery());
+        break;
+      case 'view':
+        updateRoute({ contractId, contractType });
+        this.queryViewList();
+        break;
+      default:
+        break;
+    }
+  };
+
   onAddPanesTab = (type: string, params: object) => {
     console.log('type ->', type);
     const { panes } = this.state;
     let tabItem = {};
-    let { contractId } = params;
-    let activePanesTabKey = `${type}_${contractId}`;
+    let { contractId, contractType } = params;
+    let activePanesTabKey = `${type}_${contractId}_${contractType}`;
     if (!panes.filter(v => v.key === activePanesTabKey).length) {
       updateRoute(params);
       switch (type) {
@@ -357,8 +422,9 @@ class Receivable extends PureComponent<IProps, IState> {
           tabItem = {
             title: '应收查看',
             content: <ReceivablesView {...params} />,
-            key: `view_${contractId}`,
+            key: `view_${contractId}_${contractType}`,
           };
+          this.queryViewList();
           break;
         default:
           break;
@@ -380,20 +446,7 @@ class Receivable extends PureComponent<IProps, IState> {
 
   render() {
     const { activePanesTabKey, panes } = this.state;
-    // const genTabChildContentByCustomer = (
-    //   <Fragment>
-    //     {middleButtonArea}
-    //     <Tabs activeKey={tabType} onChange={item => this.changeRoute(item, 'tabType')}>
-    //       <TabPane tab="硬件分期" key="HwStage">
-    //         {table}
-    //       </TabPane>
-    //       <TabPane tab="服务费" key="service">
-    //         {table}
-    //       </TabPane>
-    //     </Tabs>
-    //   </Fragment>
-    // );
-
+    console.log('panes ->', panes);
     return (
       <Tabs
         style={{ flex: 1 }}

@@ -48,7 +48,7 @@ export default [
   {
     tag: 'RangePicker',
     name: 'beginDate,endDate',
-    title: '起始时间',
+    title: '起始结束时间',
     // initValue: undefined,
   },
 ];

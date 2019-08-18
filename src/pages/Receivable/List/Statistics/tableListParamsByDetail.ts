@@ -1,3 +1,5 @@
+import {round} from '@/utils/format/math'
+
 export default {
   salerName: {
     name: 'salerName',
@@ -14,10 +16,16 @@ export default {
   receivableTotal: {
     name: 'receivableTotal',
     title: '应收款合计',
+    render: (text: string) => {
+      return round(text)
+    },
   },
   unOverdueAmount: {
     name: 'unOverdueAmount',
     title: '未逾期金额',
+    render: (text: string) => {
+      return round(text)
+    },
   },
   day1_30: {
     name: 'day1_30',
@@ -54,6 +62,9 @@ export default {
   total: {
     name: 'total',
     title: '本期合计',
+    render: (text: string) => {
+      return round(text)
+    },
   },
   actionPlan	: {
     name: 'total',

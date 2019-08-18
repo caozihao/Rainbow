@@ -8,18 +8,27 @@ import { genTableColumns } from '@/utils/format/dataGen';
 import { getPageQuery, updateRoute } from '@/utils/utils';
 import tableListParamsByHwStage from './tableListParamsByHwStage';
 import tableListParamsByService from './tableListParamsByService';
+import { ReceivableModelState } from '@/models/receivable';
 
-interface ReceivablesViewModelState {}
+interface IConnectState extends ConnectState {
+  receivable: ReceivableModelState;
+}
 
-interface IConnectState extends ConnectState {}
-
-interface IProps extends ConnectProps, ReceivablesViewModelState {
+interface IProps extends ConnectProps {
   dispatch: Dispatch;
+  [key: string]: any;
 }
 
 interface IState {}
 
-@connect(({  }: IConnectState) => ({}))
+@connect(({ receivable }: IConnectState) => {
+  const { dataList, actionPlan } = receivable;
+
+  return {
+    dataList,
+    actionPlan,
+  };
+})
 class ReceivablesView extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -32,54 +41,35 @@ class ReceivablesView extends PureComponent<IProps, IState> {
 
   componentDidUpdate() {}
 
-  queryList = (params: object) => {
-    const { api } = this.getItemByQueryType();
-    const { dispatch } = this.props;
-    const { contractId } = getPageQuery('contractType');
-    dispatch({
-      type: `receivable/${api}`,
-      payload: {
-        apiName: api,
-        reqType: 'GET',
-        placeHolderData: {
-          contractId,
-        },
-      },
-      successCallback: () => {},
-    });
-  };
-
   getItemByQueryType = () => {
     const contractType = parseInt(getPageQuery('contractType'), 10);
     let contractName = '';
     let tableListParams = {};
-    let api = '';
     if (contractType === 0) {
       contractName = '硬件分期';
       tableListParams = tableListParamsByHwStage;
-      api = 'receivable/queryCustomHw';
     } else {
       contractName = '服务费';
       tableListParams = tableListParamsByService;
-      api = 'receivable/queryCustomService';
     }
 
     return {
       contractName,
       tableListParams,
-      api,
     };
   };
 
   genMiddleSection = () => {
     const { contractName } = this.getItemByQueryType();
+    const { actionPlan } = this.props;
     return (
       <Fragment>
         <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
           <h3>{contractName}</h3>
           <div className="rightFlexArea">
+            <Button>导出</Button>
             <Button type="primary">编辑手动核实到账</Button>
-            <p>Action Plan：服务结清</p>
+            <p>Action Plan：{actionPlan}</p>
           </div>
         </div>
       </Fragment>
@@ -89,22 +79,26 @@ class ReceivablesView extends PureComponent<IProps, IState> {
   // handleClick = (e: Object): void => {};
 
   genTable = () => {
-    // const QnTableProps = {
-    //   dataSource: dataList,
-    //   columns: genTableColumns(tableListParams),
-    //   total: dataList.length,
-    //   hasPagination: false,
-    // };
-    // return <QnTable {...QnTableProps} />;
+    const { dataList } = this.props;
+    const dataSource = dataList.map((v, i) => {
+      v.index = i + 1;
+      return v;
+    });
+    const { tableListParams } = this.getItemByQueryType();
+    const QnTableProps = {
+      dataSource,
+      columns: genTableColumns(tableListParams),
+      total: dataList.length,
+      hasPagination: false,
+    };
+    return <QnTable {...QnTableProps} />;
   };
 
   render() {
-    const genTable = this.genTable();
     return (
       <Card bordered={false}>
         {this.genMiddleSection()}
-        表单
-        {/* <QnTable {...QnTableProps} /> */}
+        {this.genTable()}
       </Card>
     );
   }

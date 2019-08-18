@@ -167,7 +167,7 @@ class WriteOff extends PureComponent<IProps, IState> {
   };
 
   queryList = (params: object) => {
-    console.log('params ->', params);
+    // console.log('params ->', params);
     const copyParams = dealWithQueryParams(params);
     const { dispatch } = this.props;
     dispatch({

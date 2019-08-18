@@ -1,6 +1,8 @@
+import {round} from '@/utils/format/math'
+
 export default {
-  id: {
-    name: 'id',
+  index: {
+    name: 'index',
     title: '序号',
   },
   nper: {
@@ -10,14 +12,23 @@ export default {
   receivablePayment: {
     name: 'receivablePayment',
     title: '应收款合计',
+    render: (text: string) => {
+      return round(text)
+    },
   },
   actualPayment: {
     name: 'actualPayment',
     title: '本期实际到账',
+    render: (text: string) => {
+      return round(text)
+    },
   },
   unOverdueAmount: {
     name: 'unOverdueAmount',
     title: '未逾期金额',
+    render: (text: string) => {
+      return round(text)
+    },
   },
   day1_5: {
     name: 'day1_5',
@@ -54,5 +65,8 @@ export default {
   total: {
     name: 'total',
     title: '本期合计',
+    render: (text: string) => {
+      return round(text)
+    },
   },
 };
