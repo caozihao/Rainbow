@@ -43,27 +43,9 @@ class ToBeRelated extends PureComponent<IProps, IState> {
 
   queryParams: IQueryParams = getPageQuery();
 
-  componentDidMount() {
-    this.queryRelatedInvoice();
-  }
+  componentDidMount() {}
 
   componentDidUpdate() {}
-
-  queryRelatedInvoice = () => {
-    const { contractId } = this.queryParams;
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'invoice/queryRelatedInvoice',
-      payload: {
-        apiName: 'queryRelatedInvoice',
-        reqType: 'GET',
-        queryData: {
-          contractId,
-        },
-      },
-      successCallback: () => {},
-    });
-  };
 
   exportByContractId = () => {
     const { contractId, tabType } = this.queryParams;

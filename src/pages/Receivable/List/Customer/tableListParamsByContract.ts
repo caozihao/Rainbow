@@ -21,7 +21,7 @@ export default {
     },
   },
   type: {
-    name: 'productType',
+    name: 'type',
     title: '合同类型',
     render: (text: string) => {
       return contractTypeDict[text];

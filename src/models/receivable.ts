@@ -34,7 +34,7 @@ const ReceivableModel: ReceivableModelType = {
   namespace,
   state: initailState,
   effects: {
-    *queryCustomCommission({ payload, successCallback, failCallback }, { call, put }) {
+    *queryCustomService({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
       if (!parseInt(code)) {
@@ -145,7 +145,7 @@ const ReceivableModel: ReceivableModelType = {
         failCallback && failCallback(errMsg);
       }
     },
-    *updateCustomCommission({ payload, successCallback, failCallback }, { call, put }) {
+    *updateCustomService({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!parseInt(code)) {

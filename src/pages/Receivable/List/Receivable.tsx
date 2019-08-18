@@ -8,8 +8,6 @@ import { Link } from 'dva/router';
 import { genTableColumns } from '@/utils/format/dataGen';
 import { QnListPage, QnFormModal, QnFilter, QnTable } from '@/utils/Qneen/index';
 import tableFilterParamsByCustomer from './Customer/tableFilterParamsByCustomer';
-import tableListParamsByHwStage from './Customer/tableListParamsByHwStage';
-import tableListParamsByService from './Customer/tableListParamsByService';
 import tableFilterParamsByStatistics from './Statistics/tableFilterParamsByStatistics';
 import tableListParamsByDetail from './Statistics/tableListParamsByDetail';
 import tableListParamsBySummary from './Statistics/tableListParamsBySummary';
@@ -19,6 +17,7 @@ import contractTableListParams from './Customer/tableListParamsByContract';
 import { getPageQuery, updateRoute, dealWithQueryParams } from '@/utils/utils';
 import { ContractModelState } from '@/models/contract';
 import debounce from 'lodash/debounce';
+import ReceivablesView from './ReceivablesView/ReceivablesView';
 
 const { TabPane } = Tabs;
 
@@ -34,6 +33,8 @@ interface IProps extends ConnectProps, ReceivableModelState, ContractModelState 
 interface IState {
   type: string;
   tabType: string;
+  panes: Array<any>;
+  activePanesTabKey: string;
 }
 
 @connect(({ receivable, contract }: IConnectState) => {
@@ -58,6 +59,14 @@ class Receivable extends PureComponent<IProps, IState> {
     this.state = {
       type: this.queryParams.type,
       tabType: this.queryParams.tabType,
+      panes: [
+        {
+          title: '应收管理',
+          content: this.genContentPane(),
+          key: 'list',
+        },
+      ],
+      activePanesTabKey: 'list',
     };
   }
 
@@ -65,7 +74,121 @@ class Receivable extends PureComponent<IProps, IState> {
     this.queryContractList(getPageQuery());
   }
 
+  updatePanes = () => {
+    const { panes: originPanes } = this.state;
+    console.log('originPanes ->', originPanes);
+    const panes = originPanes.map(v => {
+      if (v.key === 'list') {
+        v.content = this.genContentPane();
+      }
+      return v;
+    });
+    this.setState({
+      panes,
+    });
+  };
+
   componentDidUpdate() {}
+
+  genContentPane = () => {
+    const { dataList, contractDataList, contractDataPageTotal, contractDataPageNo } = this.props;
+
+    let type = 'customer';
+    let tabType = 'HwStage';
+    if (this.state) {
+      const { type: stateType, tabType: stateTabType } = this.state;
+      type = stateType;
+      tabType = stateTabType;
+    }
+
+    const { tableListParams, middleButtonArea } = this.getDataByTabType();
+
+    let QnTableProps = {};
+    let QnFilterProps = {};
+
+    if (type === 'customer') {
+      const copyTableListParams = Object.assign({}, contractTableListParams);
+      copyTableListParams['option'] = this.option;
+
+      QnTableProps = {
+        dataSource: contractDataList,
+        columns: genTableColumns(copyTableListParams),
+        handlePageChange: this.handleContractPageChange,
+        total: contractDataPageTotal,
+        current: contractDataPageNo,
+        rowKey: item => item.contractId,
+      };
+
+      QnFilterProps = {
+        handleChange: this.handleContractFilterChange,
+        rules: tableFilterParamsByCustomer,
+        col: 2,
+      };
+    } else if (type === 'statistics') {
+      QnTableProps = {
+        dataSource: dataList,
+        columns: genTableColumns(tableListParams),
+        total: dataList.length,
+        hasPagination: false,
+      };
+
+      QnFilterProps = {
+        handleChange: this.handleFilterChange,
+        rules: tableFilterParamsByStatistics,
+        col: 2,
+      };
+    }
+
+    // console.log('type ->', type);
+    // console.log('tabType ->', tabType);
+    // console.log('QnTableProps ->', QnTableProps);
+
+    const genTabContent = <QnFilter {...QnFilterProps} />;
+
+    const table = (
+      <Fragment>
+        <br />
+        <QnTable {...QnTableProps} />
+      </Fragment>
+    );
+
+    const genTabChildContentByStatistics = (
+      <Fragment>
+        {middleButtonArea}
+        <Tabs activeKey={tabType} onChange={item => this.changeRoute(item, 'tabType')}>
+          <TabPane tab="硬件明细" key="HwDetail">
+            {table}
+          </TabPane>
+          <TabPane tab="硬件汇总" key="HwSummary">
+            {table}
+          </TabPane>
+          <TabPane tab="服务明细" key="serviceDetail">
+            {table}
+          </TabPane>
+          <TabPane tab="服务汇总" key="serviceSummary">
+            {table}
+          </TabPane>
+        </Tabs>
+      </Fragment>
+    );
+
+    return (
+      <Card bordered={false}>
+        <Tabs activeKey={type} onChange={item => this.changeRoute(item, 'type')}>
+          <TabPane tab="客户应收" key="customer">
+            <br />
+            {genTabContent}
+            {table}
+          </TabPane>
+          <TabPane tab="应收统计" key="statistics">
+            <br />
+            {genTabContent}
+            {genTabChildContentByStatistics}
+          </TabPane>
+        </Tabs>
+      </Card>
+    );
+  };
 
   queryParams: IQueryParams = getPageQuery();
 
@@ -73,7 +196,12 @@ class Receivable extends PureComponent<IProps, IState> {
     name: 'option',
     title: '操作',
     render: (text, record) => {
-      return <Button>查看</Button>;
+      const { contractId, type } = record;
+      return (
+        <Button onClick={() => this.onAddPanesTab('view', { contractId, contractType: type })}>
+          查看
+        </Button>
+      );
     },
   };
 
@@ -85,28 +213,8 @@ class Receivable extends PureComponent<IProps, IState> {
         <Button className="">导出</Button>
       </div>
     );
-    switch (this.state.tabType) {
-      case 'HwStage':
-        api = 'queryCustomHw';
-        tableListParams = tableListParamsByHwStage;
-        middleButtonArea = (
-          <div className="rightFlexArea">
-            <Button>导出</Button>
-            <Button type="primary">编辑手动核实到账</Button>
-            <p>Action Plan：服务结清</p>
-          </div>
-        );
-        break;
-      case 'service':
-        api = 'queryCustomCommission';
-        tableListParams = tableListParamsByService;
-        middleButtonArea = (
-          <div className="rightFlexArea">
-            <Button type="primary">编辑手动核实到账</Button>
-            <p>Action Plan：服务结清</p>
-          </div>
-        );
-        break;
+    switch (this.state ? this.state.tabType : 'HwStage') {
+
       case 'HwDetail':
         api = 'queryHwDetail';
         tableListParams = tableListParamsByDetail;
@@ -156,6 +264,7 @@ class Receivable extends PureComponent<IProps, IState> {
       const { type, tabType } = this.state;
       let routeUrl = `/receivable/list?type=${type}&&tabType=${tabType}`;
       router.push(routeUrl);
+      this.updatePanes();
     });
   };
 
@@ -186,6 +295,7 @@ class Receivable extends PureComponent<IProps, IState> {
         },
       },
       successCallback: (dataList: []) => {
+        this.updatePanes();
         updateRoute(copyParams);
       },
     });
@@ -223,51 +333,53 @@ class Receivable extends PureComponent<IProps, IState> {
     this.queryListByDebounce({ ...filterParams });
   };
 
-  render() {
-    const { dataList, contractDataList, contractDataPageTotal, contractDataPageNo } = this.props;
-    const { type, tabType } = this.state;
-    const { tableListParams, middleButtonArea } = this.getDataByTabType();
+  onChangePanesTab = (activePanesTabKey: string) => {
+    console.log('activeKey ->', activePanesTabKey);
+    this.setState({ activePanesTabKey });
+  };
 
-    let QnTableProps = {};
-    let QnFilterProps = {};
+  onEditPanesTab = (targetKey: string, action: string) => {
+    console.log('targetKey ->', targetKey);
+    console.log('action ->', action);
+    this[action](targetKey);
+  };
 
-    if (type === 'customer') {
-      const copyTableListParams = Object.assign({}, contractTableListParams);
-      copyTableListParams['option'] = this.option;
-
-      QnTableProps = {
-        dataSource: contractDataList,
-        columns: genTableColumns(copyTableListParams),
-        handlePageChange: this.handleContractPageChange,
-        total: contractDataPageTotal,
-        current: contractDataPageNo,
-        rowKey: item => item.contractId,
-      };
-
-      QnFilterProps = {
-        handleChange: this.handleContractFilterChange,
-        rules: tableFilterParamsByCustomer,
-        col: 2,
-      };
-    } else if (type === 'statistics') {
-      QnTableProps = {
-        dataSource: dataList,
-        columns: genTableColumns(tableListParams),
-        total: dataList.length,
-        hasPagination: false,
-      };
-
-      QnFilterProps = {
-        handleChange: this.handleFilterChange,
-        rules: tableFilterParamsByStatistics,
-        col: 2,
-      };
+  onAddPanesTab = (type: string, params: object) => {
+    console.log('type ->', type);
+    const { panes } = this.state;
+    let tabItem = {};
+    let { contractId } = params;
+    let activePanesTabKey = `${type}_${contractId}`;
+    if (!panes.filter(v => v.key === activePanesTabKey).length) {
+      updateRoute(params);
+      switch (type) {
+        case 'view':
+          tabItem = {
+            title: '应收查看',
+            content: <ReceivablesView {...params} />,
+            key: `view_${contractId}`,
+          };
+          break;
+        default:
+          break;
+      }
+      panes.push(tabItem);
     }
+    this.setState({ panes, activePanesTabKey });
+  };
 
-    const genTabContent = <QnFilter {...QnFilterProps} />;
+  remove = (targetKey: string) => {
+    let { panes: oldPanes } = this.state;
+    const panes = oldPanes.filter(pane => pane.key !== targetKey);
+    let activePanesTabKey = '';
+    if (panes.length) {
+      activePanesTabKey = panes[0].key;
+    }
+    this.setState({ panes, activePanesTabKey });
+  };
 
-    const table = <QnTable {...QnTableProps} />;
-
+  render() {
+    const { activePanesTabKey, panes } = this.state;
     // const genTabChildContentByCustomer = (
     //   <Fragment>
     //     {middleButtonArea}
@@ -282,39 +394,22 @@ class Receivable extends PureComponent<IProps, IState> {
     //   </Fragment>
     // );
 
-    const genTabChildContentByStatistics = (
-      <Fragment>
-        {middleButtonArea}
-        <Tabs activeKey={tabType} onChange={item => this.changeRoute(item, 'tabType')}>
-          <TabPane tab="硬件明细" key="HwDetail">
-            {table}
-          </TabPane>
-          <TabPane tab="硬件汇总" key="HwSummary">
-            {table}
-          </TabPane>
-          <TabPane tab="服务明细" key="serviceDetail">
-            {table}
-          </TabPane>
-          <TabPane tab="服务汇总" key="serviceSummary">
-            {table}
-          </TabPane>
-        </Tabs>
-      </Fragment>
-    );
-
     return (
-      <Card className="wrapper-right-content" title="应收管理">
-        <Tabs activeKey={type} onChange={item => this.changeRoute(item, 'type')}>
-          <TabPane tab="客户应收" key="customer">
-            {genTabContent}
-            {table}
+      <Tabs
+        style={{ flex: 1 }}
+        hideAdd
+        onChange={this.onChangePanesTab}
+        activeKey={activePanesTabKey}
+        type="editable-card"
+        onEdit={this.onEditPanesTab}
+        className="display-tab"
+      >
+        {panes.map(pane => (
+          <TabPane tab={pane.title} key={pane.key}>
+            {pane.content}
           </TabPane>
-          <TabPane tab="应收统计" key="statistics">
-            {genTabContent}
-            {genTabChildContentByStatistics}
-          </TabPane>
-        </Tabs>
-      </Card>
+        ))}
+      </Tabs>
     );
   }
 }

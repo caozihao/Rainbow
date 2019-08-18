@@ -21,6 +21,8 @@ interface IConnectState extends ConnectState {
 interface IProps extends ConnectProps, InvoiceModelState {
   dispatch: Dispatch;
   contractDetail: IContractDetail;
+  queryDataByContractId: Function;
+  queryRelatedInvoice: Function;
 }
 
 interface IState {
@@ -45,59 +47,23 @@ class Record extends PureComponent<IProps, IState> {
 
   queryParams: IQueryParams = getPageQuery();
 
-  componentDidMount() {
-    this.queryById();
-    this.queryDataByContractId();
-  }
+  componentDidMount() {}
 
   componentDidUpdate() {}
-
-  queryById = () => {
-    const { contractId } = this.queryParams;
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'contract/queryById',
-      payload: {
-        apiName: 'queryById',
-        reqType: 'GET',
-        placeholerData: {
-          contractId,
-        },
-      },
-      successCallback: () => {},
-    });
-  };
-
-  queryDataByContractId = (type = 'stageWriteOff') => {
-    const { contractId } = this.queryParams;
-    const { dispatch } = this.props;
-
-    let api =
-      type === 'stageWriteOff' ? 'querySettlementByContractId' : 'queryCommissionByContractId';
-
-    console.log('api ->', api);
-    dispatch({
-      type: `writeOff/${api}`,
-      payload: {
-        apiName: api,
-        reqType: 'GET',
-        placeholerData: {
-          contractId,
-        },
-      },
-      successCallback: () => {},
-    });
-  };
 
   changeTab = (tabType: string) => {
     console.log('tabType ->', tabType);
     const newQueryParams = Object.assign(this.queryParams, { tabType });
+
+    if (tabType === 'stageWriteOff') {
+      this.props.queryRelatedInvoice();
+    }
     this.setState(
       {
         tabType,
       },
       () => {
-        this.queryDataByContractId(tabType);
+        this.props.queryDataByContractId(tabType);
         updateRoute(newQueryParams);
       },
     );

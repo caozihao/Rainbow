@@ -161,7 +161,7 @@ class BasicLayout extends PureComponent<BasicLayoutProps> {
           formatMessage={formatMessage}
           rightContentRender={rightProps => <RightContent {...rightProps} />}
           {...this.props}
-          title=""
+          title="RICHO"
         >
           {children}
         </ProLayout>

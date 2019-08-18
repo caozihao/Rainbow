@@ -1,7 +1,19 @@
 export default {
+  id: {
+    name: 'id',
+    title: '序号',
+  },
   nper: {
     name: 'nper',
     title: '期数',
+  },
+  receivablePayment: {
+    name: 'receivablePayment',
+    title: '应收款合计',
+  },
+  actualPayment: {
+    name: 'actualPayment',
+    title: '本期实际到账',
   },
   unOverdueAmount: {
     name: 'unOverdueAmount',

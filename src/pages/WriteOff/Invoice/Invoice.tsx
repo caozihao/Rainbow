@@ -9,7 +9,7 @@ import { getPageQuery } from '@/utils/utils';
 import BeRelated from './BeRelated/BeRelated';
 import ToBeRelated from './ToBeRelated/ToBeRelated';
 import { IContractDetail } from '../writeoff.d';
-import { formatDate } from '@/utils/format/dataFormatter';
+
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
   contract: ContractModelState;
@@ -18,6 +18,7 @@ interface IConnectState extends ConnectState {
 interface IProps extends ConnectProps, InvoiceModelState {
   dispatch: Dispatch;
   contractDetail: IContractDetail;
+  queryInvoice: Function;
 }
 
 interface IState {}
@@ -36,53 +37,12 @@ class Invoice extends PureComponent<IProps, IState> {
     this.state = {};
   }
 
-  componentDidMount() {
-    this.queryById();
-  }
+  componentDidMount() {}
 
   componentDidUpdate() {}
 
-  queryInvoice = () => {
-    const { dispatch, contractDetail } = this.props;
-    const { customId, effectiveDate } = contractDetail;
-    const contractId = getPageQuery('contractId');
-    console.log('contractDetail ->', contractDetail);
-
-    dispatch({
-      type: 'invoice/queryInvoice',
-      payload: {
-        apiName: 'queryInvoice',
-        reqType: 'POST',
-        bodyData: {
-          customId,
-          contractId,
-          effectiveDate: effectiveDate ? formatDate(effectiveDate, false) : '',
-        },
-      },
-      successCallback: () => {},
-    });
-  };
-
-  queryById = () => {
-    const contractId = getPageQuery('contractId');
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'contract/queryById',
-      payload: {
-        apiName: 'queryById',
-        reqType: 'GET',
-        placeholerData: {
-          contractId,
-        },
-      },
-      successCallback: () => {
-        this.queryInvoice();
-      },
-    });
-  };
-
   render() {
-    const { contractDetail } = this.props;
+    const { contractDetail, queryInvoice } = this.props;
     const genContractInfo = () => {
       const { customId, contractNo, effectiveDate, customName } = contractDetail;
       return (
@@ -108,8 +68,8 @@ class Invoice extends PureComponent<IProps, IState> {
     return (
       <Card className="wrapper-right-content" title="" bordered={false}>
         {contractDetail ? genContractInfo() : ''}
-        <ToBeRelated queryInvoice={this.queryInvoice} />
-        <BeRelated queryInvoice={this.queryInvoice} />
+        <ToBeRelated queryInvoice={queryInvoice} />
+        <BeRelated queryInvoice={queryInvoice} />
       </Card>
     );
   }

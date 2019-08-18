@@ -66,9 +66,15 @@ export function dealWithQueryParams(params: IQueryParams) {
   return copyParams;
 }
 
-export function updateRoute(params: object) {
+export function updateRoute(params: object, ifReplace = true) {
+  let query = { ...params };
+  if (!ifReplace) {
+    const queryParams = getPageQuery();
+    query = { ...queryParams, ...params };
+  }
+
   router.push({
     pathname: location ? location.pathname : '',
-    query: { ...params },
+    query,
   });
 }

@@ -12,57 +12,60 @@ class QnTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filteredColumns: [],
+      filteredColumns: this.props.columns,
     };
-    this.allColumnValues = this.getAllColumnValues(this.props.columns);
+    // this.allColumnValues = this.getAllColumnValues(this.props.columns);
     // this.scrollX = 150 * (this.props.columns.length + 1);
   }
 
   componentDidMount() {}
 
   componentWillMount() {
-    const filteredColumns = this.getFilteredColumns(
-      this.props.defaultColumnValues || this.allColumnValues,
-    );
-    this.setState({ filteredColumns });
+    // const filteredColumns = this.getFilteredColumns(
+    //   this.props.defaultColumnValues || this.allColumnValues,
+    // );
+    // this.setState({ filteredColumns });
   }
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(nextProps.columns, this.props.columns)) {
-      const filteredColumns = this.getFilteredColumns(this.getAllColumnValues(nextProps.columns));
-      this.setState({ filteredColumns });
+      // console.log('nextProps.columns ->', nextProps.columns);
+      // console.log('this.props.columns ->', this.props.columns);
+      // const filteredColumns = this.getFilteredColumns(this.getAllColumnValues(nextProps.columns));
+      this.setState({ filteredColumns: nextProps.columns });
     }
   }
 
   componentDidUpdate = prevProps => {};
 
-  getAllColumnValues = columns => {
-    const values = [];
-    for (let i = 0; i < columns.length; i += 1) {
-      values.push(columns[i].key);
-    }
-    return values;
-  };
+  // getAllColumnValues = columns => {
+  //   const values = [];
+  //   for (let i = 0; i < columns.length; i += 1) {
+  //     values.push(columns[i].key);
+  //   }
+  //   return values;
+  // };
 
-  getFilteredColumns = values => {
-    const filteredColumns = [];
-    if (values) {
-      for (let i = 0; i < values.length; i += 1) {
-        for (let j = 0; j < this.props.columns.length; j += 1) {
-          const column = this.props.columns[j];
-          if (column.dataIndex === values[i]) {
-            filteredColumns.push(column);
-          }
-        }
-      }
-      return filteredColumns;
-    }
-  };
+  // getFilteredColumns = values => {
+  //   console.log('getFilteredColumns values->', values);
+  //   const filteredColumns = [];
+  //   if (values) {
+  //     for (let i = 0; i < values.length; i += 1) {
+  //       for (let j = 0; j < this.props.columns.length; j += 1) {
+  //         const column = this.props.columns[j];
+  //         if (column.dataIndex === values[i]) {
+  //           filteredColumns.push(column);
+  //         }
+  //       }
+  //     }
+  //     return filteredColumns;
+  //   }
+  // };
 
-  handleColumnSwitchChange = checkedList => {
-    const filteredColumns = this.getFilteredColumns(checkedList);
-    this.setState({ filteredColumns });
-  };
+  // handleColumnSwitchChange = checkedList => {
+  //   const filteredColumns = this.getFilteredColumns(checkedList);
+  //   this.setState({ filteredColumns });
+  // };
 
   render() {
     // log('defaultPageSize', this.props.defaultPageSize);
@@ -106,17 +109,15 @@ class QnTable extends Component {
         };
       }
     }
-    // console.log(expandedRowRender);
-
     return (
       <div className="QnTable">
-        {this.props.hasColumnSwitch ? (
+        {/* {this.props.hasColumnSwitch ? (
           <ColumnSwitch
             columns={columns}
             defaultCheckedList={this.props.defaultColumnValues || this.allColumnValues}
             onChange={this.handleColumnSwitchChange}
           />
-        ) : null}
+        ) : null} */}
 
         <Table
           {...this.props.otherProps}

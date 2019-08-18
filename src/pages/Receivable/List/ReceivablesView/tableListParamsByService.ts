@@ -1,4 +1,8 @@
 export default {
+  id: {
+    name: 'id',
+    title: '序号',
+  },
   nper: {
     name: 'nper',
     title: '期数',
@@ -15,9 +19,9 @@ export default {
     name: 'unOverdueAmount',
     title: '未逾期金额',
   },
-  day1_30: {
-    name: 'day1_30',
-    title: '1～30天',
+  day1_5: {
+    name: 'day1_5',
+    title: '1～5天',
   },
   day31_60: {
     name: 'day31_60',

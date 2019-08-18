@@ -31,13 +31,13 @@ export default {
     queryRelatedInvoice: `${host}/invoice/queryRelatedInvoice`,
   },
   receivable: {
-    queryCustomCommission: `${host}/receivable/queryCustomCommission`,
+    queryCustomService: `${host}/receivable/queryCustomService`,
     queryCustomHw: `${host}/receivable/queryCustomHw`,
     queryHwDetail: `${host}/receivable/queryHwDetail`,
     queryHwSummary: `${host}/receivable/queryHwSummary`,
     queryServiceDetail: `${host}/receivable/queryServiceDetail`,
     queryServiceSummary: `${host}/receivable/queryServiceSummary`,
-    updateCustomCommission: `${host}/receivable/updateCustomCommission`,
+    updateCustomService: `${host}/receivable/updateCustomService`,
     updateCustomHw: `${host}/receivable/updateCustomHw`,
   },
   account: {

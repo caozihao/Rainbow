@@ -14,6 +14,7 @@ import { WriteOffModelState, namespace } from '@/models/writeOff';
 import debounce from 'lodash/debounce';
 import Invoice from '../Invoice/Invoice';
 import Record from '../Record/Record';
+import { formatDate } from '@/utils/format/dataFormatter';
 
 import {
   getPageQuery,
@@ -28,6 +29,7 @@ interface IConnectState extends ConnectState {
 }
 interface IProps extends ConnectProps, ContractModelState, WriteOffModelState {
   dispatch: Dispatch;
+  [key: string]: any;
 }
 
 interface IState {
@@ -40,11 +42,13 @@ interface IState {
 
 @connect(({ contract }: IConnectState) => {
   const { dataList, dataPageTotal, dataPageNo, dataPageSize } = contract;
+  const { detail } = contract;
   return {
     dataList,
     dataPageTotal,
     dataPageNo,
     dataPageSize,
+    contractDetail: detail,
   };
 })
 class WriteOff extends PureComponent<IProps, IState> {
@@ -87,13 +91,17 @@ class WriteOff extends PureComponent<IProps, IState> {
             type="edit"
             title="编辑核销记录"
             style={{ marginRight: '0.5rem' }}
-            onClick={() => this.addTab('edit', { pageType: 'edit', contractId })}
+            onClick={() =>
+              this.addTab('edit', { pageType: 'edit', contractId, tabType: 'stageWriteOff' })
+            }
           />
           <Icon
             type="search"
             title="查看核销记录"
             style={{ marginRight: '0.5rem' }}
-            onClick={() => this.addTab('detail', { pageType: 'detail', contractId })}
+            onClick={() =>
+              this.addTab('detail', { pageType: 'detail', contractId, tabType: 'stageWriteOff' })
+            }
           />
         </Fragment>
       );
@@ -125,7 +133,7 @@ class WriteOff extends PureComponent<IProps, IState> {
       handleFilterChange: this.handleFilterChange,
       total: dataPageTotal,
       current: dataPageNo,
-      rowKey: item=>item.contractId,
+      rowKey: item => item.contractId,
       // middleSection: this.genMiddleSection(),
       // ...this.QnFormModalProps('QnListPage'),
     };
@@ -141,7 +149,7 @@ class WriteOff extends PureComponent<IProps, IState> {
 
   componentDidUpdate(prevProps: IProps) {}
 
-  updateList = () => {
+  updatePanes = () => {
     const { panes } = this.state;
     const newPanes = panes.map(v => {
       if (v.key === 'list') {
@@ -170,14 +178,13 @@ class WriteOff extends PureComponent<IProps, IState> {
         bodyData: copyParams,
       },
       successCallback: (dataList: []) => {
-        this.updateList();
+        this.updatePanes();
         updateRoute(copyParams);
       },
     });
   };
 
   queryListByDebounce = debounce(this.queryList, 1000);
-
 
   handlePageChange = (currentPage: number, pageSize: number) => {
     this.queryListByDebounce({ pageSize, currentPage });
@@ -187,27 +194,119 @@ class WriteOff extends PureComponent<IProps, IState> {
     this.queryListByDebounce({ ...filterParams });
   };
 
-  // genMiddleSection = () => {
-  //   return (
-  //     <div style={{ marginBottom: '1rem' }}>
-  //       <Link to="/writeoff/invoice">
-  //         <Button style={{ marginRight: '1rem' }}>添加发票</Button>
-  //       </Link>
-  //       <Link to="/writeoff/record">
-  //         <Button type="primary">编辑核销记录</Button>
-  //       </Link>
-  //     </div>
-  //   );
-  // };
+  queryInvoice = () => {
+    const { dispatch, contractDetail } = this.props;
+    const { customId, effectiveDate } = contractDetail;
+    const contractId = getPageQuery('contractId');
+    console.log('contractDetail ->', contractDetail);
 
-  // handleClick = (e: Object): void => {};
-
-  onChange = (activeKey: string) => {
-    console.log('activeKey ->', activeKey);
-    this.setState({ activeKey });
+    dispatch({
+      type: 'invoice/queryInvoice',
+      payload: {
+        apiName: 'queryInvoice',
+        reqType: 'POST',
+        bodyData: {
+          customId,
+          contractId,
+          effectiveDate: effectiveDate ? formatDate(effectiveDate, false) : '',
+        },
+      },
+      successCallback: () => {},
+    });
   };
 
-  onEdit = (targetKey, action) => {
+  queryById = (callback = () => {}) => {
+    const contractId = getPageQuery('contractId');
+    const { dispatch } = this.props;
+    console.log('queryById...');
+    dispatch({
+      type: 'contract/queryById',
+      payload: {
+        apiName: 'queryById',
+        reqType: 'GET',
+        placeholerData: {
+          contractId,
+        },
+      },
+      successCallback: () => {
+        callback();
+      },
+    });
+  };
+
+  queryDataByContractId = (type = 'stageWriteOff') => {
+    const contractId = getPageQuery('contractId');
+    const { dispatch } = this.props;
+
+    let api =
+      type === 'stageWriteOff' ? 'querySettlementByContractId' : 'queryCommissionByContractId';
+
+    console.log('api ->', api);
+    dispatch({
+      type: `writeOff/${api}`,
+      payload: {
+        apiName: api,
+        reqType: 'GET',
+        placeholerData: {
+          contractId,
+        },
+      },
+      successCallback: () => {},
+    });
+  };
+
+  queryRelatedInvoice = () => {
+    const contractId = getPageQuery('contractId');
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'invoice/queryRelatedInvoice',
+      payload: {
+        apiName: 'queryRelatedInvoice',
+        reqType: 'GET',
+        queryData: {
+          contractId,
+        },
+      },
+      successCallback: () => {},
+    });
+  };
+
+  onChange = (activeKey: string) => {
+    this.setState({ activeKey });
+    let contractId = activeKey.split('_')[1];
+    let type = activeKey.split('_')[0];
+    console.log('activeKey ->', activeKey);
+    console.log('contractId ->', contractId);
+    console.log('type ->', type);
+    const tabType = getPageQuery('tabType');
+    updateRoute({ contractId, tabType }, true);
+    switch (type) {
+      case 'list':
+        this.queryList(getPageQuery());
+        break;
+      case 'invoice':
+        this.queryById(this.queryInvoice);
+        break;
+      case 'detail':
+        this.queryById();
+        if (tabType === 'stageWriteOff') {
+          this.queryRelatedInvoice();
+        }
+        this.queryDataByContractId();
+        break;
+      case 'edit':
+        this.queryById();
+        if (tabType === 'stageWriteOff') {
+          this.queryRelatedInvoice();
+        }
+        this.queryDataByContractId();
+        break;
+      default:
+        break;
+    }
+  };
+
+  onEdit = (targetKey: string, action: string) => {
     console.log('targetKey ->', targetKey);
     console.log('action ->', action);
     this[action](targetKey);
@@ -223,23 +322,42 @@ class WriteOff extends PureComponent<IProps, IState> {
       updateRoute(params);
       switch (type) {
         case 'invoice':
+          this.queryById();
           tabItem = {
             title: '添加发票',
-            content: <Invoice {...params} />,
+            content: <Invoice {...params} queryInvoice={this.queryInvoice} />,
             key: `invoice_${contractId}`,
           };
           break;
         case 'detail':
+          this.queryById();
+          this.queryDataByContractId();
+          this.queryRelatedInvoice();
           tabItem = {
             title: '查看核销记录',
-            content: <Record {...params} />,
+            content: (
+              <Record
+                {...params}
+                queryDataByContractId={this.queryDataByContractId}
+                queryRelatedInvoice={this.queryRelatedInvoice}
+              />
+            ),
             key: `detail_${contractId}`,
           };
           break;
         case 'edit':
+          this.queryById();
+          this.queryDataByContractId();
+          this.queryRelatedInvoice();
           tabItem = {
             title: '编辑核销记录',
-            content: <Record {...params} />,
+            content: (
+              <Record
+                {...params}
+                queryDataByContractId={this.queryDataByContractId}
+                queryRelatedInvoice={this.queryRelatedInvoice}
+              />
+            ),
             key: `edit_${contractId}`,
           };
           break;
@@ -265,29 +383,21 @@ class WriteOff extends PureComponent<IProps, IState> {
     const { activeKey, panes } = this.state;
 
     return (
-      // <Card className="wrapper-right-content" title="核销管理">
-      //   <QnListPage {...QnListPageProps} />
-      // </Card>
-      <Fragment>
-        {/* <div style={{ marginBottom: 16 }}>
-          <Button onClick={this.add}>ADD</Button>
-        </div> */}
-        <Tabs
-          style={{ flex: 1 }}
-          hideAdd
-          onChange={this.onChange}
-          activeKey={activeKey}
-          type="editable-card"
-          onEdit={this.onEdit}
-          className="display-tab"
-        >
-          {panes.map(pane => (
-            <TabPane tab={pane.title} key={pane.key}>
-              {pane.content}
-            </TabPane>
-          ))}
-        </Tabs>
-      </Fragment>
+      <Tabs
+        style={{ flex: 1 }}
+        hideAdd
+        onChange={this.onChange}
+        activeKey={activeKey}
+        type="editable-card"
+        onEdit={this.onEdit}
+        className="display-tab"
+      >
+        {panes.map(pane => (
+          <TabPane tab={pane.title} key={pane.key}>
+            {pane.content}
+          </TabPane>
+        ))}
+      </Tabs>
     );
   }
 }
