@@ -21,7 +21,7 @@ export default [
   },
   {
     tag: 'Select',
-    name: 'type',
+    name: 'salesName',
     title: '销售经理姓名',
     // initValue: [],
     // otherProps: {mode: 'multiple' },

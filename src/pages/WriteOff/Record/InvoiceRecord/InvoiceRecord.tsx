@@ -41,14 +41,12 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     };
   }
 
-  queryParams: IQueryParams = getPageQuery();
-
   componentDidMount() {}
 
   componentDidUpdate() {}
 
   exportByContractId = () => {
-    const { contractId, tabType } = this.queryParams;
+    const { contractId, tabType } = getPageQuery();
     const { dispatch } = this.props;
     dispatch({
       type: 'writeOff/exportByContractId',
@@ -69,7 +67,8 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   };
 
   genMiddleSectionBeRelated = () => {
-    const { pageType } = this.queryParams;
+    const { pageType } = getPageQuery();
+    console.log('11111->', pageType);
     return (
       <Fragment>
         <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>

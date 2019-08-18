@@ -77,7 +77,8 @@ class WriteOff extends PureComponent<IProps, IState> {
     name: 'option',
     title: '操作',
     render: (text, record) => {
-      const { contractId } = record;
+      const { contractId, type: contractType } = record;
+      let tabType = contractType === '0' ? 'stageWriteOff' : 'serviceWriteOff';
       return (
         <Fragment>
           <Icon
@@ -92,7 +93,12 @@ class WriteOff extends PureComponent<IProps, IState> {
             title="编辑核销记录"
             style={{ marginRight: '0.5rem' }}
             onClick={() =>
-              this.addTab('edit', { pageType: 'edit', contractId, tabType: 'stageWriteOff' })
+              this.addTab('edit', {
+                pageType: 'edit',
+                contractId,
+                tabType,
+                contractType,
+              })
             }
           />
           <Icon
@@ -100,7 +106,12 @@ class WriteOff extends PureComponent<IProps, IState> {
             title="查看核销记录"
             style={{ marginRight: '0.5rem' }}
             onClick={() =>
-              this.addTab('detail', { pageType: 'detail', contractId, tabType: 'stageWriteOff' })
+              this.addTab('detail', {
+                pageType: 'detail',
+                contractId,
+                tabType,
+                contractType,
+              })
             }
           />
         </Fragment>
@@ -275,11 +286,12 @@ class WriteOff extends PureComponent<IProps, IState> {
     this.setState({ activeKey });
     let contractId = activeKey.split('_')[1];
     let type = activeKey.split('_')[0];
+    let contractType = activeKey.split('_')[2];
     console.log('activeKey ->', activeKey);
-    console.log('contractId ->', contractId);
-    console.log('type ->', type);
-    const tabType = getPageQuery('tabType');
-    updateRoute({ contractId, tabType }, true);
+    // console.log('contractId ->', contractId);
+    // console.log('type ->', type);
+    const { tabType } = getPageQuery();
+    updateRoute({ contractId, tabType, contractType, pageType: type });
     switch (type) {
       case 'list':
         this.queryList(getPageQuery());
@@ -316,18 +328,18 @@ class WriteOff extends PureComponent<IProps, IState> {
     console.log('type ->', type);
     const { panes } = this.state;
     let tabItem = {};
-    let { contractId } = params;
-    let activeKey = `${type}_${contractId}`;
+    let { contractId, contractType } = params;
+    let activeKey = `${type}_${contractId}_${contractType}`;
     if (!panes.filter(v => v.key === activeKey).length) {
       updateRoute(params);
       switch (type) {
         case 'invoice':
-          this.queryById();
           tabItem = {
             title: '添加发票',
             content: <Invoice {...params} queryInvoice={this.queryInvoice} />,
-            key: `invoice_${contractId}`,
+            key: `invoice_${contractId}_${contractType}`,
           };
+          this.queryById(this.queryInvoice);
           break;
         case 'detail':
           this.queryById();
@@ -342,7 +354,7 @@ class WriteOff extends PureComponent<IProps, IState> {
                 queryRelatedInvoice={this.queryRelatedInvoice}
               />
             ),
-            key: `detail_${contractId}`,
+            key: `detail_${contractId}_${contractType}`,
           };
           break;
         case 'edit':
@@ -358,7 +370,7 @@ class WriteOff extends PureComponent<IProps, IState> {
                 queryRelatedInvoice={this.queryRelatedInvoice}
               />
             ),
-            key: `edit_${contractId}`,
+            key: `edit_${contractId}_${contractType}`,
           };
           break;
         default:

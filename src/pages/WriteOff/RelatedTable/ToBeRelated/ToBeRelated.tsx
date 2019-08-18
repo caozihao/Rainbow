@@ -45,8 +45,6 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     };
   }
 
-  queryParams: IQueryParams = getPageQuery();
-
   componentDidMount() {}
 
   componentDidUpdate() {}
@@ -54,7 +52,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
   relationToContract = () => {
     const { dispatch, settlementId, writeOffType,queryWriteOffRecord } = this.props;
     const { selectedRowKeys } = this.state;
-    const { contractId } = this.queryParams;
+    const { contractId } = getPageQuery();
 
     dispatch({
       type: 'writeOff/relationToContract',

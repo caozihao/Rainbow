@@ -57,8 +57,8 @@ class Receivable extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      type: this.queryParams.type || 'customer',
-      tabType: this.queryParams.tabType || 'HwStage',
+      type: getPageQuery().type || 'customer',
+      tabType: getPageQuery().tabType || 'HwStage',
       panes: [
         {
           title: '应收管理',
@@ -208,8 +208,6 @@ class Receivable extends PureComponent<IProps, IState> {
     );
   };
 
-  queryParams: IQueryParams = getPageQuery();
-
   option = {
     name: 'option',
     title: '操作',
@@ -291,9 +289,9 @@ class Receivable extends PureComponent<IProps, IState> {
   };
 
   queryContractList = (params: object) => {
-    // console.log('params ->', params);
+    console.log('params ->', params);
     const copyParams = dealWithQueryParams(params);
-    const { tabType, type, pageType, ...otherParams } = copyParams;
+    const { tabType, pageType, ...otherParams } = copyParams;
     const { dispatch } = this.props;
     // console.log('copyParams ->', copyParams);
     dispatch({

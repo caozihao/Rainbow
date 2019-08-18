@@ -41,11 +41,9 @@ class Record extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      tabType: this.queryParams['tabType'] || 'stageWriteOff',
+      tabType: getPageQuery()['tabType'] || 'stageWriteOff',
     };
   }
-
-  queryParams: IQueryParams = getPageQuery();
 
   componentDidMount() {}
 
@@ -53,7 +51,7 @@ class Record extends PureComponent<IProps, IState> {
 
   changeTab = (tabType: string) => {
     console.log('tabType ->', tabType);
-    const newQueryParams = Object.assign(this.queryParams, { tabType });
+    const newQueryParams = Object.assign(getPageQuery(), { tabType });
 
     if (tabType === 'stageWriteOff') {
       this.props.queryRelatedInvoice();
@@ -94,26 +92,34 @@ class Record extends PureComponent<IProps, IState> {
       );
     };
 
-    // const pageTitle = this.queryParams.type === 'edit' ? '编辑' : '查看';
+    // const pageTitle = getPageQuery().type === 'edit' ? '编辑' : '查看';
 
     // const dataSource =
+
+    const { contractType } = getPageQuery();
 
     const WriteOffSettlementProps = {
       dataSource: dataList,
     };
 
+    console.log('contractType ->', contractType);
+
     return (
       <Card className="wrapper-right-content" title="" bordered={false}>
         <Fragment>
           {contractDetail ? genContractInfo() : ''}
+
           <Tabs activeKey={tabType} onChange={this.changeTab}>
-            <TabPane tab="分期核销" key="stageWriteOff">
-              <InvoiceRecord />
-              <WriteOffSettlement {...WriteOffSettlementProps} />
-            </TabPane>
-            <TabPane tab="服务费核销" key="serviceWriteOff">
-              <WriteOffSettlement {...WriteOffSettlementProps} />
-            </TabPane>
+            {contractType === '0' ? (
+              <TabPane tab="分期核销" key="stageWriteOff">
+                <InvoiceRecord />
+                <WriteOffSettlement {...WriteOffSettlementProps} />
+              </TabPane>
+            ) : (
+              <TabPane tab="服务费核销" key="serviceWriteOff">
+                <WriteOffSettlement {...WriteOffSettlementProps} />
+              </TabPane>
+            )}
           </Tabs>
         </Fragment>
       </Card>

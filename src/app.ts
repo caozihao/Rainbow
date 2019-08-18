@@ -5,7 +5,7 @@ setTimeout(() => {
   console.log('myWindow.g_app._store ->', myWindow.g_app._store);
 });
 
-console.log = () => {};
+// console.log = () => {};
 
 // history.listen(({ query }) => {
 //   const { callId, tid } = query;

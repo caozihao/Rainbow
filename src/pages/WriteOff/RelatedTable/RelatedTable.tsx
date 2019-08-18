@@ -35,8 +35,6 @@ class ReletedTable extends PureComponent<IProps, IState> {
     this.state = {};
   }
 
-  queryParams: IQueryParams = getPageQuery();
-
   componentDidMount() {
     this.queryWriteOffRecord();
   }
