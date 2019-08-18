@@ -58,18 +58,12 @@ class QnFormModal extends Component {
   };
 
   handleModalOk = () => {
-    const { handleOk, formInitialValueObj, keyName, keyValue } = this.props;
+    const { handleOk, formInitialValueObj, extraData, keyValue } = this.props;
     this.props.form.validateFields((error, values) => {
       if (!error) {
         if (typeof handleOk === 'function') {
-          console.log('keyName ->', keyName);
-          if (
-            formInitialValueObj &&
-            Object.keys(formInitialValueObj).length &&
-            keyName &&
-            keyValue
-          ) {
-            values[keyName] = keyValue;
+          if (extraData && Object.keys(extraData).length) {
+            values = Object.assign(extraData, values);
           }
 
           const result = handleOk(values);
@@ -358,6 +352,7 @@ QnFormModal.defaultProps = {
   keyName: '',
   keyValue: '',
   type: 'form', // detail | ""，默认是表单
+  extraData: null, // 额外的数据
 };
 
 export default Form.create()(QnFormModal);

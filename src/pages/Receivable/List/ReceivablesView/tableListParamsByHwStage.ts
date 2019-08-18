@@ -1,4 +1,4 @@
-import {round} from '@/utils/format/math'
+import { round } from '@/utils/format/math';
 
 export default {
   index: {
@@ -13,21 +13,21 @@ export default {
     name: 'receivablePayment',
     title: '应收款合计',
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
   actualPayment: {
     name: 'actualPayment',
     title: '本期实际到账',
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
   unOverdueAmount: {
     name: 'unOverdueAmount',
     title: '未逾期金额',
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
   day1_30: {
@@ -46,27 +46,27 @@ export default {
     name: 'day91_180',
     title: '91～180天',
   },
-  day_lt_365: {
+  day181_365: {
     name: 'day181_365',
     title: '181～365天',
   },
-  day181_365: {
-    name: 'day181_365',
+  day_lt_365: {
+    name: 'day_lt_365',
     title: '>365天',
   },
   day_lt_90_total: {
-    name: 'effectiveDate',
+    name: 'day_lt_90_total',
     title: '>90天合计',
   },
   day_lt_90_ratio: {
-    name: 'effectiveDate',
+    name: 'day_lt_90_ratio',
     title: '>90天占比',
   },
   total: {
     name: 'total',
     title: '本期合计',
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
 };

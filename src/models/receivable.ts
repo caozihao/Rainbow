@@ -10,6 +10,7 @@ export interface ReceivableModelState {
   dataPageTotal: number;
   dataPageNo: number;
   dataPageSize: number;
+  actionPlan: string;
 }
 
 const initailState = {
@@ -17,6 +18,7 @@ const initailState = {
   dataPageTotal: 0,
   dataPageNo: 0,
   dataPageSize: 0,
+  actionPlan: '',
 };
 
 export interface ReceivableModelType {

@@ -121,7 +121,7 @@ class BasicLayout extends PureComponent<BasicLayoutProps> {
 
     return (
       <Fragment>
-        <span className={styles.version}>报表管理系统 v0.1</span>
+        <span className={styles.version}>报表管理系统 v0.2</span>
         <ProLayout
           {...settings}
           className={styles.BasicLayout}

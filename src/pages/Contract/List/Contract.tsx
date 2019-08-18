@@ -176,8 +176,9 @@ class Contract extends PureComponent<IProps, IState> {
         handleOk: this.addAndUpdate,
         handleTriggerClick: () => this.queryById(contractId),
         formInitialValueObj: this.props.detail,
-        keyName: 'contractId',
-        keyValue: this.props.detail.contractId,
+        extraData: {
+          contractId: this.props.detail.contractId,
+        },
       };
 
       const extraDetailData = {

@@ -81,7 +81,7 @@ class Receivable extends PureComponent<IProps, IState> {
 
   updatePanes = () => {
     const { panes: originPanes } = this.state;
-    console.log('originPanes ->', originPanes);
+    // console.log('originPanes ->', originPanes);
     const panes = originPanes.map(v => {
       if (v.key === 'list') {
         v.content = this.genContentPane();
@@ -290,17 +290,6 @@ class Receivable extends PureComponent<IProps, IState> {
     });
   };
 
-  genMiddleSection = () => {
-    return (
-      <Fragment>
-        <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
-          {/* <h3>发票记录</h3> */}
-          <Button onClick={() => {}}>导出</Button>
-        </div>
-      </Fragment>
-    );
-  };
-
   queryContractList = (params: object) => {
     // console.log('params ->', params);
     const copyParams = dealWithQueryParams(params);
@@ -421,7 +410,7 @@ class Receivable extends PureComponent<IProps, IState> {
         case 'view':
           tabItem = {
             title: '应收查看',
-            content: <ReceivablesView {...params} />,
+            content: <ReceivablesView {...params} queryViewList={this.queryViewList} />,
             key: `view_${contractId}_${contractType}`,
           };
           this.queryViewList();
@@ -446,7 +435,6 @@ class Receivable extends PureComponent<IProps, IState> {
 
   render() {
     const { activePanesTabKey, panes } = this.state;
-    console.log('panes ->', panes);
     return (
       <Tabs
         style={{ flex: 1 }}
