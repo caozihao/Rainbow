@@ -14,10 +14,10 @@ import {
   Row,
   Col,
 } from 'antd';
-import QnSelect from '../QnSelect/QnSelect.jsx';
-import QnListTagAdder from '../QnListTagAdder/QnListTagAdder.jsx';
-import QnUpload from '../QnUpload/QnUpload.jsx';
-import QnDynamicForm from '../QnDynamicForm/QnDynamicForm.jsx';
+import QnSelect from '../QnSelect/QnSelect';
+import QnListTagAdder from '../QnListTagAdder/QnListTagAdder';
+import QnUpload from '../QnUpload/QnUpload';
+import QnDynamicForm from '../QnDynamicForm/QnDynamicForm';
 // import './QnFormModal.less';
 const log = console.log.bind(console);
 const FormItem = Form.Item;
@@ -349,8 +349,6 @@ QnFormModal.defaultProps = {
   rowsNumber: 1,
   rowSplitTitleDict: null,
   saveDynamicFormData: () => {},
-  keyName: '',
-  keyValue: '',
   type: 'form', // detail | ""，默认是表单
   extraData: null, // 额外的数据
 };

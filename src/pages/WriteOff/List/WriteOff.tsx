@@ -219,7 +219,7 @@ class WriteOff extends PureComponent<IProps, IState> {
         bodyData: {
           customId,
           contractId,
-          effectiveDate: effectiveDate ? formatDate(effectiveDate, false) : '',
+          // effectiveDate: effectiveDate ? formatDate(effectiveDate, false) : '',
         },
       },
       successCallback: () => {},
@@ -245,12 +245,12 @@ class WriteOff extends PureComponent<IProps, IState> {
     });
   };
 
-  queryDataByContractId = (type = 'stageWriteOff') => {
-    const contractId = getPageQuery('contractId');
+  queryDataByContractId = () => {
+    const { contractId, tabType } = getPageQuery();
     const { dispatch } = this.props;
 
     let api =
-      type === 'stageWriteOff' ? 'querySettlementByContractId' : 'queryCommissionByContractId';
+      tabType === 'stageWriteOff' ? 'querySettlementByContractId' : 'queryCommissionByContractId';
 
     console.log('api ->', api);
     dispatch({
