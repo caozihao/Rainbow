@@ -5,6 +5,10 @@ export default {
     name: 'salerName',
     title: '销售名字',
   },
+  nper: {
+    name: 'nper',
+    title: '期数',
+  },
   customStatus: {
     name: 'customStatus',
     title: '客户状态',
