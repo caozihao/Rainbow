@@ -1,13 +1,14 @@
 import {round} from '@/utils/format/math'
 
 export default {
-  salerName: {
-    name: 'salerName',
-    title: '销售名字',
-  },
+
   nper: {
     name: 'nper',
     title: '期数',
+  },
+  salerName: {
+    name: 'salerName',
+    title: '销售名字',
   },
   customStatus: {
     name: 'customStatus',
