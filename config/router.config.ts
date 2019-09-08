@@ -84,7 +84,7 @@ const router: object = [
         path: '/setting',
         name: 'setting',
         // authority: ['admin', 'user'],
-        component: './setting/Setting',
+        component: './Setting/Setting',
         icon: 'setting',
       },
       {

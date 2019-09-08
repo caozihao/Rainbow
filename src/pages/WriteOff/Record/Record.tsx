@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import { Card, Tabs } from 'antd';
+import { Card, Tabs, Row, Col } from 'antd';
 import withRouter from 'umi/withRouter';
 import { InvoiceModelState } from '@/models/invoice';
 import { ContractModelState } from '@/models/contract';
@@ -71,22 +71,28 @@ class Record extends PureComponent<IProps, IState> {
     const { contractDetail, dataList } = this.props;
     const { tabType } = this.state;
     const genContractInfo = () => {
-      const { customId, contractNo, effectiveDate, customName } = contractDetail;
+      const {
+        customId,
+        contractNo,
+        effectiveDate,
+        customName,
+        firstPayment,
+        balance,
+        receivableNum,
+      } = contractDetail;
       return (
         <Fragment>
-          {/* <h3>合同信息</h3> */}
-          {/* <Row>
+          <Row>
             <Col span={6}>客户编号：{customId}</Col>
             <Col span={6}>合同编号：{contractNo}</Col>
             <Col span={6}>生效时间：{effectiveDate}</Col>
             <Col span={6}>客户名称：{customName}</Col>
-          </Row> */}
-          <div className="headLayout">
-            <span>客户编号：{customId}</span>
-            <span>合同编号：{contractNo}</span>
-            <span>生效时间：{effectiveDate}</span>
-            <span>客户名称：{customName}</span>
-          </div>
+          </Row>
+          <Row>
+            <Col span={6}>首付款：{firstPayment}</Col>
+            {/* <Col span={6}>余额：{0}</Col> */}
+            <Col span={6}>期数：{receivableNum}</Col>
+          </Row>
           <br />
         </Fragment>
       );

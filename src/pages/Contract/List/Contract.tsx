@@ -140,6 +140,58 @@ class Contract extends PureComponent<IProps, IState> {
       return { label: name, value: accountNo };
     });
 
+    // totalAmount receivableNum  firstPayment  periodPayment
+
+    const changeParamsByContractType = (dict, params, type) => {
+      params.forEach(v => {
+        dict[v].required = !type;
+        dict[v].otherProps = {
+          disabled: !!type,
+        };
+      });
+    };
+
+    formDict.type.onChange = (contractType: string) => {
+      console.log('contractType ->', contractType);
+
+      const params = ['totalAmount', 'receivableNum', 'periodPayment', 'firstPayment'];
+      changeParamsByContractType(formDict, params, parseInt(contractType, 10));
+      this.setState({
+        contractType,
+      });
+
+      // if (contractType === '1') {
+      //   formDict.totalAmount.required = formDict.totalAmount.otherProps = {
+      //     disabled: true,
+      //   };
+      //   formDict.receivableNum.otherProps = {
+      //     disabled: true,
+      //   };
+      //   formDict.firstPayment.otherProps = {
+      //     disabled: true,
+      //   };
+      //   formDict.periodPayment.otherProps = {
+      //     disabled: true,
+      //   };
+      // } else {
+      //   formDict.totalAmount.otherProps = {
+      //     disabled: false,
+      //   };
+      //   formDict.receivableNum.otherProps = {
+      //     disabled: false,
+      //   };
+      //   formDict.firstPayment.otherProps = {
+      //     disabled: false,
+      //   };
+      //   formDict.periodPayment.otherProps = {
+      //     disabled: false,
+      //   };
+      // }
+      // this.setState({
+      //   contractType,
+      // });
+    };
+
     // console.log('formDict.salesNo.options ->', formDict.salesNo.options);
 
     const commonParams = {
@@ -160,52 +212,54 @@ class Contract extends PureComponent<IProps, IState> {
     return result;
   };
 
-  option = {
-    name: 'option',
-    title: '操作',
-    render: (text, record) => {
-      const { contractId } = record;
-      const copyQnFormModalProps = Object.assign({}, this.QnFormModalProps('QnFormModal'));
-
-      const extraData = {
-        buttonProps: {
-          type: 'primary',
-          title: '修改',
-        },
-        title: '修改合同',
-        handleOk: this.addAndUpdate,
-        handleTriggerClick: () => this.queryById(contractId),
-        formInitialValueObj: this.props.detail,
-        extraData: {
-          contractId: this.props.detail.contractId,
-        },
-      };
-
-      const extraDetailData = {
-        buttonProps: {
-          type: 'default',
-          title: '查看',
-          style: {
-            marginRight: '10px',
+  genOption = () => {
+    return {
+      name: 'option',
+      title: '操作',
+      render: (text, record) => {
+        const { contractId } = record;
+        const copyQnFormModalProps = Object.assign({}, this.QnFormModalProps('QnFormModal'));
+        // console.log('copyQnFormModalProps ->', copyQnFormModalProps);
+        const extraData = {
+          buttonProps: {
+            type: 'primary',
+            title: '修改',
           },
-        },
-        title: '查看合同',
-        type: 'detail',
-        handleTriggerClick: () => this.queryById(contractId),
-        formInitialValueObj: this.props.detail,
-      };
+          title: '修改合同',
+          handleOk: this.addAndUpdate,
+          handleTriggerClick: () => this.queryById(contractId),
+          formInitialValueObj: this.props.detail,
+          extraData: {
+            contractId: this.props.detail.contractId,
+          },
+        };
 
-      return (
-        <Fragment>
-          <QnFormModal
-            {...copyQnFormModalProps}
-            {...extraDetailData}
-            style={{ marginRight: '10px' }}
-          ></QnFormModal>
-          <QnFormModal {...copyQnFormModalProps} {...extraData}></QnFormModal>
-        </Fragment>
-      );
-    },
+        const extraDetailData = {
+          buttonProps: {
+            type: 'default',
+            title: '查看',
+            style: {
+              marginRight: '10px',
+            },
+          },
+          title: '查看合同',
+          type: 'detail',
+          handleTriggerClick: () => this.queryById(contractId),
+          formInitialValueObj: this.props.detail,
+        };
+
+        return (
+          <Fragment>
+            <QnFormModal
+              {...copyQnFormModalProps}
+              {...extraDetailData}
+              style={{ marginRight: '10px' }}
+            ></QnFormModal>
+            <QnFormModal {...copyQnFormModalProps} {...extraData}></QnFormModal>
+          </Fragment>
+        );
+      },
+    };
   };
 
   tableFilterParams = tableFilterParams;
@@ -299,9 +353,9 @@ class Contract extends PureComponent<IProps, IState> {
   genMiddleSection = () => {
     return (
       <div style={{ marginBottom: '1rem' }}>
-        <Button style={{ marginRight: '1rem' }} type="primary">
+        {/* <Button style={{ marginRight: '1rem' }} type="primary">
           创建核销表
-        </Button>
+        </Button> */}
         <Button
           type="danger"
           disabled={!this.state.selectedRowKeys.length}
@@ -318,7 +372,7 @@ class Contract extends PureComponent<IProps, IState> {
   render() {
     const { dataList, dataPageTotal, dataPageNo } = this.props;
     const copyTableListParams = Object.assign({}, tableListParams);
-    copyTableListParams['option'] = this.option;
+    copyTableListParams['option'] = this.genOption();
 
     const QnListPageProps: object = {
       dataSource: dataList,

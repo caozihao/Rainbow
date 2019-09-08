@@ -1,10 +1,10 @@
-import {round} from '@/utils/format/math'
+import { round } from '@/utils/format/math';
+import { constractStatusDict } from '@/constant';
 
 export default {
-
   nper: {
     name: 'nper',
-    title: '期数',
+    title: '序号',
   },
   salerName: {
     name: 'salerName',
@@ -12,7 +12,10 @@ export default {
   },
   customStatus: {
     name: 'customStatus',
-    title: '客户状态',
+    title: '合同状态',
+    render: (text: string) => {
+      return constractStatusDict[text ? parseInt(text, 10) : ''];
+    },
   },
   customName: {
     name: 'customName',
@@ -22,14 +25,14 @@ export default {
     name: 'receivableTotal',
     title: '应收款合计',
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
   unOverdueAmount: {
     name: 'unOverdueAmount',
     title: '未逾期金额',
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
   day1_30: {
@@ -68,10 +71,10 @@ export default {
     name: 'total',
     title: '本期合计',
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
-  actionPlan	: {
+  actionPlan: {
     name: 'total',
     title: 'actionPlan',
   },

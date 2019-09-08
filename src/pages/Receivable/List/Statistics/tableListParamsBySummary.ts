@@ -1,13 +1,9 @@
 import {round} from '@/utils/format/math'
 
 export default {
-  index: {
-    name: 'index',
-    title: '序号',
-  },
   nper: {
     name: 'nper',
-    title: '期数',
+    title: '序号',
   },
   unOverdueAmount: {
     name: 'unOverdueAmount',

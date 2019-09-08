@@ -18,6 +18,7 @@ import { getPageQuery, updateRoute, dealWithQueryParams } from '@/utils/utils';
 import { ContractModelState } from '@/models/contract';
 import debounce from 'lodash/debounce';
 import ReceivablesView from './ReceivablesView/ReceivablesView';
+import cloneDeep from 'lodash/cloneDeep';
 
 const { TabPane } = Tabs;
 
@@ -106,7 +107,7 @@ class Receivable extends PureComponent<IProps, IState> {
       tabType = stateTabType;
     }
 
-    const { tableListParams, middleButtonArea } = this.getDataByTabType();
+    const { tableListParams, middleButtonArea, textNumber } = this.getDataByTabType();
     // console.log('tableListParams ->', tableListParams);
 
     let QnTableProps = {};
@@ -139,8 +140,16 @@ class Receivable extends PureComponent<IProps, IState> {
       // console.log('tableListParams ->', tableListParams);
       // console.log('dataSource ->', dataSource);
 
+      let cloneDataSource = cloneDeep(dataSource);
+
+      if (cloneDataSource.length > textNumber) {
+        for (let i = 0; i < cloneDataSource.length - textNumber; i++) {
+          cloneDataSource[i].nper = i + 1;
+        }
+      }
+
       QnTableProps = {
-        dataSource,
+        dataSource: cloneDataSource,
         columns: genTableColumns(tableListParams),
         total: dataList.length,
         hasPagination: false,
@@ -224,26 +233,32 @@ class Receivable extends PureComponent<IProps, IState> {
   getDataByTabType = () => {
     let api = '';
     let tableListParams = {};
+    let textNumber = 0;
     switch (this.state ? this.state.tabType : getPageQuery('tabType') || 'HwStage') {
       case 'HwDetail':
         api = 'queryHwDetail';
         tableListParams = tableListParamsByDetail;
+        textNumber = 3;
         break;
       case 'serviceDetail':
         api = 'queryServiceDetail';
         tableListParams = tableListParamsByDetail;
+        textNumber = 3;
         break;
       case 'HwSummary':
         api = 'queryHwSummary';
         tableListParams = tableListParamsBySummary;
+        textNumber = 6;
         break;
       case 'serviceSummary':
         api = 'queryServiceSummary';
         tableListParams = tableListParamsBySummary;
+        textNumber = 6;
         break;
       case 'HwAndServiceSummary':
         api = 'queryHWAndServiceSummary';
         tableListParams = tableListParamsBySummary;
+        textNumber = 6;
         break;
       default:
         break;
@@ -251,6 +266,7 @@ class Receivable extends PureComponent<IProps, IState> {
     return {
       api,
       tableListParams,
+      textNumber,
     };
   };
 

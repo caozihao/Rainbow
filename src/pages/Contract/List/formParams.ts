@@ -12,6 +12,9 @@ const genInputParam = (name: string, otherProps = {}) => {
     //   },
     // ],
     otherProps: {},
+    // otherProps: {
+    //   disabled: true,
+    // },
   };
 };
 

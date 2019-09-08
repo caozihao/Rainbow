@@ -15,6 +15,12 @@ export default [
     // initValue: undefined,
   },
   {
+    tag: 'Input',
+    name: 'customName',
+    title: '客户名称',
+    // initValue: undefined,
+  },
+  {
     tag: 'Select',
     name: 'productType',
     title: '产品类型',
@@ -31,10 +37,10 @@ export default [
     // mode: 'multiple',
     options: contractTypeOption,
   },
-  {
-    tag: 'RangePicker',
-    name: 'startDate,endDate',
-    title: '生效时间',
-    otherProps: rangeTimeProps,
-  },
+  // {
+  //   tag: 'RangePicker',
+  //   name: 'startDate,endDate',
+  //   title: '生效时间',
+  //   otherProps: rangeTimeProps,
+  // },
 ];

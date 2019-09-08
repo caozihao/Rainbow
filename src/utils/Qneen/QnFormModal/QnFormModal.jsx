@@ -87,6 +87,7 @@ class QnFormModal extends Component {
   };
 
   handleModalCancel = () => {
+    this.props.form.resetFields();
     this.setState({
       visible: false,
     });
