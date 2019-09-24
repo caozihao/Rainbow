@@ -92,17 +92,17 @@ class BasicLayout extends PureComponent<BasicLayoutProps> {
    * constructor
    */
 
-  useEffect = (() => {
-    const { dispatch } = this.props;
-    if (dispatch) {
-      dispatch({
-        type: 'user/fetchCurrent',
-      });
-      dispatch({
-        type: 'settings/getSetting',
-      });
-    }
-  })();
+  // useEffect = (() => {
+  //   const { dispatch } = this.props;
+  //   if (dispatch) {
+  //     dispatch({
+  //       type: 'user/fetchCurrent',
+  //     });
+  //     dispatch({
+  //       type: 'settings/getSetting',
+  //     });
+  //   }
+  // })();
 
   /**
    * init variables
