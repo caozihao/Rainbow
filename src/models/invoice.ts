@@ -100,6 +100,26 @@ const InvoiceModel: InvoiceModelType = {
         failCallback && failCallback(errMsg);
       }
     },
+    *create({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg, body } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *update({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg, body } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
   },
   reducers: {
     save(state: any, { payload = {} }) {

@@ -29,6 +29,8 @@ export default {
     unRelationToContract: `${host}/invoice/unRelationToContract`,
     syncByCustomId: `${host}/invoice/sync/:customId`,
     queryRelatedInvoice: `${host}/invoice/queryRelatedInvoice`,
+    create: `${host}/invoice/create`,
+    update: `${host}/invoice/update`,
   },
   receivable: {
     queryHWAndServiceSummary: `${host}/receivable/queryHWAndServiceSummary`,

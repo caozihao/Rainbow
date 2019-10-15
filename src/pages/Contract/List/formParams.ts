@@ -33,7 +33,7 @@ const formDict = {
     title: '销售经理员工号',
     // options: productTypeOption,
     tag: 'QnSelect',
-    required: true,
+    required: false,
   },
 
   // contactName: genInputParam('联系人'),

@@ -1,14 +1,17 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import { Card, Tabs, Row, Col } from 'antd';
+import { Card, Tabs, Row, Col, message } from 'antd';
 import withRouter from 'umi/withRouter';
 import { InvoiceModelState } from '@/models/invoice';
 import { ContractModelState } from '@/models/contract';
 import { getPageQuery } from '@/utils/utils';
 import BeRelated from './BeRelated/BeRelated';
 import ToBeRelated from './ToBeRelated/ToBeRelated';
+import QnFormModal from '@/utils/Qneen/QnFormModal/QnFormModal';
+import { formDict } from './formParams';
 import { IContractDetail } from '../writeoff.d';
+import { formatMoment } from '@/utils/format/dataFormatter';
 
 interface IConnectState extends ConnectState {
   invoice: InvoiceModelState;
@@ -41,8 +44,42 @@ class Invoice extends PureComponent<IProps, IState> {
 
   componentDidUpdate() {}
 
+  createData = (params: any) => {
+    const { contractDetail, queryInvoice } = this.props;
+    const { customId, customName } = contractDetail;
+    params.billingDate = formatMoment(params.billingDate, 'YYYYMMDD');
+    params.customId = customId;
+    params.customName = customName;
+    const { dispatch } = this.props;
+    dispatch({
+      type: `invoice/create`,
+      payload: {
+        apiName: 'create',
+        reqType: 'POST',
+        bodyData: params,
+      },
+      successCallback: () => {
+        message.success('录入成功');
+        queryInvoice();
+      },
+    });
+  };
+
   render() {
     const { contractDetail, queryInvoice } = this.props;
+
+    const QnFormModalProps = {
+      buttonProps: {
+        type: 'primary',
+        title: '录入',
+      },
+      formDict,
+      title: '录入发票信息',
+      handleOk: this.createData,
+      // extraData,
+      // formInitialValueObj,
+    };
+
     const genContractInfo = () => {
       const { customId, contractNo, effectiveDate, customName } = contractDetail;
       return (
@@ -61,6 +98,7 @@ class Invoice extends PureComponent<IProps, IState> {
             <span>客户名称：{customName}</span>
           </div>
           <br />
+          <QnFormModal {...QnFormModalProps} />
         </Fragment>
       );
     };
