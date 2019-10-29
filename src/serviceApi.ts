@@ -42,6 +42,14 @@ export default {
     queryServiceSummary: `${host}/receivable/queryServiceSummary`,
     updateCustomService: `${host}/receivable/updateCustomService`,
     updateCustomHw: `${host}/receivable/updateCustomHw`,
+
+    exportCustomHw: `${host}/receivable/exportCustomHw/:contractId`,
+    exportCustomService: `${host}/receivable/exportCustomService/:contractId`,
+    exportHWAndServiceSummary: `${host}/receivable/exportHWAndServiceSummary`,
+    exportHwDetail: `${host}/receivable/exportHwDetail`,
+    exportHwSummary: `${host}/receivable/exportHwSummary`,
+    exportServiceDetail: `${host}/receivable/exportServiceDetail`,
+    exportServiceSummary: `${host}/receivable/exportServiceSummary`,
   },
   account: {
     queryByName: `${host}/account/queryByName`,

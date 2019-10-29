@@ -61,7 +61,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
         },
       },
       successCallback: () => {
-        message.success('导出成功');
+        message.success('导出成功！');
       },
     });
   };

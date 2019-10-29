@@ -36,6 +36,7 @@ interface IState {
   tabType: string;
   panes: Array<any>;
   activePanesTabKey: string;
+  statisticsFilterParams: object;
 }
 
 @connect(({ receivable, contract }: IConnectState) => {
@@ -68,6 +69,7 @@ class Receivable extends PureComponent<IProps, IState> {
         },
       ],
       activePanesTabKey: 'list',
+      statisticsFilterParams: {},
     };
   }
 
@@ -107,7 +109,7 @@ class Receivable extends PureComponent<IProps, IState> {
       tabType = stateTabType;
     }
 
-    const { tableListParams, middleButtonArea, textNumber } = this.getDataByTabType();
+    const { tableListParams, textNumber } = this.getDataByTabType();
     // console.log('tableListParams ->', tableListParams);
 
     let QnTableProps = {};
@@ -178,7 +180,9 @@ class Receivable extends PureComponent<IProps, IState> {
 
     const genTabChildContentByStatistics = (
       <Fragment>
-        {middleButtonArea}
+        <Button onClick={this.export} style={{ position: 'absolute', right: 0, zIndex: 99 }}>
+          导出
+        </Button>
         <Tabs activeKey={tabType} onChange={item => this.changeRoute(item, 'tabType')}>
           <TabPane tab="硬件明细" key="HwDetail">
             {table}
@@ -234,31 +238,37 @@ class Receivable extends PureComponent<IProps, IState> {
     let api = '';
     let tableListParams = {};
     let textNumber = 0;
+    let exportApi = '';
     switch (this.state ? this.state.tabType : getPageQuery('tabType') || 'HwStage') {
       case 'HwDetail':
         api = 'queryHwDetail';
         tableListParams = tableListParamsByDetail;
         textNumber = 3;
+        exportApi = 'exportHwDetail';
         break;
       case 'serviceDetail':
         api = 'queryServiceDetail';
         tableListParams = tableListParamsByDetail;
         textNumber = 3;
+        exportApi = 'exportServiceDetail';
         break;
       case 'HwSummary':
         api = 'queryHwSummary';
         tableListParams = tableListParamsBySummary;
         textNumber = 6;
+        exportApi = 'exportHwSummary';
         break;
       case 'serviceSummary':
         api = 'queryServiceSummary';
         tableListParams = tableListParamsBySummary;
         textNumber = 6;
+        exportApi = 'exportServiceSummary';
         break;
       case 'HwAndServiceSummary':
         api = 'queryHWAndServiceSummary';
         tableListParams = tableListParamsBySummary;
         textNumber = 6;
+        exportApi = 'exportHWAndServiceSummary';
         break;
       default:
         break;
@@ -267,6 +277,7 @@ class Receivable extends PureComponent<IProps, IState> {
       api,
       tableListParams,
       textNumber,
+      exportApi,
     };
   };
 
@@ -357,12 +368,15 @@ class Receivable extends PureComponent<IProps, IState> {
   };
 
   handleFilterChange = (filterParams: object) => {
+    this.setState({
+      statisticsFilterParams: filterParams,
+    });
     this.queryListByDebounce({ ...filterParams });
   };
 
   onEditPanesTab = (targetKey: string, action: string) => {
-    console.log('targetKey ->', targetKey);
-    console.log('action ->', action);
+    // console.log('targetKey ->', targetKey);
+    // console.log('action ->', action);
     this[action](targetKey);
   };
 
@@ -375,7 +389,7 @@ class Receivable extends PureComponent<IProps, IState> {
     } else {
       api = 'queryCustomService';
     }
-    console.log('contractId ->', contractId);
+    // console.log('contractId ->', contractId);
     dispatch({
       type: `receivable/${api}`,
       payload: {
@@ -386,6 +400,25 @@ class Receivable extends PureComponent<IProps, IState> {
         },
       },
       successCallback: () => {},
+    });
+  };
+
+  export = () => {
+    const { dispatch } = this.props;
+    const { statisticsFilterParams } = this.state;
+    const { exportApi } = this.getDataByTabType();
+    dispatch({
+      type: `receivable/${exportApi}`,
+      payload: {
+        apiName: exportApi,
+        reqType: 'POST',
+        bodyData: {
+          ...statisticsFilterParams,
+        },
+      },
+      successCallback: () => {
+        message.success('导出成功！');
+      },
     });
   };
 

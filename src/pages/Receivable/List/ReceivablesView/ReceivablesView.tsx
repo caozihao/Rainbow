@@ -94,6 +94,28 @@ class ReceivablesView extends PureComponent<IProps, IState> {
     });
   };
 
+  export = () => {
+    const { contractType, contractId } = getPageQuery();
+    const { dispatch } = this.props;
+
+    let api = parseInt(contractType, 10) === 0 ? 'exportCustomHw' : 'exportCustomService';
+
+    console.log('api ->', api);
+    dispatch({
+      type: `receivable/${api}`,
+      payload: {
+        apiName: api,
+        reqType: 'GET',
+        placeholerData: {
+          contractId,
+        },
+      },
+      successCallback: () => {
+        message.success('导出成功！');
+      },
+    });
+  };
+
   genMiddleSection = () => {
     const { contractName, formDict } = this.getItemByQueryType();
     const { dataList } = this.props;
@@ -131,7 +153,7 @@ class ReceivablesView extends PureComponent<IProps, IState> {
         <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
           <h3>{contractName}</h3>
           <div className="rightFlexArea">
-            <Button onClick={() => message.warning('暂未实现此功能')}>导出</Button>
+            <Button onClick={this.export}>导出</Button>
             <QnFormModal {...QnFormModalProps} />
             <p>Action Plan：{actionPlan}</p>
           </div>

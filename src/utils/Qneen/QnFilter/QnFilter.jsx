@@ -446,7 +446,7 @@ class QnFilter extends Component {
       const value = dataObj[key];
       if (value || value === 0) {
         if (moment.isMoment(value)) {
-          cleanData[key] = value.format('x');
+          cleanData[key] = value.format('YYYY-MM-DD');
         } else if (key.indexOf(',') !== -1) {
           // 时间范围选择器
           const nameArr = key.split(',');

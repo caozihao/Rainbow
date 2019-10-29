@@ -187,6 +187,76 @@ const ReceivableModel: ReceivableModelType = {
         failCallback && failCallback(errMsg);
       }
     },
+    *exportCustomHw({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *exportCustomService({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *exportHWAndServiceSummary({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *exportHwDetail({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *exportHwSummary({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *exportServiceDetail({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *exportServiceSummary({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
   },
   reducers: {
     save(state: any, { payload = {} }) {
