@@ -72,11 +72,24 @@ const formDict = {
     tag: 'QnDynamicForm',
     title: '',
     otherProps: {
+      columns: 2,
+      dataType: 'contactsInfo',
       item: {
         connectName: '联系人',
         position: '职位',
         connectWay: '联系方式',
         email: '邮箱',
+      },
+    },
+  },
+  payments: {
+    tag: 'QnDynamicForm',
+    title: '',
+    otherProps: {
+      columns: 1,
+      dataType: 'payments',
+      item: {
+        number: (index: any) => `第${index}期`,
       },
     },
   },

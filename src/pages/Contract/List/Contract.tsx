@@ -32,6 +32,7 @@ interface IState {
   selectedRowKeys: Array<string>;
   ifShowFormLoading: boolean;
   contactsInfo: string;
+  payments: string;
 }
 
 @connect(({ contract, account }: IConnectState) => {
@@ -53,15 +54,15 @@ class Contract extends PureComponent<IProps, IState> {
       selectedRowKeys: [],
       ifShowFormLoading: false,
       contactsInfo: '',
+      payments: '',
     };
   }
 
   addAndUpdate = (values: object) => {
-    const { contactsInfo } = this.state;
+    const { contactsInfo, payments } = this.state;
     const copyValue = Object.assign({}, values);
     copyValue['contactsInfo'] = contactsInfo;
-    console.log('values ->', values);
-
+    copyValue['payments'] = payments;
     let api = 'contract/create';
     let apiName = 'create';
     let successMesage = '添加成功！';
@@ -98,25 +99,32 @@ class Contract extends PureComponent<IProps, IState> {
     return promise;
   };
 
-  saveDynamicFormData = (formDict: object) => {
+  saveDynamicFormData = (dataType: any, formDict: object) => {
     console.log('formDict ->', formDict);
     const { keys } = formDict;
     let arr = [];
-    for (let i = 0; i < keys.length; i++) {
-      arr.push({
-        connectName: formDict[`connectName_${keys[i]}`],
-        connectWay: formDict[`connectWay_${keys[i]}`],
-        email: formDict[`email_${keys[i]}`],
-        position: formDict[`position_${keys[i]}`],
+    if (dataType === 'contactsInfo') {
+      for (let i = 0; i < keys.length; i++) {
+        arr.push({
+          connectName: formDict[`connectName_${keys[i]}`],
+          connectWay: formDict[`connectWay_${keys[i]}`],
+          email: formDict[`email_${keys[i]}`],
+          position: formDict[`position_${keys[i]}`],
+        });
+      }
+      const contactsInfo = JSON.stringify(arr);
+      this.setState({
+        contactsInfo,
+      });
+    } else if (dataType === 'payments') {
+      for (let i = 0; i < keys.length; i++) {
+        arr.push(formDict[`number_${i}`]);
+      }
+      const payments = arr.join(',');
+      this.setState({
+        payments,
       });
     }
-
-    const contactsInfo = JSON.stringify(arr);
-    // console.log('contactsInfo ->', contactsInfo);
-
-    this.setState({
-      contactsInfo,
-    });
   };
 
   QnFormModalProps = (type: string) => {
@@ -130,6 +138,7 @@ class Contract extends PureComponent<IProps, IState> {
         0: '基础信息',
         6: '交易信息',
         12: '联系人信息',
+        13: '添加每期合同',
         // 14: '上传合同',
       },
     };
@@ -159,37 +168,6 @@ class Contract extends PureComponent<IProps, IState> {
       this.setState({
         contractType,
       });
-
-      // if (contractType === '1') {
-      //   formDict.totalAmount.required = formDict.totalAmount.otherProps = {
-      //     disabled: true,
-      //   };
-      //   formDict.receivableNum.otherProps = {
-      //     disabled: true,
-      //   };
-      //   formDict.firstPayment.otherProps = {
-      //     disabled: true,
-      //   };
-      //   formDict.periodPayment.otherProps = {
-      //     disabled: true,
-      //   };
-      // } else {
-      //   formDict.totalAmount.otherProps = {
-      //     disabled: false,
-      //   };
-      //   formDict.receivableNum.otherProps = {
-      //     disabled: false,
-      //   };
-      //   formDict.firstPayment.otherProps = {
-      //     disabled: false,
-      //   };
-      //   formDict.periodPayment.otherProps = {
-      //     disabled: false,
-      //   };
-      // }
-      // this.setState({
-      //   contractType,
-      // });
     };
 
     // console.log('formDict.salesNo.options ->', formDict.salesNo.options);

@@ -6,6 +6,7 @@ import React, { Component, Fragment } from 'react';
 import propTypes, { object } from 'prop-types';
 import { Form, Input, Icon, Button, Row, Col, message } from 'antd';
 import styles from './QnDynamicForm.less';
+import classNames from 'classnames';
 
 let id = 0;
 
@@ -56,48 +57,70 @@ class QnDynamicForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const { dataType } = this.props;
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const { keys, names } = values;
-        console.log('Received values of form: ', values);
         // console.log('this.props ', this.props);
-        this.props.saveDynamicFormData(values);
+        this.props.saveDynamicFormData(dataType, values);
         message.success('保存成功');
       }
     });
   };
 
-  genInputGroup = (k, index, initialValue) => {
-    const { item, type } = this.props;
-    const { getFieldDecorator } = this.props.form;
+  genInputGroup = (k, index, initialValueDict) => {
+    const { item, type, columns, dataType, form } = this.props;
+    const { getFieldDecorator } = form;
     const result = [];
     let number = 0;
+    const keys = form.getFieldValue('keys');
     for (const key in item) {
       const dataKey = `${key}_${index}`;
       number++;
+
+      const label = typeof item[key] === 'function' ? item[key](index + 1) : item[key];
+
+      let iconResult = '';
+      if (
+        (dataType === 'payments' && index === keys.length - 1 && type === 'form') ||
+        (dataType === 'contactsInfo' && number === 4 && type === 'form')
+      ) {
+        iconResult = (
+          <Icon
+            className={classNames(styles.deleteButton, dataType)}
+            type="minus-circle-o"
+            onClick={() => this.remove(k)}
+          />
+        );
+      }
+
+      // console.log('k ->', k);
+      // console.log('dataKey ->', dataKey);
+      //  console.log('initialValueDict ->', initialValueDict);
+
+      let initialValue = '';
+      if (dataType === 'contactsInfo') {
+        initialValue = initialValueDict[k] ? initialValueDict[k][dataKey] : '';
+      } else if (dataType === 'payments') {
+        initialValue = k[dataKey];
+      }
+
       result.push(
-        <Col span={12} key={dataKey}>
-          <Form.Item {...this.formItemLayout} label={item[key]} required key={key}>
+        <Col span={24 / columns} key={dataKey}>
+          <Form.Item {...this.formItemLayout} label={label} required key={key}>
             {getFieldDecorator(dataKey, {
               validateTrigger: ['onChange', 'onBlur'],
-              initialValue: initialValue[k] ? initialValue[k][dataKey] : '',
+              initialValue,
               rules: [
                 {
                   required: true,
                   whitespace: true,
-                  message: `${item[key]}不能为空`,
+                  message: `${label}不能为空`,
                 },
               ],
-            })(<Input placeholder={`请输入${item[key]}`} />)}
-            {number === 4 && type === 'form' ? (
-              <Fragment>
-                <Icon
-                  className={styles.deleteButton}
-                  type="minus-circle-o"
-                  onClick={() => this.remove(k)}
-                />
-              </Fragment>
-            ) : null}
+            })(<Input placeholder={`请输入${label}`} />)}
+
+            {iconResult}
           </Form.Item>
         </Col>,
       );
@@ -107,22 +130,30 @@ class QnDynamicForm extends Component {
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { item, initData, type } = this.props;
-    // console.log('this.props ->', this.props);
+    const { item, initData, type, dataType } = this.props;
+
     const initialValue = [];
-    const keysInitialValue = [];
+    let keysInitialValue = [];
     if (initData) {
-      let copyInitData = JSON.parse(initData);
-      copyInitData = copyInitData.filter(v => Object.keys(v).length !== 0);
-      if (copyInitData.length) {
-        copyInitData = copyInitData.forEach((v, i) => {
-          const obj = {};
-          for (const k in v) {
-            obj[`${k}_${i}`] = v[k];
-          }
-          initialValue.push(obj);
-          keysInitialValue.push(i);
-          id++;
+      if (dataType === 'contactsInfo') {
+        let copyInitData = JSON.parse(initData);
+        copyInitData = copyInitData.filter(v => Object.keys(v).length !== 0);
+        if (copyInitData.length) {
+          copyInitData = copyInitData.forEach((v, i) => {
+            const obj = {};
+            for (const k in v) {
+              obj[`${k}_${i}`] = v[k];
+            }
+            initialValue.push(obj);
+            keysInitialValue.push(i);
+            id++;
+          });
+        }
+      } else if (dataType === 'payments') {
+        keysInitialValue = initData.split(',').map((v, i) => {
+          return {
+            [`number_${i}`]: v,
+          };
         });
       }
     }
@@ -149,7 +180,7 @@ class QnDynamicForm extends Component {
           <Fragment>
             <Form.Item {...this.formItemLayoutWithOutLabel}>
               <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
-                <Icon type="plus" /> 添加联系人
+                <Icon type="plus" /> 添加
               </Button>
             </Form.Item>
             <Form.Item {...this.formItemLayoutWithOutLabel}>
