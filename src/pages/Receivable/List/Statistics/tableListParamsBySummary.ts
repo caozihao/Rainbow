@@ -28,12 +28,12 @@ export default {
     name: 'day91_180',
     title: '91～180天',
   },
-  day_lt_365: {
+  day181_365: {
     name: 'day181_365',
     title: '181～365天',
   },
-  day181_365: {
-    name: 'day181_365',
+  day_lt_365: {
+    name: 'day_lt_365',
     title: '>365天',
   },
   day_lt_90_total: {

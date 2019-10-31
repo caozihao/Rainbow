@@ -179,8 +179,14 @@ const ReceivableModel: ReceivableModelType = {
     },
     *queryHWAndServiceSummary({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
-      const { code, errMsg } = data;
+      const { code, errMsg, body } = data;
       if (!parseInt(code)) {
+        yield put({
+          type: 'save',
+          payload: {
+            dataList: body,
+          },
+        });
         successCallback && successCallback();
       } else {
         message.error(errMsg);
