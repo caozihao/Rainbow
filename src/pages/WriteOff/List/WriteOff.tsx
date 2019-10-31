@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import { Card, Button, message, Icon, Tabs } from 'antd';
+import { Card, Button, message, Icon, Tabs, Upload, Spin } from 'antd';
 import withRouter from 'umi/withRouter';
 import isEqual from 'lodash/isEqual';
 import { Link } from 'dva/router';
@@ -38,6 +38,7 @@ interface IState {
   panes: Array<any>;
   activeKey: string;
   dataList: Array<any>;
+  uploading: boolean;
 }
 
 @connect(({ contract }: IConnectState) => {
@@ -70,6 +71,7 @@ class WriteOff extends PureComponent<IProps, IState> {
         },
       ],
       activeKey: 'list',
+      uploading: false,
     };
   }
 
@@ -119,6 +121,59 @@ class WriteOff extends PureComponent<IProps, IState> {
     },
   };
 
+  genMiddleSection = () => {
+    const that = this;
+    const uploadProps = {
+      name: 'file',
+      multiple: false,
+      showUploadList: false,
+      action: '/rcs/invoice/importInvoice',
+      withCredentials: true,
+      headers: {
+        // 'Content-Disposition': 'attachment; filename="your-name.mp3"',
+      },
+      data: {},
+      onChange(info: any) {
+        // console.log(info);
+        const { status } = info.file;
+        if (status === 'uploading') {
+          that.setState({
+            uploading: true,
+          });
+        }
+        if (status === 'done') {
+          if (parseInt(info.file.response.code)) {
+            message.error(`${info.file.name}上传失败: ${info.file.response.message}`);
+            that.setState({
+              uploading: false,
+            });
+            return;
+          }
+          message.success(`${info.file.name}上传成功`);
+
+          that.setState({
+            uploading: false,
+          });
+        } else if (status === 'error') {
+          message.error(`${info.file.name}上传失败`);
+        }
+      },
+    };
+    return (
+      <div>
+        <h3>导入发票</h3>
+        <div>
+          <Upload {...uploadProps}>
+            <Button>
+              <Icon type="upload" /> 上传
+            </Button>
+          </Upload>
+        </div>
+        <br />
+      </div>
+    );
+  };
+
   getQnListPageProps = () => {
     const { dataList, dataPageTotal, dataPageNo } = this.props;
     // console.log('dataList ->', dataList);
@@ -145,7 +200,7 @@ class WriteOff extends PureComponent<IProps, IState> {
       total: dataPageTotal,
       current: dataPageNo,
       rowKey: item => item.contractId,
-      // middleSection: this.genMiddleSection(),
+      middleSection: this.genMiddleSection(),
       // ...this.QnFormModalProps('QnListPage'),
     };
     return QnListPageProps;
@@ -392,24 +447,26 @@ class WriteOff extends PureComponent<IProps, IState> {
   };
 
   render() {
-    const { activeKey, panes } = this.state;
+    const { activeKey, panes, uploading } = this.state;
 
     return (
-      <Tabs
-        style={{ flex: 1 }}
-        hideAdd
-        onChange={this.onChange}
-        activeKey={activeKey}
-        type="editable-card"
-        onEdit={this.onEdit}
-        className="display-tab"
-      >
-        {panes.map(pane => (
-          <TabPane tab={pane.title} key={pane.key}>
-            {pane.content}
-          </TabPane>
-        ))}
-      </Tabs>
+      <Spin spinning={uploading}>
+        <Tabs
+          style={{ flex: 1 }}
+          hideAdd
+          onChange={this.onChange}
+          activeKey={activeKey}
+          type="editable-card"
+          onEdit={this.onEdit}
+          className="display-tab"
+        >
+          {panes.map(pane => (
+            <TabPane tab={pane.title} key={pane.key}>
+              {pane.content}
+            </TabPane>
+          ))}
+        </Tabs>
+      </Spin>
     );
   }
 }
