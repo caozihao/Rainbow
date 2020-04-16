@@ -107,19 +107,16 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
     });
   };
 
-  exportByContractId = () => {
-    const { contractId, tabType } = getPageQuery();
+  exportWriteOff = () => {
+    const { contractId } = getPageQuery();
     const { dispatch } = this.props;
     dispatch({
-      type: 'writeOff/exportByContractId',
+      type: 'writeOff/exportWriteOff',
       payload: {
-        apiName: 'exportByContractId',
+        apiName: 'exportWriteOff',
         reqType: 'GET',
         placeholerData: {
           contractId,
-        },
-        queryData: {
-          type: tabType === 'serviceWriteOff' ? 1 : 0,
         },
       },
       successCallback: () => {
@@ -134,7 +131,7 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
       <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
         <h3>{headTitle}</h3>
         {pageType === 'detail' && tabType === 'serviceWriteOff' ? (
-          <Button onClick={this.exportByContractId}>导出</Button>
+          <Button onClick={this.exportWriteOff}>导出</Button>
         ) : (
           ''
         )}

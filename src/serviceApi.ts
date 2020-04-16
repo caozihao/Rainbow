@@ -15,13 +15,16 @@ export default {
   writeOff: {
     createWriteOff: `${host}/writeOff/createWriteOff`,
     deleteByWriteOffId: `${host}/writeOff/delete/:writeOffId`,
-    exportByContractId: `${host}/writeOff/export/:contractId`,
+    exportDunningCulvert: `${host}/writeOff/exportDunningCulvert/:contractId`,
+    exportStopNotify: `${host}/writeOff/exportStopNotify/:contractId`,
+    exportWriteOff: `${host}/writeOff/exportWriteOff/:contractId`,
     queryCommissionByContractId: `${host}/writeOff/queryCommissionByContractId/:contractId`,
     querySettlementByContractId: `${host}/writeOff/querySettlementByContractId/:contractId`,
     queryWriteOffRecord: `${host}/writeOff/queryWriteOffRecord`,
     relationToContract: `${host}/writeOff/relationToContract`,
     syncByCustomId: `${host}/writeOff/sync/:customId`,
     unRelationToContract: `${host}/writeOff/unRelationToContract`,
+
   },
   invoice: {
     queryInvoice: `${host}/invoice/queryInvoice`,

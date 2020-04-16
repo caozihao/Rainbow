@@ -45,19 +45,16 @@ class ToBeRelated extends PureComponent<IProps, IState> {
 
   componentDidUpdate() {}
 
-  exportByContractId = () => {
-    const { contractId, tabType } = getPageQuery();
+  exportWriteOff = () => {
+    const { contractId } = getPageQuery();
     const { dispatch } = this.props;
     dispatch({
-      type: 'writeOff/exportByContractId',
+      type: 'writeOff/exportWriteOff',
       payload: {
-        apiName: 'exportByContractId',
+        apiName: 'exportWriteOff',
         reqType: 'GET',
         placeholerData: {
           contractId,
-        },
-        queryData: {
-          type: tabType === 'stageWriteOff' ? 0 : 1,
         },
       },
       successCallback: () => {
@@ -73,7 +70,7 @@ class ToBeRelated extends PureComponent<IProps, IState> {
       <Fragment>
         <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
           <h3>发票记录</h3>
-          {pageType === 'detail' ? <Button onClick={this.exportByContractId}>导出</Button> : ''}
+          {pageType === 'detail' ? <Button onClick={this.exportWriteOff}>导出</Button> : ''}
         </div>
       </Fragment>
     );

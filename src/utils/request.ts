@@ -59,7 +59,6 @@ export function requestApi({
   if (bodyData) {
     req.data = JSON.stringify(bodyData);
   }
-  console.log('url ->', url);
   return request(url, req);
 }
 

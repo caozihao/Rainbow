@@ -6,7 +6,7 @@ interface IConfig {
 
 const config: IConfig = {
   MOCK_API: '/mock/rcs',
-  HOST_API: 'http://47.244.9.156:10023/rcs',
+  HOST_API: 'http://121.41.110.90:11023/rcs',
   DEV_MODE: 'dev',
 };
 

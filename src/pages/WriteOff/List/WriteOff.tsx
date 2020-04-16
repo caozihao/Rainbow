@@ -1,3 +1,4 @@
+/* eslint-disable react/sort-comp */
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
@@ -115,6 +116,12 @@ class WriteOff extends PureComponent<IProps, IState> {
                 contractType,
               })
             }
+          />
+          <Icon
+            type="download"
+            title="导出停服通知涵"
+            style={{ marginRight: '0.5rem' }}
+            onClick={() => this.exportStopNotify(record.contractId)}
           />
         </Fragment>
       );
@@ -250,6 +257,23 @@ class WriteOff extends PureComponent<IProps, IState> {
     });
   };
 
+  exportStopNotify = (contractId: string) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'writeOff/exportStopNotify',
+      payload: {
+        apiName: 'exportStopNotify',
+        reqType: 'GET',
+        placeholerData: {
+          contractId,
+        },
+      },
+      successCallback: () => {
+        message.success('导出成功!');
+      },
+    });
+  };
+
   queryListByDebounce = debounce(this.queryList, 1000);
 
   handlePageChange = (currentPage: number, pageSize: number) => {
@@ -374,13 +398,10 @@ class WriteOff extends PureComponent<IProps, IState> {
   };
 
   onEdit = (targetKey: string, action: string) => {
-    console.log('targetKey ->', targetKey);
-    console.log('action ->', action);
     this[action](targetKey);
   };
 
   addTab = (type: string, params: object) => {
-    console.log('type ->', type);
     const { panes } = this.state;
     let tabItem = {};
     let { contractId, contractType } = params;

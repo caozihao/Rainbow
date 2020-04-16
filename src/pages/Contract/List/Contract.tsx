@@ -202,6 +202,7 @@ class Contract extends PureComponent<IProps, IState> {
           buttonProps: {
             type: 'primary',
             title: '修改',
+            size: 'small',
           },
           title: '修改合同',
           handleOk: this.addAndUpdate,
@@ -216,6 +217,7 @@ class Contract extends PureComponent<IProps, IState> {
           buttonProps: {
             type: 'default',
             title: '查看',
+            size: 'small',
             style: {
               marginRight: '10px',
             },

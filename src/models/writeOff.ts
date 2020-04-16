@@ -1,15 +1,17 @@
+/* eslint-disable radix */
+/* eslint-disable no-unused-expressions */
 import { Effect } from 'dva';
 import { Reducer } from 'redux';
-import { requestApi } from '../utils/request';
 import { message } from 'antd';
+import { requestApi } from '../utils/request';
 
 export const namespace = 'writeOff';
 
 export interface WriteOffModelState {
-  dataList: Array<any>;
-  writeOffRecordDataList: Array<any>;
-  toBeRelatedDataList: Array<any>;
-  beRelatedDataList: Array<any>;
+  dataList: any[];
+  writeOffRecordDataList: any[];
+  toBeRelatedDataList: any[];
+  beRelatedDataList: any[];
   // dataPageTotal: number;
   // dataPageNo: number;
   // dataPageSize: number;
@@ -60,7 +62,7 @@ const WriteOffModel: WriteOffModelType = {
         failCallback && failCallback(errMsg);
       }
     },
-    *exportByContractId({ payload, successCallback, failCallback }, { call, put }) {
+    *exportWriteOff({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!parseInt(code)) {
@@ -116,8 +118,8 @@ const WriteOffModel: WriteOffModelType = {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg, body } = data;
       if (!parseInt(code)) {
-        let beRelatedDataList = body.filter(v => !!v.contractId);
-        let toBeRelatedDataList = body.filter(v => !v.contractId);
+        const beRelatedDataList = body.filter(v => !!v.contractId);
+        const toBeRelatedDataList = body.filter(v => !v.contractId);
         yield put({
           type: 'save',
           payload: {
@@ -152,6 +154,26 @@ const WriteOffModel: WriteOffModelType = {
       }
     },
     *syncByCustomId({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *exportDunningCulvert({ payload, successCallback, failCallback }, { call, put }) {
+      const data = yield call(requestApi, { ...payload, namespace });
+      const { code, errMsg } = data;
+      if (!parseInt(code)) {
+        successCallback && successCallback();
+      } else {
+        message.error(errMsg);
+        failCallback && failCallback(errMsg);
+      }
+    },
+    *exportStopNotify({ payload, successCallback, failCallback }, { call, put }) {
       const data = yield call(requestApi, { ...payload, namespace });
       const { code, errMsg } = data;
       if (!parseInt(code)) {
