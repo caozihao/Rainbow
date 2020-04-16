@@ -84,7 +84,6 @@ class Receivable extends PureComponent<IProps, IState> {
 
   updatePanes = () => {
     const { panes: originPanes } = this.state;
-    // console.log('originPanes ->', originPanes);
     const panes = originPanes.map(v => {
       if (v.key === 'list') {
         v.content = this.genContentPane();
@@ -110,8 +109,6 @@ class Receivable extends PureComponent<IProps, IState> {
     }
 
     const { tableListParams, textNumber } = this.getDataByTabType();
-    // console.log('tableListParams ->', tableListParams);
-
     let QnTableProps = {};
     let QnFilterProps = {};
 
@@ -139,9 +136,6 @@ class Receivable extends PureComponent<IProps, IState> {
         return v;
       });
 
-      // console.log('tableListParams ->', tableListParams);
-      // console.log('dataSource ->', dataSource);
-
       let cloneDataSource = cloneDeep(dataSource);
 
       if (cloneDataSource.length > textNumber) {
@@ -164,10 +158,6 @@ class Receivable extends PureComponent<IProps, IState> {
         col: 2,
       };
     }
-
-    // console.log('type ->', type);
-    // console.log('tabType ->', tabType);
-    // console.log('QnTableProps ->', QnTableProps);
 
     const genTabContent = <QnFilter {...QnFilterProps} />;
 
@@ -316,11 +306,9 @@ class Receivable extends PureComponent<IProps, IState> {
   };
 
   queryContractList = (params: object) => {
-    console.log('params ->', params);
     const copyParams = dealWithQueryParams(params);
     const { tabType, pageType, ...otherParams } = copyParams;
     const { dispatch } = this.props;
-    // console.log('copyParams ->', copyParams);
     dispatch({
       type: 'contract/queryList',
       payload: {
@@ -340,8 +328,6 @@ class Receivable extends PureComponent<IProps, IState> {
   queryList = (params: object) => {
     const { api } = this.getDataByTabType();
     const { dispatch } = this.props;
-    // console.log('api ->', api);
-    // console.log('params ->', params);
     dispatch({
       type: `receivable/${api}`,
       payload: {
@@ -375,8 +361,6 @@ class Receivable extends PureComponent<IProps, IState> {
   };
 
   onEditPanesTab = (targetKey: string, action: string) => {
-    // console.log('targetKey ->', targetKey);
-    // console.log('action ->', action);
     this[action](targetKey);
   };
 
@@ -389,7 +373,6 @@ class Receivable extends PureComponent<IProps, IState> {
     } else {
       api = 'queryCustomService';
     }
-    // console.log('contractId ->', contractId);
     dispatch({
       type: `receivable/${api}`,
       payload: {
@@ -427,8 +410,6 @@ class Receivable extends PureComponent<IProps, IState> {
     let panelType = activePanesTabKey.split('_')[0];
     let contractId = activePanesTabKey.split('_')[1];
     let contractType = activePanesTabKey.split('_')[2];
-    console.log('activeKey ->', activePanesTabKey);
-    console.log('contractId ->', contractId);
     const { currentPage, pageSize, tabType, type } = getPageQuery();
 
     switch (panelType) {
@@ -446,7 +427,6 @@ class Receivable extends PureComponent<IProps, IState> {
   };
 
   onAddPanesTab = (type: string, params: object) => {
-    console.log('type ->', type);
     const { panes } = this.state;
     let tabItem = {};
     let { contractId, contractType } = params;

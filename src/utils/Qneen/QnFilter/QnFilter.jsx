@@ -67,8 +67,6 @@ class QnFilter extends Component {
     const { tags } = this.state;
     const allValues = this.props.form.getFieldsValue();
     const transferFormData = this.transferFormData(allValues);
-    console.log('allValues ->', allValues);
-    console.log('transferFormData ->', transferFormData);
     handleChange(transferFormData);
     saveDataToStore(tags);
   };
@@ -149,7 +147,6 @@ class QnFilter extends Component {
           }
         }
         names.pop();
-        // console.log('names ->', names);
         return names;
       } else {
         return false;
@@ -415,7 +412,6 @@ class QnFilter extends Component {
     // const FormItem = Form.Item;
     if (rule && rule.tag) {
       const { name, title, initValue: initialValue, required } = rule;
-      // console.log(`genFormItem name ${name}  initValue${initialValue}`);
       // 多数控件的值都是value, 而checkbox和 switch的是checked, 在这里根据tag设置valuePropName来完成适配
       let valuePropName = 'value';
       if (rule.tag === 'Switch' || rule.tag === 'Checkbox') {

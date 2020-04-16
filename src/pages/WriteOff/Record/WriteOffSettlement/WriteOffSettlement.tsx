@@ -145,8 +145,6 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
     const headTitle = tabType === 'serviceWriteOff' ? '服务费核销结算' : '核销结算';
     const tableListParams =
       tabType === 'serviceWriteOff' ? serviceWriteOffTableListParams : stageWriteOffTableListParams;
-    // console.log('tabType ->', tabType);
-    // console.log('tableListParams ->', tableListParams);
 
     const QnListPagePropsToBeRelated: object = {
       dataSource,

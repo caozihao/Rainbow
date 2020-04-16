@@ -61,7 +61,6 @@ class QnDynamicForm extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const { keys, names } = values;
-        // console.log('this.props ', this.props);
         this.props.saveDynamicFormData(dataType, values);
         message.success('保存成功');
       }
@@ -93,10 +92,6 @@ class QnDynamicForm extends Component {
           />
         );
       }
-
-      // console.log('k ->', k);
-      // console.log('dataKey ->', dataKey);
-      //  console.log('initialValueDict ->', initialValueDict);
 
       let initialValue = '';
       if (dataType === 'contactsInfo') {
@@ -161,10 +156,6 @@ class QnDynamicForm extends Component {
     getFieldDecorator('keys', { initialValue: keysInitialValue });
 
     const keys = getFieldValue('keys');
-    // console.log('initialValue ->', initialValue);
-    // console.log('keysInitialValue ->', keysInitialValue);
-    // console.log('keys ->', keys);
-
     let formItems =
       keys &&
       keys.map((k, index) => {

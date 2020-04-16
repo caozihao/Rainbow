@@ -100,7 +100,6 @@ class Contract extends PureComponent<IProps, IState> {
   };
 
   saveDynamicFormData = (dataType: any, formDict: object) => {
-    console.log('formDict ->', formDict);
     const { keys } = formDict;
     let arr = [];
     if (dataType === 'contactsInfo') {
@@ -130,7 +129,6 @@ class Contract extends PureComponent<IProps, IState> {
   QnFormModalProps = (type: string) => {
     const { ifShowFormLoading } = this.state;
     const { accountList } = this.props;
-    // console.log('accountList ->', accountList);
     const modalOtherProps = {
       width: 800,
       rowsNumber: 2,
@@ -161,16 +159,12 @@ class Contract extends PureComponent<IProps, IState> {
     };
 
     formDict.type.onChange = (contractType: string) => {
-      console.log('contractType ->', contractType);
-
       const params = ['totalAmount', 'receivableNum', 'periodPayment', 'firstPayment'];
       changeParamsByContractType(formDict, params, parseInt(contractType, 10));
       this.setState({
         contractType,
       });
     };
-
-    // console.log('formDict.salesNo.options ->', formDict.salesNo.options);
 
     const commonParams = {
       formDict,
@@ -197,7 +191,6 @@ class Contract extends PureComponent<IProps, IState> {
       render: (text, record) => {
         const { contractId } = record;
         const copyQnFormModalProps = Object.assign({}, this.QnFormModalProps('QnFormModal'));
-        // console.log('copyQnFormModalProps ->', copyQnFormModalProps);
         const extraData = {
           buttonProps: {
             type: 'primary',
@@ -268,7 +261,6 @@ class Contract extends PureComponent<IProps, IState> {
   };
 
   queryById = (contractId: string) => {
-    console.log('queryById contractId ->', contractId);
     const { dispatch } = this.props;
     dispatch({
       type: 'contract/queryById',
@@ -284,7 +276,6 @@ class Contract extends PureComponent<IProps, IState> {
   };
 
   queryByName = (accountName = '') => {
-    // console.log('accountName ->', accountName);
     const { dispatch } = this.props;
 
     dispatch({
@@ -303,7 +294,6 @@ class Contract extends PureComponent<IProps, IState> {
   batchDelete = () => {
     const { dispatch } = this.props;
     const { selectedRowKeys } = this.state;
-    console.log('selectedRowKeys ->', selectedRowKeys);
     dispatch({
       type: 'contract/batchDelete',
       payload: {
@@ -360,7 +350,6 @@ class Contract extends PureComponent<IProps, IState> {
       title: '合同',
       rowSelection: {
         onChange: (selectedRowKeys = [], selectedRows = []) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
           this.setState({
             selectedRowKeys,
           });

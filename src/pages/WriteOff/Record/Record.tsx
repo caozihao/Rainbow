@@ -50,7 +50,6 @@ class Record extends PureComponent<IProps, IState> {
   componentDidUpdate() {}
 
   changeTab = (tabType: string) => {
-    console.log('tabType ->', tabType);
     const newQueryParams = Object.assign(getPageQuery(), { tabType });
 
     if (tabType === 'stageWriteOff') {
@@ -107,9 +106,6 @@ class Record extends PureComponent<IProps, IState> {
     const WriteOffSettlementProps = {
       dataSource: dataList,
     };
-
-    console.log('contractType ->', contractType);
-
     return (
       <Card className="wrapper-right-content" title="" bordered={false}>
         <Fragment>

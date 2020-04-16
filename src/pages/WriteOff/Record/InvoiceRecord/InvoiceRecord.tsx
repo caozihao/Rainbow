@@ -65,7 +65,6 @@ class ToBeRelated extends PureComponent<IProps, IState> {
 
   genMiddleSectionBeRelated = () => {
     const { pageType } = getPageQuery();
-    console.log('11111->', pageType);
     return (
       <Fragment>
         <div className="headLayout" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
@@ -100,21 +99,6 @@ class ToBeRelated extends PureComponent<IProps, IState> {
       hasPagination: false,
       rowSelection: null,
       total: copyInvoiceRecordDataList.length,
-      // otherTableProps: {
-      //   footer: (pageData: []) => {
-      //     console.log('pageData ->', pageData);
-      //     const amountData = [];
-      //     pageData.forEach(v => {
-      //       amountData.push(parseFloat(v.amount));
-      //     });
-      //     const number = amountData.reduce((total, num) => total + num, 0);
-      //     return (
-      //       <div>
-      //         <h3>合计 | 发票金额 : {number} </h3>
-      //       </div>
-      //     );
-      //   },
-      // },
     };
 
     return (

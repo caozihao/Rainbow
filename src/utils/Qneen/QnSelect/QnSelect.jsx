@@ -91,30 +91,11 @@ class QnSelect extends Component {
   };
 
   filterOption = (input, option) => {
-    // console.log('typeof option.props.children------->', typeof option.props.children);
-    // console.log('typeof input------->', typeof input);
     return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
   };
 
   // 单个数值转换
   valueToStr = value => {
-    // if (typeof value === 'string') {
-    //   return value;
-    // } else if (typeof value === 'number') {
-    //   return `${value}`;
-    // } else if (!value) {
-    //   return undefined;
-    // } else {
-    //   console.log('select的value出错了,typeof value = ', typeof value);
-    // }
-    // if (typeof value === 'string' || typeof value === 'number') {
-    //   return `${value}`;
-    // } else if (!value) {
-    //   return undefined;
-    // } else {
-    //   console.log('select的value出错了,typeof value = ', typeof value);
-    // }
-
     // 简化版
     if (typeof value === 'string' || typeof value === 'number') {
       return `${value}`;

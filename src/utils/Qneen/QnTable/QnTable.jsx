@@ -29,43 +29,11 @@ class QnTable extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(nextProps.columns, this.props.columns)) {
-      // console.log('nextProps.columns ->', nextProps.columns);
-      // console.log('this.props.columns ->', this.props.columns);
-      // const filteredColumns = this.getFilteredColumns(this.getAllColumnValues(nextProps.columns));
       this.setState({ filteredColumns: nextProps.columns });
     }
   }
 
   componentDidUpdate = prevProps => {};
-
-  // getAllColumnValues = columns => {
-  //   const values = [];
-  //   for (let i = 0; i < columns.length; i += 1) {
-  //     values.push(columns[i].key);
-  //   }
-  //   return values;
-  // };
-
-  // getFilteredColumns = values => {
-  //   console.log('getFilteredColumns values->', values);
-  //   const filteredColumns = [];
-  //   if (values) {
-  //     for (let i = 0; i < values.length; i += 1) {
-  //       for (let j = 0; j < this.props.columns.length; j += 1) {
-  //         const column = this.props.columns[j];
-  //         if (column.dataIndex === values[i]) {
-  //           filteredColumns.push(column);
-  //         }
-  //       }
-  //     }
-  //     return filteredColumns;
-  //   }
-  // };
-
-  // handleColumnSwitchChange = checkedList => {
-  //   const filteredColumns = this.getFilteredColumns(checkedList);
-  //   this.setState({ filteredColumns });
-  // };
 
   render() {
     // log('defaultPageSize', this.props.defaultPageSize);

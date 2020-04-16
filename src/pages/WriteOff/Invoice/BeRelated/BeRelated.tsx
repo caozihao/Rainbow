@@ -94,10 +94,6 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     });
   };
 
-  changeTab = (key: string) => {
-    console.log('key ->', key);
-  };
-
   render() {
     const { beRelatedDataList, unRelationToContractLoading } = this.props;
     const { defaultTabKey, selectedRowKeys } = this.state;
@@ -110,7 +106,6 @@ class ToBeRelated extends PureComponent<IProps, IState> {
       rowSelection: {
         selectedRowKeys,
         onChange: (selectedRowKeys = [], selectedRows = []) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
           this.setState({
             selectedRowKeys,
           });
@@ -125,14 +120,6 @@ class ToBeRelated extends PureComponent<IProps, IState> {
       <Spin spinning={!!unRelationToContractLoading}>
         {this.genMiddleSectionBeRelated()}
         <QnListPage {...QnListPagePropsBeRelated} />
-        {/* <Tabs defaultActiveKey={defaultTabKey} onChange={this.changeTab}>
-          <TabPane tab="分期" key="instalment">
-            <QnListPage {...QnListPagePropsBeRelated} />
-          </TabPane>
-          <TabPane tab="服务费" key="serviceFee">
-            <QnListPage {...QnListPagePropsBeRelated} />
-          </TabPane>
-        </Tabs> */}
       </Spin>
     );
   }

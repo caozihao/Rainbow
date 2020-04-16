@@ -78,8 +78,6 @@ class ReceivablesView extends PureComponent<IProps, IState> {
         params[key] = parseFloat(params[key]);
       }
     }
-    console.log('params ->', params);
-
     dispatch({
       type: `receivable/${updateFormDataApi}`,
       payload: {
@@ -100,7 +98,6 @@ class ReceivablesView extends PureComponent<IProps, IState> {
 
     let api = parseInt(contractType, 10) === 0 ? 'exportCustomHw' : 'exportCustomService';
 
-    console.log('api ->', api);
     dispatch({
       type: `receivable/${api}`,
       payload: {

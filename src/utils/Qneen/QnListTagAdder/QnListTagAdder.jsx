@@ -60,7 +60,6 @@ class QnListTagAdder extends Component {
 
   // 根据values来生产用于预览的标签
   handleChange = (values) => {
-    // console.log('values------->', values);
     const tags = [];
     const dataToSubmit = [];
     for (let i = 0; i < values.length; i += 1) {

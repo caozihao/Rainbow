@@ -67,7 +67,6 @@ export function requestApi({
  */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
-  console.log('response ->', response);
   if (response && response.status) {
   }
   return response;
@@ -83,7 +82,6 @@ const request = extend({
 });
 
 request.interceptors.response.use(response => {
-  // console.log(response);
   const disposition = response.headers && response.headers.get('content-disposition');
   if (disposition) {
     // const fileName = disposition.split('=')[1];

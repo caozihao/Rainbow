@@ -23,25 +23,10 @@ class QnUpload extends Component {
       multiple: true,
       onChange: info => {
         let { fileList } = info;
-        // console.log('fileList.length------->', fileList.length);
         fileList = fileList.slice(-10);
         // 给每个文件拼出下载链接
         fileList = fileList.map(() => {
-          // if (fileItem.response && fileItem.response.code === 0) {
-          //   const queryStr = data2urlStr(
-          //     { userId, token, fileKey: fileItem.response.data },
-          //     true,
-          //     true,
-          //   );
-          //   fileItem.url = `${service.downloadByKey}${queryStr}`;
-          //   fileItem.fileKey = fileItem.response.data;
-          // }
-          // return fileItem;
         });
-
-        // this.setState({
-        //   fileList,
-        // });
       },
     };
     return (

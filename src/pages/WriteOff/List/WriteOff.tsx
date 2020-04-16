@@ -141,7 +141,6 @@ class WriteOff extends PureComponent<IProps, IState> {
       },
       data: {},
       onChange(info: any) {
-        // console.log(info);
         const { status } = info.file;
         if (status === 'uploading') {
           that.setState({
@@ -183,7 +182,6 @@ class WriteOff extends PureComponent<IProps, IState> {
 
   getQnListPageProps = () => {
     const { dataList, dataPageTotal, dataPageNo } = this.props;
-    // console.log('dataList ->', dataList);
     const copyTableListParams = Object.assign({}, tableListParams);
     copyTableListParams['option'] = this.option;
 
@@ -194,7 +192,6 @@ class WriteOff extends PureComponent<IProps, IState> {
       rowSelection: null,
       // rowSelection: {
       //   onChange: (selectedRowKeys = [], selectedRows = []) => {
-      //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
       //     this.setState({
       //       selectedRowKeys,
       //     });
@@ -240,7 +237,6 @@ class WriteOff extends PureComponent<IProps, IState> {
   };
 
   queryList = (params: object) => {
-    // console.log('params ->', params);
     const copyParams = dealWithQueryParams(params);
     const { dispatch } = this.props;
     dispatch({
@@ -288,7 +284,6 @@ class WriteOff extends PureComponent<IProps, IState> {
     const { dispatch, contractDetail } = this.props;
     const { customId, effectiveDate } = contractDetail;
     const contractId = getPageQuery('contractId');
-    console.log('contractDetail ->', contractDetail);
 
     dispatch({
       type: 'invoice/queryInvoice',
@@ -308,7 +303,6 @@ class WriteOff extends PureComponent<IProps, IState> {
   queryById = (callback = () => {}) => {
     const contractId = getPageQuery('contractId');
     const { dispatch } = this.props;
-    console.log('queryById...');
     dispatch({
       type: 'contract/queryById',
       payload: {
@@ -331,7 +325,6 @@ class WriteOff extends PureComponent<IProps, IState> {
     let api =
       tabType === 'stageWriteOff' ? 'querySettlementByContractId' : 'queryCommissionByContractId';
 
-    console.log('api ->', api);
     dispatch({
       type: `writeOff/${api}`,
       payload: {
@@ -366,9 +359,6 @@ class WriteOff extends PureComponent<IProps, IState> {
     let contractId = activeKey.split('_')[1];
     let type = activeKey.split('_')[0];
     let contractType = activeKey.split('_')[2];
-    console.log('activeKey ->', activeKey);
-    // console.log('contractId ->', contractId);
-    // console.log('type ->', type);
     const { tabType } = getPageQuery();
     updateRoute({ contractId, tabType, contractType, pageType: type });
     switch (type) {

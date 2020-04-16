@@ -101,7 +101,6 @@ class ToBeRelated extends PureComponent<IProps, IState> {
       rowSelection: {
         selectedRowKeys,
         onChange: (selectedRowKeys = [], selectedRows = []) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
           this.setState({
             selectedRowKeys,
           });
