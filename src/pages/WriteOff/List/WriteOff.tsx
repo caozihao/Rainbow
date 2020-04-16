@@ -2,7 +2,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import { Card, Button, message, Icon, Tabs, Upload, Spin } from 'antd';
+import { Card, Button, message, Icon, Tabs, Upload, Spin, Menu, Dropdown } from 'antd';
 import withRouter from 'umi/withRouter';
 import isEqual from 'lodash/isEqual';
 import { Link } from 'dva/router';
@@ -82,6 +82,13 @@ class WriteOff extends PureComponent<IProps, IState> {
     render: (text, record) => {
       const { contractId, type: contractType } = record;
       let tabType = contractType === '0' ? 'stageWriteOff' : 'serviceWriteOff';
+
+      const menu = (
+        <Menu onClick={({ key }) => this.export(key, record.contractId)}>
+          <Menu.Item key="exportStopNotify">停服通知涵</Menu.Item>
+          <Menu.Item key="exportDunningCulvert">催款函</Menu.Item>
+        </Menu>
+      );
       return (
         <Fragment>
           <Icon
@@ -117,12 +124,10 @@ class WriteOff extends PureComponent<IProps, IState> {
               })
             }
           />
-          <Icon
-            type="download"
-            title="导出停服通知涵"
-            style={{ marginRight: '0.5rem' }}
-            onClick={() => this.exportStopNotify(record.contractId)}
-          />
+
+          <Dropdown overlay={menu} style={{ marginRight: '0.5rem' }}>
+            <Icon type="download" />
+          </Dropdown>
         </Fragment>
       );
     },
@@ -253,12 +258,12 @@ class WriteOff extends PureComponent<IProps, IState> {
     });
   };
 
-  exportStopNotify = (contractId: string) => {
+  export = (key: string, contractId: string) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'writeOff/exportStopNotify',
+      type: `writeOff/${key}`,
       payload: {
-        apiName: 'exportStopNotify',
+        apiName: key,
         reqType: 'GET',
         placeholerData: {
           contractId,
