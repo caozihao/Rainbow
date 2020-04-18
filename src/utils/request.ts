@@ -84,34 +84,44 @@ const request = extend({
 request.interceptors.response.use(response => {
   const disposition = response.headers && response.headers.get('content-disposition');
   if (disposition) {
-    // const fileName = disposition.split('=')[1];
-    const { tabType = 'HwDetail', contractType } = getPageQuery();
+    const unit = disposition.split('.')[1];
+    const { contractType } = getPageQuery();
+    const { url } = response;
     let fileName = '统计数据';
-    if (contractType === '0') {
+    if (url.includes('exportDunningCulvert')) {
+      fileName = '催款函';
+    } else if (url.includes('exportStopNotify')) {
+      fileName = '停服通知涵';
+    } else if (url.includes('exportWriteOff')) {
+      if (contractType === '0') {
+        fileName = '硬件分期';
+      } else if (contractType === '1') {
+        fileName = '服务费';
+      }
+    } else if (url.includes('exportCustomHw')) {
       fileName = '硬件分期';
-    } else if (contractType === '1') {
+    } else if (url.includes('exportCustomService')) {
       fileName = '服务费';
-    } else if (tabType === 'HwDetail') {
+    } else if (url.includes('exportHWAndServiceSummary')) {
+      fileName = '硬件 + 服务汇总';
+    } else if (url.includes('exportHwDetail')) {
       fileName = '硬件明细';
-    } else if (tabType === 'serviceDetail') {
-      fileName = '服务明细';
-    } else if (tabType === 'HwSummary') {
+    } else if (url.includes('exportHwSummary')) {
       fileName = '硬件汇总';
-    } else if (tabType === 'serviceSummary') {
+    } else if (url.includes('exportServiceDetail')) {
+      fileName = '服务明细';
+    } else if (url.includes('exportServiceSummary')) {
       fileName = '服务汇总';
-    } else if (tabType === 'HwAndServiceSummary') {
-      fileName = '硬件+服务汇总';
     }
-
+    const finalFileName = `${fileName}.${unit}`;
     response
       .clone()
       .blob()
       .then(blob => {
-        // const filename = `test.xlsx`;
         const eleLink = document.createElement('a');
-        const url = window.URL.createObjectURL(blob);
-        eleLink.href = url;
-        eleLink.download = decodeURIComponent(fileName);
+        const downloadUrl = window.URL.createObjectURL(blob);
+        eleLink.href = downloadUrl;
+        eleLink.download = decodeURIComponent(finalFileName);
         eleLink.click();
         window.URL.revokeObjectURL(url);
       });

@@ -111,11 +111,9 @@ class Receivable extends PureComponent<IProps, IState> {
     const { tableListParams, textNumber } = this.getDataByTabType();
     let QnTableProps = {};
     let QnFilterProps = {};
-
     if (type === 'customer' || !type) {
       const copyTableListParams = Object.assign({}, contractTableListParams);
       copyTableListParams['option'] = this.option;
-
       QnTableProps = {
         dataSource: contractDataList,
         columns: genTableColumns(copyTableListParams),
@@ -289,6 +287,26 @@ class Receivable extends PureComponent<IProps, IState> {
         tabType: key,
       };
     }
+
+    this.props.dispatch({
+      type: 'contract/save',
+      payload: {
+        dataList: [],
+        dataPageTotal: 0,
+        dataPageNo: 0,
+        dataPageSize: 0,
+      },
+    });
+    this.props.dispatch({
+      type: 'receivable/save',
+      payload: {
+        dataList: [],
+        dataPageTotal: 0,
+        dataPageNo: 0,
+        dataPageSize: 0,
+      },
+    });
+
 
     this.setState({ ...param }, () => {
       const { type, tabType } = this.state;
