@@ -218,7 +218,7 @@ class WriteOff extends PureComponent<IProps, IState> {
   tableFilterParams = tableFilterParams;
 
   componentDidMount() {
-    this.queryList(getPageQuery());
+    this.queryList();
     this.tableFilterParams = initializeFilterParams(tableFilterParams);
   }
 
@@ -241,8 +241,8 @@ class WriteOff extends PureComponent<IProps, IState> {
     });
   };
 
-  queryList = (params: object) => {
-    const copyParams = dealWithQueryParams(params);
+  queryList = () => {
+    const copyParams = dealWithQueryParams(getPageQuery());
     const { dispatch } = this.props;
     dispatch({
       type: 'contract/queryList',
@@ -251,9 +251,8 @@ class WriteOff extends PureComponent<IProps, IState> {
         reqType: 'POST',
         bodyData: copyParams,
       },
-      successCallback: (dataList: []) => {
+      successCallback: () => {
         this.updatePanes();
-        updateRoute(copyParams);
       },
     });
   };
@@ -278,11 +277,13 @@ class WriteOff extends PureComponent<IProps, IState> {
   queryListByDebounce = debounce(this.queryList, 1000);
 
   handlePageChange = (currentPage: number, pageSize: number) => {
-    this.queryListByDebounce({ pageSize, currentPage });
+    updateRoute({ pageSize, currentPage }, false);
+    this.queryListByDebounce();
   };
 
   handleFilterChange = (filterParams: object) => {
-    this.queryListByDebounce({ ...filterParams });
+    updateRoute({ ...filterParams });
+    this.queryListByDebounce();
   };
 
   queryInvoice = () => {
@@ -368,7 +369,7 @@ class WriteOff extends PureComponent<IProps, IState> {
     updateRoute({ contractId, tabType, contractType, pageType: type });
     switch (type) {
       case 'list':
-        this.queryList(getPageQuery());
+        this.queryList();
         break;
       case 'invoice':
         this.queryById(this.queryInvoice);

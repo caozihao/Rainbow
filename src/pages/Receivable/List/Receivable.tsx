@@ -32,11 +32,10 @@ interface IProps extends ConnectProps, ReceivableModelState, ContractModelState 
 }
 
 interface IState {
-  type: string;
+  pageType: string;
   tabType: string;
   panes: Array<any>;
   activePanesTabKey: string;
-  statisticsFilterParams: object;
 }
 
 @connect(({ receivable, contract }: IConnectState) => {
@@ -59,7 +58,7 @@ class Receivable extends PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      type: getPageQuery().type || 'customer',
+      pageType: getPageQuery().pageType || 'customer',
       tabType: getPageQuery().tabType || 'HwStage',
       panes: [
         {
@@ -69,16 +68,15 @@ class Receivable extends PureComponent<IProps, IState> {
         },
       ],
       activePanesTabKey: 'list',
-      statisticsFilterParams: {},
     };
   }
 
   componentDidMount() {
-    const { type, tabType, ...otherParamns } = getPageQuery();
-    if (type === 'customer' || !type) {
-      this.queryContractList(otherParamns);
-    } else if (type === 'statistics') {
-      this.queryList(otherParamns);
+    const { pageType } = getPageQuery();
+    if (pageType === 'customer' || !pageType) {
+      this.queryContractList();
+    } else if (pageType === 'statistics') {
+      this.queryList();
     }
   }
 
@@ -100,18 +98,18 @@ class Receivable extends PureComponent<IProps, IState> {
   genContentPane = () => {
     const { dataList, contractDataList, contractDataPageTotal, contractDataPageNo } = this.props;
 
-    let type = getPageQuery('type') || 'customer';
+    let pageType = getPageQuery('pageType') || 'customer';
     let tabType = getPageQuery('tabType') || 'HwStage';
     if (this.state) {
-      const { type: stateType, tabType: stateTabType } = this.state;
-      type = stateType;
+      const { pageType: stateType, tabType: stateTabType } = this.state;
+      pageType = stateType;
       tabType = stateTabType;
     }
 
     const { tableListParams, textNumber } = this.getDataByTabType();
     let QnTableProps = {};
     let QnFilterProps = {};
-    if (type === 'customer' || !type) {
+    if (pageType === 'customer' || !pageType) {
       const copyTableListParams = Object.assign({}, contractTableListParams);
       copyTableListParams['option'] = this.option;
       QnTableProps = {
@@ -128,7 +126,7 @@ class Receivable extends PureComponent<IProps, IState> {
         rules: tableFilterParamsByCustomer,
         col: 2,
       };
-    } else if (type === 'statistics') {
+    } else if (pageType === 'statistics') {
       const dataSource = dataList.map((v, i) => {
         v.index = i + 1;
         return v;
@@ -193,7 +191,7 @@ class Receivable extends PureComponent<IProps, IState> {
 
     return (
       <Card bordered={false}>
-        <Tabs activeKey={type} onChange={item => this.changeRoute(item, 'type')}>
+        <Tabs activeKey={pageType} onChange={item => this.changeRoute(item, 'pageType')}>
           <TabPane tab="客户应收" key="customer">
             <br />
             {genTabContent}
@@ -271,7 +269,7 @@ class Receivable extends PureComponent<IProps, IState> {
 
   changeRoute = (key = '', type = '') => {
     let param = {};
-    if (type === 'type') {
+    if (type === 'pageType') {
       let tabType = '';
       if (key === 'customer') {
         tabType = 'HwStage';
@@ -279,13 +277,15 @@ class Receivable extends PureComponent<IProps, IState> {
         tabType = 'HwDetail';
       }
       param = {
-        type: key,
+        pageType: key,
         tabType,
       };
+      updateRoute({ ...param });
     } else {
       param = {
         tabType: key,
       };
+      updateRoute({ ...param }, false);
     }
 
     this.props.dispatch({
@@ -307,24 +307,18 @@ class Receivable extends PureComponent<IProps, IState> {
       },
     });
 
-
     this.setState({ ...param }, () => {
-      const { type, tabType } = this.state;
-      let routeUrl = `/receivable/list?type=${type}&&tabType=${tabType}`;
-      router.push(routeUrl);
       this.updatePanes();
-
-      const { type: typeKey, tabType: tabTypeKey, ...otherParamns } = getPageQuery();
       if (key === 'customer') {
-        this.queryContractList(otherParamns);
+        this.queryContractList();
       } else {
-        this.queryList(otherParamns);
+        this.queryList();
       }
     });
   };
 
-  queryContractList = (params: object) => {
-    const copyParams = dealWithQueryParams(params);
+  queryContractList = () => {
+    const copyParams = dealWithQueryParams(getPageQuery());
     const { tabType, pageType, ...otherParams } = copyParams;
     const { dispatch } = this.props;
     dispatch({
@@ -332,18 +326,17 @@ class Receivable extends PureComponent<IProps, IState> {
       payload: {
         apiName: 'queryList',
         reqType: 'POST',
-        bodyData: {
-          ...otherParams,
-        },
+        bodyData: otherParams,
       },
       successCallback: (dataList: []) => {
         this.updatePanes();
-        // updateRoute(copyParams);
       },
     });
   };
 
-  queryList = (params: object) => {
+  queryList = () => {
+    const copyParams = dealWithQueryParams(getPageQuery());
+    const { tabType, pageType, ...otherParams } = copyParams;
     const { api } = this.getDataByTabType();
     const { dispatch } = this.props;
     dispatch({
@@ -351,11 +344,10 @@ class Receivable extends PureComponent<IProps, IState> {
       payload: {
         apiName: api,
         reqType: 'POST',
-        bodyData: params,
+        bodyData: otherParams,
       },
       successCallback: () => {
         this.updatePanes();
-        // updateRoute(copyParams);
       },
     });
   };
@@ -364,18 +356,18 @@ class Receivable extends PureComponent<IProps, IState> {
   queryListByDebounce = debounce(this.queryList, 1000);
 
   handleContractPageChange = (currentPage: number, pageSize: number) => {
-    this.queryContractListByDebounce({ pageSize, currentPage });
+    updateRoute({ pageSize, currentPage }, false);
+    this.queryContractListByDebounce();
   };
 
   handleContractFilterChange = (filterParams: object) => {
-    this.queryContractListByDebounce({ ...filterParams });
+    updateRoute({ ...filterParams });
+    this.queryContractListByDebounce();
   };
 
   handleFilterChange = (filterParams: object) => {
-    this.setState({
-      statisticsFilterParams: filterParams,
-    });
-    this.queryListByDebounce({ ...filterParams });
+    updateRoute({ ...filterParams });
+    this.queryListByDebounce();
   };
 
   onEditPanesTab = (targetKey: string, action: string) => {
@@ -406,16 +398,14 @@ class Receivable extends PureComponent<IProps, IState> {
 
   export = () => {
     const { dispatch } = this.props;
-    const { statisticsFilterParams } = this.state;
+    const { tabType, pageType, ...otherParams } = getPageQuery();
     const { exportApi } = this.getDataByTabType();
     dispatch({
       type: `receivable/${exportApi}`,
       payload: {
         apiName: exportApi,
         reqType: 'POST',
-        bodyData: {
-          ...statisticsFilterParams,
-        },
+        bodyData: otherParams,
       },
       successCallback: () => {
         message.success('导出成功！');
@@ -428,12 +418,12 @@ class Receivable extends PureComponent<IProps, IState> {
     let panelType = activePanesTabKey.split('_')[0];
     let contractId = activePanesTabKey.split('_')[1];
     let contractType = activePanesTabKey.split('_')[2];
-    const { currentPage, pageSize, tabType, type } = getPageQuery();
+    const { currentPage, pageSize, tabType, pageType } = getPageQuery();
 
     switch (panelType) {
       case 'list':
-        updateRoute({ currentPage, pageSize, tabType, type });
-        this.queryContractList(getPageQuery());
+        updateRoute({ currentPage, pageSize, tabType, pageType });
+        this.queryContractList();
         break;
       case 'view':
         updateRoute({ contractId, contractType });

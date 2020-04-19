@@ -18,7 +18,6 @@ import {
   updateRoute,
   initializeFilterParams,
 } from '@/utils/utils';
-import Item from 'antd/lib/list/Item';
 
 interface IConnectState extends ConnectState {
   contract: ContractModelState;
@@ -58,6 +57,13 @@ class Contract extends PureComponent<IProps, IState> {
     };
   }
 
+  componentDidMount() {
+    this.queryList();
+    this.tableFilterParams = initializeFilterParams(tableFilterParams);
+  }
+
+  componentDidUpdate() {}
+
   addAndUpdate = (values: object) => {
     const { contactsInfo, payments } = this.state;
     const copyValue = Object.assign({}, values);
@@ -87,7 +93,7 @@ class Contract extends PureComponent<IProps, IState> {
         },
         successCallback: () => {
           message.success(successMesage);
-          this.queryList(getPageQuery());
+          this.queryList();
           this.setState({
             ifShowFormLoading: false,
           });
@@ -237,15 +243,8 @@ class Contract extends PureComponent<IProps, IState> {
 
   tableFilterParams = tableFilterParams;
 
-  componentDidMount() {
-    this.queryList(getPageQuery());
-    this.tableFilterParams = initializeFilterParams(tableFilterParams);
-  }
-
-  componentDidUpdate() {}
-
-  queryList = (params: object) => {
-    const copyParams = dealWithQueryParams(params);
+  queryList = () => {
+    const copyParams = dealWithQueryParams(getPageQuery());
     const { dispatch } = this.props;
     dispatch({
       type: 'contract/queryList',
@@ -254,9 +253,7 @@ class Contract extends PureComponent<IProps, IState> {
         reqType: 'POST',
         bodyData: copyParams,
       },
-      successCallback: () => {
-        updateRoute(copyParams);
-      },
+      successCallback: () => {},
     });
   };
 
@@ -305,7 +302,8 @@ class Contract extends PureComponent<IProps, IState> {
       },
       successCallback: () => {
         message.success('删除成功!');
-        this.queryList(getPageQuery());
+        updateRoute({ currentPage: 1 });
+        this.queryList();
       },
     });
   };
@@ -313,11 +311,13 @@ class Contract extends PureComponent<IProps, IState> {
   queryListByDebounce = debounce(this.queryList, 1000);
 
   handlePageChange = (currentPage: number, pageSize: number) => {
-    this.queryListByDebounce({ pageSize, currentPage });
+    updateRoute({ pageSize, currentPage }, false);
+    this.queryListByDebounce();
   };
 
   handleFilterChange = (filterParams: object) => {
-    this.queryListByDebounce({ ...filterParams });
+    updateRoute({ ...filterParams });
+    this.queryListByDebounce();
   };
 
   genMiddleSection = () => {

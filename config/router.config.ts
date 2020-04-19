@@ -63,7 +63,7 @@ const router: object = [
         icon: 'pay-circle',
         hideChildrenInMenu: true,
         routes: [
-          { path: '/receivable', redirect: '/receivable/list?type=customer&&tabType=HwStage' },
+          { path: '/receivable', redirect: '/receivable/list?pageType=customer&&tabType=HwStage' },
           // type=customer  客户应收
           // tabType=HwStage  硬件分期
           // tabType=service  服务费
