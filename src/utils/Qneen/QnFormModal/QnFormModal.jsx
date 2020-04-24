@@ -268,6 +268,7 @@ class QnFormModal extends Component {
           onOk={this.handleModalOk}
           onCancel={this.handleModalCancel}
           width={width}
+          destroyOnClose={true}
           closable
           {...extraParam}
           {...otherProps}
