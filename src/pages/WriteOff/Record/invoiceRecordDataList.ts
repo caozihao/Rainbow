@@ -20,9 +20,7 @@ export default {
   amount: {
     name: 'amount',
     title: '发票金额',
-    render: (text: string) => {
-      return round(text)
-    },
+    render: (text: string) => round(text),
   },
   firstPayment: {
     name: 'firstPayment',
@@ -31,10 +29,6 @@ export default {
   balance: {
     name: 'balance',
     title: '余额',
-    render: (text, record) => {
-      const { amount, firstPayment } = record;
-      return round(parseFloat(amount) - parseFloat(firstPayment));
-    },
   },
   receivableNum: {
     name: 'receivableNum',

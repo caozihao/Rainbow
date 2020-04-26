@@ -75,23 +75,9 @@ class ToBeRelated extends PureComponent<IProps, IState> {
     );
   };
 
-  getExtraData = () => {
-    const { invoiceRecordDataList, contractDetail } = this.props;
-    let result = invoiceRecordDataList;
-    if (contractDetail && Object.keys(contractDetail).length) {
-      const { firstPayment, receivableNum } = contractDetail;
-      result = invoiceRecordDataList.map(v => {
-        v.firstPayment = firstPayment;
-        v.receivableNum = receivableNum;
-        return v;
-      });
-    }
-    return result;
-  };
-
   render() {
     const copyTableListParams = Object.assign({}, tableListParams);
-    const copyInvoiceRecordDataList = this.getExtraData();
+    const copyInvoiceRecordDataList = this.props.invoiceRecordDataList;
 
     const QnListPagePropsBeRelated: object = {
       dataSource: copyInvoiceRecordDataList,
