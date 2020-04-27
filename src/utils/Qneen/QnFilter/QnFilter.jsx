@@ -351,6 +351,7 @@ class QnFilter extends Component {
         Input: (
           <Input
             {...otherProps}
+            allowClear
             style={{ width: '100%' }}
             onChange={e => {
               this.handleItemChange(e.target.value, rule);
@@ -361,6 +362,7 @@ class QnFilter extends Component {
           <DatePicker
             style={{ width: '100%' }}
             {...otherProps}
+            allowClear
             onChange={(dateMoment, dateStr) => {
               this.handleItemChange(dateMoment, rule);
             }}
@@ -371,6 +373,7 @@ class QnFilter extends Component {
           <InputNumber
             style={{ width: '100%' }}
             {...otherProps}
+            allowClear
             onChange={value => {
               this.handleItemChange(value, rule);
             }}

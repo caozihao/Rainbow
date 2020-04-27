@@ -126,9 +126,9 @@ class QnFormModal extends Component {
     }
 
     const formPartDict = {
-      Input: <Input {...itemProps} />,
-      InputNumber: <InputNumber {...itemProps} />,
-      DatePicker: <DatePicker {...itemProps} />,
+      Input: <Input {...itemProps} allowClear />,
+      InputNumber: <InputNumber {...itemProps} allowClear />,
+      DatePicker: <DatePicker {...itemProps} allowClear/>,
       QnSelect: (
         <QnSelect
           {...itemProps}

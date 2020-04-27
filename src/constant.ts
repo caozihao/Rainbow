@@ -1,13 +1,13 @@
 export const productTypeOption = [
   { label: '直销', value: 0 },
   { label: '渠道', value: 1 },
-  { label: '爱德堡', value: 2 },
+  { label: '海德堡', value: 2 },
 ];
 
 export const productTypeDict = {
   0: '直销',
   1: '渠道',
-  2: '爱德堡',
+  2: '海德堡',
 };
 
 export const contractTypeOption = [{ label: '硬件', value: 0 }, { label: '服务', value: 1 }];

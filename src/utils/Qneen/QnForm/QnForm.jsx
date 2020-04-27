@@ -158,10 +158,10 @@ class QnForm extends Component {
     // 根据tag生成不同的form体
     const selectTag = <QnSelect {...inputTagProps} options={dict[name].options} />;
     const formPartDict = {
-      Input: <Input {...inputTagProps} />,
-      InputNumber: <InputNumber {...inputTagProps} />,
-      DatePicker: <DatePicker {...inputTagProps} />,
-      TimePicker: <TimePicker {...inputTagProps} />,
+      Input: <Input {...inputTagProps} allowClear />,
+      InputNumber: <InputNumber {...inputTagProps} allowClear />,
+      DatePicker: <DatePicker {...inputTagProps} allowClear />,
+      TimePicker: <TimePicker {...inputTagProps} allowClear />,
       QnListTagAdder: <QnListTagAdder {...inputTagProps} />,
       Select: selectTag,
       QnSelect: selectTag,
