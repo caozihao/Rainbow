@@ -1,3 +1,4 @@
+/* eslint-disable react/sort-comp */
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
@@ -20,16 +21,16 @@ interface IConnectState extends ConnectState {
 
 interface IProps extends ConnectProps, WriteOffModelState {
   dispatch: Dispatch;
-  relationToContractLoading: Boolean;
+  relationToContractLoading: boolean;
   dataSource: Array<any>;
-  headTitle: string;
+  queryDataByContractId: Function;
 }
 
 interface IState {}
 
 @connect(({ writeOff, loading }: IConnectState) => {
   return {
-    // relationToContractLoading: loading.effects['invoice/relationToContract'],
+    relationToContractLoading: loading.effects['invoice/relationToContract'],
   };
 })
 class WriteOffSettlement extends PureComponent<IProps, IState> {
@@ -47,6 +48,7 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
       otherProps: {
         footer: null,
       },
+      handleCancel: this.props.queryDataByContractId,
     };
     const copyTableListParams = cloneDeep(tableListParams);
     copyTableListParams.control = {
@@ -67,7 +69,10 @@ class WriteOffSettlement extends PureComponent<IProps, IState> {
             </a>
             <a
               href="javascript:void(0)"
-              onClick={() => this.unRelationToContract(RelatedTableProps)}
+              onClick={() => {
+                this.unRelationToContract(RelatedTableProps);
+                this.props.queryDataByContractId();
+              }}
             >
               <Icon type="minus" />
             </a>

@@ -105,6 +105,7 @@ class Record extends PureComponent<IProps, IState> {
 
     const WriteOffSettlementProps = {
       dataSource: dataList,
+      queryDataByContractId: this.props.queryDataByContractId,
     };
     return (
       <Card className="wrapper-right-content" title="" bordered={false}>
