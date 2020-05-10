@@ -34,4 +34,8 @@ export default {
     name: 'receivableNum',
     title: '期数',
   },
+  productModel: {
+    name: 'productModel',
+    title: '机型',
+  },
 };

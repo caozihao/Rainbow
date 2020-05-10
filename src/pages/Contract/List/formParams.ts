@@ -68,6 +68,19 @@ const formDict = {
   receivableNum: genInputParam('应收期数'),
   firstPayment: genInputParam('首付款'),
   periodPayment: genInputParam('每期应付'),
+  projectInfo: {
+    tag: 'QnDynamicForm',
+    title: '',
+    otherProps: {
+      columns: 2,
+      dataType: 'projectInfo',
+      item: {
+        address: '联系地址',
+        model: '产品机型',
+        num: '产品数量',
+      },
+    },
+  },
   contactsInfo: {
     tag: 'QnDynamicForm',
     title: '',

@@ -32,6 +32,7 @@ interface IState {
   ifShowFormLoading: boolean;
   contactsInfo: string;
   payments: string;
+  projectInfo: any[];
 }
 
 @connect(({ contract, account }: IConnectState) => {
@@ -54,6 +55,7 @@ class Contract extends PureComponent<IProps, IState> {
       ifShowFormLoading: false,
       contactsInfo: '',
       payments: '',
+      projectInfo: [],
     };
   }
 
@@ -65,10 +67,11 @@ class Contract extends PureComponent<IProps, IState> {
   componentDidUpdate() {}
 
   addAndUpdate = (values: object) => {
-    const { contactsInfo, payments } = this.state;
+    const { contactsInfo, payments, projectInfo } = this.state;
     const copyValue = Object.assign({}, values);
     copyValue['contactsInfo'] = contactsInfo;
     copyValue['payments'] = payments;
+    copyValue['projectInfo'] = projectInfo;
     let api = 'contract/create';
     let apiName = 'create';
     let successMesage = '添加成功！';
@@ -108,6 +111,7 @@ class Contract extends PureComponent<IProps, IState> {
   saveDynamicFormData = (dataType: any, formDict: object) => {
     const { keys } = formDict;
     let arr = [];
+
     if (dataType === 'contactsInfo') {
       for (let i = 0; i < keys.length; i++) {
         arr.push({
@@ -121,9 +125,21 @@ class Contract extends PureComponent<IProps, IState> {
       this.setState({
         contactsInfo,
       });
+    } else if (dataType === 'projectInfo') {
+      for (let i = 0; i < keys.length; i++) {
+        arr.push({
+          address: formDict[`address_${keys[i]}`],
+          model: formDict[`model_${keys[i]}`],
+          num: formDict[`num_${keys[i]}`],
+        });
+      }
+
+      this.setState({
+        projectInfo: arr,
+      });
     } else if (dataType === 'payments') {
       for (let i = 0; i < keys.length; i++) {
-        arr.push(formDict[`number_${i}`]);
+        arr.push(formDict[`number_${keys[i]}`]);
       }
       const payments = arr.join(',');
       this.setState({
@@ -141,8 +157,9 @@ class Contract extends PureComponent<IProps, IState> {
       rowSplitTitleDict: {
         0: '基础信息',
         6: '交易信息',
-        12: '联系人信息',
-        13: '添加每期合同',
+        12: '产品信息',
+        13: '联系人信息',
+        14: '添加每期合同',
         // 14: '上传合同',
       },
     };
@@ -268,7 +285,14 @@ class Contract extends PureComponent<IProps, IState> {
           contractId,
         },
       },
-      successCallback: () => {},
+      successCallback: (data: any) => {
+        const { contactsInfo, payments, projectInfo } = data;
+        this.setState({
+          contactsInfo,
+          payments,
+          projectInfo: projectInfo || [],
+        });
+      },
     });
   };
 

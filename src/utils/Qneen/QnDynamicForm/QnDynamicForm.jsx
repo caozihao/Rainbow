@@ -18,6 +18,11 @@ class QnDynamicForm extends Component {
       labelCol: { span: 7 },
       wrapperCol: { span: 14 },
     };
+
+    this.formItemLayoutByOneRow = {
+      labelCol: { span: 3, offset: 1 },
+      wrapperCol: { span: 20 },
+    };
     this.formItemLayoutWithOutLabel = {
       labelCol: { span: 0 },
       wrapperCol: { span: 14, offset: 7 },
@@ -73,8 +78,9 @@ class QnDynamicForm extends Component {
     const result = [];
     let number = 0;
     const keys = form.getFieldValue('keys');
+
     for (const key in item) {
-      const dataKey = `${key}_${index}`;
+      const dataKey = `${key}_${k}`;
       number++;
 
       const label = typeof item[key] === 'function' ? item[key](index + 1) : item[key];
@@ -82,7 +88,8 @@ class QnDynamicForm extends Component {
       let iconResult = '';
       if (
         (dataType === 'payments' && index === keys.length - 1 && type === 'form') ||
-        (dataType === 'contactsInfo' && number === 4 && type === 'form')
+        (dataType === 'contactsInfo' && number === 4 && type === 'form') ||
+        (dataType === 'projectInfo' && number === 3 && type === 'form')
       ) {
         iconResult = (
           <Icon
@@ -94,15 +101,20 @@ class QnDynamicForm extends Component {
       }
 
       let initialValue = '';
-      if (dataType === 'contactsInfo') {
+      if (dataType === 'contactsInfo' || 'projectInfo') {
         initialValue = initialValueDict[k] ? initialValueDict[k][dataKey] : '';
       } else if (dataType === 'payments') {
         initialValue = k[dataKey];
       }
 
       result.push(
-        <Col span={24 / columns} key={dataKey}>
-          <Form.Item {...this.formItemLayout} label={label} required key={key}>
+        <Col span={key === 'address' ? 23 : 24 / columns} key={dataKey}>
+          <Form.Item
+            {...(key === 'address' ? this.formItemLayoutByOneRow : this.formItemLayout)}
+            label={label}
+            required
+            key={key}
+          >
             {getFieldDecorator(dataKey, {
               validateTrigger: ['onChange', 'onBlur'],
               initialValue,
@@ -127,11 +139,11 @@ class QnDynamicForm extends Component {
     const { getFieldDecorator, getFieldValue } = this.props.form;
     const { item, initData, type, dataType } = this.props;
 
-    const initialValue = [];
+    let initialValue = [];
     let keysInitialValue = [];
     if (initData) {
-      if (dataType === 'contactsInfo') {
-        let copyInitData = JSON.parse(initData);
+      if (dataType === 'contactsInfo' || dataType === 'projectInfo') {
+        let copyInitData = typeof initData === 'string' ? JSON.parse(initData) : initData;
         copyInitData = copyInitData.filter(v => Object.keys(v).length !== 0);
         if (copyInitData.length) {
           copyInitData = copyInitData.forEach((v, i) => {
@@ -145,10 +157,11 @@ class QnDynamicForm extends Component {
           });
         }
       } else if (dataType === 'payments') {
-        keysInitialValue = initData.split(',').map((v, i) => {
-          return {
-            [`number_${i}`]: v,
-          };
+        const dataArr = initData.split(',').filter(v => v !== '');
+
+        dataArr.forEach((v, i) => {
+          keysInitialValue.push(i);
+          initialValue.push({ [`number_${i}`]: v });
         });
       }
     }

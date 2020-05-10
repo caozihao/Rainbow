@@ -96,7 +96,7 @@ const ContractModel: ContractModelType = {
             detail: body,
           },
         });
-        successCallback && successCallback();
+        successCallback && successCallback(body);
       } else {
         message.error(errMsg);
         failCallback && failCallback(errMsg);
