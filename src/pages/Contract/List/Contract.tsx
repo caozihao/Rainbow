@@ -222,6 +222,15 @@ class Contract extends PureComponent<IProps, IState> {
           },
           title: '修改合同',
           handleOk: this.addAndUpdate,
+          handleCancel: () => {
+            this.setState({
+              selectedRowKeys: [],
+              ifShowFormLoading: false,
+              contactsInfo: '',
+              payments: '',
+              projectInfo: [],
+            });
+          },
           handleTriggerClick: () => this.queryById(contractId),
           formInitialValueObj: this.props.detail,
           extraData: {

@@ -87,6 +87,7 @@ class QnFormModal extends Component {
   };
 
   handleModalCancel = () => {
+    this.props.handleCancel && this.props.handleCancel();
     this.props.form.resetFields();
     this.setState({
       visible: false,
@@ -128,7 +129,7 @@ class QnFormModal extends Component {
     const formPartDict = {
       Input: <Input {...itemProps} allowClear />,
       InputNumber: <InputNumber {...itemProps} allowClear />,
-      DatePicker: <DatePicker {...itemProps} allowClear/>,
+      DatePicker: <DatePicker {...itemProps} allowClear />,
       QnSelect: (
         <QnSelect
           {...itemProps}
@@ -297,6 +298,7 @@ QnFormModal.defaultProps = {
   handleTriggerClick: null,
   isShow: null,
   handleOk: () => {},
+  handleCancel: () => {},
   // formItems:格式
   // [
   //   {
