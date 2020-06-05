@@ -70,7 +70,7 @@ class Invoice extends PureComponent<IProps, IState> {
 
     const QnFormModalProps = {
       buttonProps: {
-        type: 'primary',
+        type: 'default',
         title: '录入',
       },
       formDict,
