@@ -14,7 +14,7 @@ export default {
     name: 'planPayAmount',
     title: <span className="color-red">每期计划收款金额</span>,
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
   planNumOfPeriods: {
@@ -34,7 +34,7 @@ export default {
     name: 'actualPayAmount',
     title: '实际收款金额',
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
   actualPayDate: {
@@ -45,7 +45,7 @@ export default {
     name: 'overdueAmount',
     title: <span className="color-blue">逾期应收款金额</span>,
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
   overdueNumOfDate: {
@@ -56,7 +56,7 @@ export default {
     name: 'accumulatedPayAmount',
     title: <span className="color-blue">累计收款金额</span>,
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
   },
 
@@ -64,7 +64,11 @@ export default {
     name: 'receivableReasonable',
     title: <span className="color-blue">应收款余额</span>,
     render: (text: string) => {
-      return round(text)
+      return round(text);
     },
+  },
+  remark: {
+    name: 'remark',
+    title: <span className="color-blue">备注</span>,
   },
 };

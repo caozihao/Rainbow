@@ -71,7 +71,6 @@ class Record extends PureComponent<IProps, IState> {
   createWriteOff = (values: any) => {
     const { dispatch } = this.props;
     values.actualPayDate = formatMoment(values.actualPayDate, 'YYYYMMDD');
-    console.log('values ->', values);
     dispatch({
       type: 'writeOff/createWriteOff',
       payload: {

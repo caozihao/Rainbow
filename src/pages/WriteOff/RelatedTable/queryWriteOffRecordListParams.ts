@@ -15,4 +15,8 @@ export default {
     name: 'actualPayAmount',
     title: '实际收款金额',
   },
+  remark: {
+    name: 'remark',
+    title: '备注',
+  },
 };
