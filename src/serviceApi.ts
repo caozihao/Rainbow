@@ -24,7 +24,6 @@ export default {
     relationToContract: `${host}/writeOff/relationToContract`,
     syncByCustomId: `${host}/writeOff/sync/:customId`,
     unRelationToContract: `${host}/writeOff/unRelationToContract`,
-
   },
   invoice: {
     queryInvoice: `${host}/invoice/queryInvoice`,

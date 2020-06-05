@@ -1,12 +1,14 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Dispatch, ConnectProps, ConnectState } from '@/models/connect';
-import { Card, Tabs, Row, Col } from 'antd';
+import { Card, Tabs, Row, Col, message } from 'antd';
 import withRouter from 'umi/withRouter';
+import { QnFormModal } from '@/utils/Qneen/index';
 import { InvoiceModelState } from '@/models/invoice';
 import { ContractModelState } from '@/models/contract';
 import { getPageQuery, updateRoute } from '@/utils/utils';
 import InvoiceRecord from './InvoiceRecord/InvoiceRecord';
+import { formatMoment } from '@/utils/format/dataFormatter';
 import { WriteOffModelState } from '@/models/writeOff';
 import { IQueryParams, IContractDetail } from '../writeoff.d';
 import WriteOffSettlement from './WriteOffSettlement/WriteOffSettlement';
@@ -66,6 +68,23 @@ class Record extends PureComponent<IProps, IState> {
     );
   };
 
+  createWriteOff = (values: any) => {
+    const { dispatch } = this.props;
+    values.actualPayDate = formatMoment(values.actualPayDate, 'YYYYMMDD');
+    console.log('values ->', values);
+    dispatch({
+      type: 'writeOff/createWriteOff',
+      payload: {
+        apiName: 'createWriteOff',
+        reqType: 'POST',
+        bodyData: values,
+      },
+      successCallback: () => {
+        message.success('录入成功');
+      },
+    });
+  };
+
   render() {
     const { contractDetail, dataList } = this.props;
     const { tabType } = this.state;
@@ -102,15 +121,54 @@ class Record extends PureComponent<IProps, IState> {
     // const dataSource =
 
     const { contractType } = getPageQuery();
+    const formDict = {
+      customId: {
+        title: '客户编号',
+        tag: 'Input',
+        required: true,
+      },
+      customName: {
+        title: '客户名称',
+        tag: 'Input',
+        required: true,
+      },
+      actualPayDate: {
+        title: '实际到账日期',
+        tag: 'DatePicker',
+        required: true,
+      },
+      actualPayAmount: {
+        title: '实际收款金额',
+        tag: 'Input',
+        required: true,
+      },
+      remark: {
+        title: '备注',
+        tag: 'Input',
+      },
+    };
 
     const WriteOffSettlementProps = {
       dataSource: dataList,
       queryDataByContractId: this.props.queryDataByContractId,
     };
+
+    const QnFormModalProps = {
+      buttonProps: {
+        type: 'default',
+        title: '录入',
+      },
+      formDict,
+      title: '核销录入',
+      handleOk: this.createWriteOff,
+    };
+
     return (
       <Card className="wrapper-right-content" title="" bordered={false}>
         <Fragment>
           {contractDetail ? genContractInfo() : ''}
+
+          <QnFormModal {...QnFormModalProps} />
 
           <Tabs activeKey={tabType} onChange={this.changeTab}>
             {contractType === '0' ? (
