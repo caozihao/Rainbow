@@ -135,11 +135,11 @@ class WriteOff extends PureComponent<IProps, IState> {
 
   genMiddleSection = () => {
     const that = this;
-    const uploadProps = {
+    const getUploadProps = (action: string) => ({
       name: 'file',
       multiple: false,
       showUploadList: false,
-      action: '/rcs/invoice/importInvoice',
+      action,
       withCredentials: true,
       headers: {
         // 'Content-Disposition': 'attachment; filename="your-name.mp3"',
@@ -169,18 +169,20 @@ class WriteOff extends PureComponent<IProps, IState> {
           message.error(`${info.file.name}上传失败`);
         }
       },
-    };
+    });
     return (
-      <div>
-        <h3>导入发票</h3>
-        <div>
-          <Upload {...uploadProps}>
-            <Button>
-              <Icon type="upload" /> 上传
-            </Button>
-          </Upload>
-        </div>
-        <br />
+      <div style={{ marginBottom: 10 }}>
+        <Upload {...getUploadProps('/rcs/invoice/importInvoice')}>
+          <Button style={{ marginRight: 10 }}>
+            <Icon type="upload" /> 导入发票
+          </Button>
+        </Upload>
+
+        <Upload {...getUploadProps('/rcs/writeOff/importInvoice')}>
+          <Button>
+            <Icon type="upload" /> 导入核销
+          </Button>
+        </Upload>
       </div>
     );
   };
