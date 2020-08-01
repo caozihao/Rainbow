@@ -166,7 +166,9 @@ class ReceivablesView extends PureComponent<IProps, IState> {
     const { dataList } = this.props;
     const filterData = cloneDeep(dataList).map(v => {
       for (let key in v) {
-        if (key !== 'receivablePayment' || key !== 'actualPayment' || key !== 'unOverdueAmount') {
+        if (key === 'receivablePayment' || key === 'actualPayment' || key === 'unOverdueAmount') {
+          v[key] = v[key] === 0 ? undefined : v[key];
+        } else {
           v[key] = undefined;
         }
       }
@@ -191,9 +193,13 @@ class ReceivablesView extends PureComponent<IProps, IState> {
   genOverdueTable = () => {
     const { dataList } = this.props;
     const filterData = cloneDeep(dataList).map(v => {
-      v['receivablePayment'] = undefined;
-      v['actualPayment'] = undefined;
-      v['unOverdueAmount'] = undefined;
+      for (let key in v) {
+        if (key === 'receivablePayment' || key === 'actualPayment' || key === 'unOverdueAmount') {
+          v[key] = undefined;
+        } else {
+          v[key] = v[key] === 0 ? undefined : v[key];
+        }
+      }
       return v;
     });
     const dataSource = filterData.map((v, i) => {
