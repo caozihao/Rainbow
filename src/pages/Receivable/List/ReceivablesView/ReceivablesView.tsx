@@ -166,7 +166,13 @@ class ReceivablesView extends PureComponent<IProps, IState> {
     const { dataList } = this.props;
     const filterData = cloneDeep(dataList).map(v => {
       for (let key in v) {
-        if (key === 'receivablePayment' || key === 'actualPayment' || key === 'unOverdueAmount') {
+        if (
+          key === 'receivablePayment' ||
+          key === 'actualPayment' ||
+          key === 'unOverdueAmount' ||
+          key === 'dataTime' ||
+          key === 'nper'
+        ) {
           v[key] = v[key] === 0 ? undefined : v[key];
         } else {
           v[key] = undefined;
