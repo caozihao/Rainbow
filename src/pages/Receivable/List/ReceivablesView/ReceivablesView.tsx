@@ -50,7 +50,7 @@ class ReceivablesView extends PureComponent<IProps, IState> {
     let updateFormDataApi = '';
     let copyFormDict = Object.assign({}, formDict);
     if (contractType === 0) {
-      contractName = '硬件分期';
+      contractName = '硬件分期 - 实际到账';
       tableListParams = tableListParamsByHwStage;
       updateFormDataApi = 'updateCustomHw';
       delete copyFormDict.day1_5;
@@ -163,7 +163,8 @@ class ReceivablesView extends PureComponent<IProps, IState> {
 
   genTable = () => {
     const { dataList } = this.props;
-    const dataSource = dataList.map((v, i) => {
+    const filterData = dataList.slice(0, 3);
+    const dataSource = filterData.map((v, i) => {
       v.index = i + 1;
       return v;
     });
@@ -171,7 +172,25 @@ class ReceivablesView extends PureComponent<IProps, IState> {
     const QnTableProps = {
       dataSource,
       columns: genTableColumns(tableListParams),
-      total: dataList.length,
+      total: filterData.length,
+      hasPagination: false,
+      rowKey: (_, index) => index,
+    };
+    return <QnTable {...QnTableProps} />;
+  };
+
+  genDownTable = () => {
+    const { dataList } = this.props;
+    const filterData = dataList.slice(3, dataList.length);
+    const dataSource = filterData.map((v, i) => {
+      v.index = i + 1;
+      return v;
+    });
+    const { tableListParams } = this.getItemByQueryType();
+    const QnTableProps = {
+      dataSource,
+      columns: genTableColumns(tableListParams),
+      total: filterData.length,
       hasPagination: false,
       rowKey: (_, index) => index,
     };
@@ -183,6 +202,8 @@ class ReceivablesView extends PureComponent<IProps, IState> {
       <Card bordered={false}>
         {this.genMiddleSection()}
         {this.genTable()}
+        <h3 style={{ marginTop: 10 }}>硬件分期 - 逾期</h3>
+        {this.genDownTable()}
       </Card>
     );
   }

@@ -156,10 +156,10 @@ class Contract extends PureComponent<IProps, IState> {
       rowsNumber: 2,
       rowSplitTitleDict: {
         0: '基础信息',
-        6: '交易信息',
-        12: '产品信息',
-        13: '联系人信息',
-        14: '添加每期合同',
+        7: '交易信息',
+        13: '产品信息',
+        14: '联系人信息',
+        15: '添加每期合同',
         // 14: '上传合同',
       },
     };

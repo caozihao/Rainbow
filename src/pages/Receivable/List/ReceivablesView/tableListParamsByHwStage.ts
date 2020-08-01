@@ -5,6 +5,10 @@ export default {
     name: 'index',
     title: '序号',
   },
+  dataTime: {
+    name: 'dataTime',
+    title: '日期',
+  },
   nper: {
     name: 'nper',
     title: '期数',

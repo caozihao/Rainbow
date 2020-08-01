@@ -35,7 +35,10 @@ const formDict = {
     tag: 'QnSelect',
     required: false,
   },
-
+  remark: {
+    title: '备注',
+    tag: 'Input',
+  },
   // contactName: genInputParam('联系人'),
   // tel: genInputParam('联系方式'),
   // email: genInputParam('邮箱'),
