@@ -11,6 +11,7 @@ import tableListParamsByService from './tableListParamsByService';
 import { ReceivableModelState } from '@/models/receivable';
 import { QnFormModal } from '@/utils/Qneen/index';
 import { formDict } from './formParams';
+import { cloneDeep } from 'lodash';
 
 interface IConnectState extends ConnectState {
   receivable: ReceivableModelState;
@@ -56,7 +57,7 @@ class ReceivablesView extends PureComponent<IProps, IState> {
       delete copyFormDict.day1_5;
       delete copyFormDict.day6_30;
     } else {
-      contractName = '服务费';
+      contractName = '服务费 - 实际到账';
       tableListParams = tableListParamsByService;
       updateFormDataApi = 'updateCustomService';
       delete copyFormDict.day1_30;
@@ -161,9 +162,17 @@ class ReceivablesView extends PureComponent<IProps, IState> {
 
   // handleClick = (e: Object): void => {};
 
-  genTable = () => {
+  genActualReceiptTable = () => {
     const { dataList } = this.props;
-    const filterData = dataList.slice(0, 3);
+    const filterData = cloneDeep(dataList).map(v => {
+      for (let key in v) {
+        if (key !== 'receivablePayment' || key !== 'actualPayment' || key !== 'unOverdueAmount') {
+          v[key] = undefined;
+        }
+      }
+      return v;
+    });
+
     const dataSource = filterData.map((v, i) => {
       v.index = i + 1;
       return v;
@@ -179,9 +188,14 @@ class ReceivablesView extends PureComponent<IProps, IState> {
     return <QnTable {...QnTableProps} />;
   };
 
-  genDownTable = () => {
+  genOverdueTable = () => {
     const { dataList } = this.props;
-    const filterData = dataList.slice(3, dataList.length);
+    const filterData = cloneDeep(dataList).map(v => {
+      v['receivablePayment'] = undefined;
+      v['actualPayment'] = undefined;
+      v['unOverdueAmount'] = undefined;
+      return v;
+    });
     const dataSource = filterData.map((v, i) => {
       v.index = i + 1;
       return v;
@@ -198,12 +212,14 @@ class ReceivablesView extends PureComponent<IProps, IState> {
   };
 
   render() {
+    const contractType = parseInt(getPageQuery('contractType'), 10);
+
     return (
       <Card bordered={false}>
         {this.genMiddleSection()}
-        {this.genTable()}
-        <h3 style={{ marginTop: 10 }}>硬件分期 - 逾期</h3>
-        {this.genDownTable()}
+        {this.genActualReceiptTable()}
+        <h3 style={{ marginTop: 10 }}> {contractType === 0 ? '硬件分期' : '服务费'} - 逾期</h3>
+        {this.genOverdueTable()}
       </Card>
     );
   }
